@@ -26,7 +26,7 @@ find_package(ZLIB)
 
 find_library(LIBSBML_LIBRARY
   NAMES sbml-static.lib sbml-static sbml
-  PATHS /usr/lib /usr/local/lib
+  PATHS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64
         ${CMAKE_SOURCE_DIR}
         ${LIBSBML_DEPENDENCY_DIR}/lib
   DOC "The file name of the libsbml library."
