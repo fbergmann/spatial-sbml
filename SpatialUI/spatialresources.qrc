@@ -1,0 +1,20 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
+    <file>images/editcopy.png</file>
+    <file>images/editcut.png</file>
+    <file>images/file-128x128.png</file>
+    <file>images/folder-open-128x128.png</file>
+    <file>images/editpaste.png</file>
+    <file>images/floppy-128x128.png</file>
+    <file>images/media-playback-pause.png</file>
+    <file>images/media-skip-backward.png</file>
+    <file>images/media-playback-start.png</file>
+    <file>images/media-playback-stop.png</file>
+    <file>images/zoom-fit-best.png</file>
+    <file>images/zoom-in.png</file>
+    <file>images/zoom-original.png</file>
+    <file>images/zoom-out.png</file>
+    <file>images/format-fill-color.png</file>	
+  </qresource>
+</RCC>
