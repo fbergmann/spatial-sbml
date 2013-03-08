@@ -15,9 +15,15 @@ make install
 ## Running the GUI
 Once installed, simply double click SpatialUI, and the following interface will come up.   
 
-![SpatialUI, the interface](http://)
+![SpatialUI, the interface](https://raw.github.com/fbergmann/spatial-sbml/master/screenshots/2012-06-12_fish300x300.png)
 
-From here, you could simply open one of the example models supplied. We use a custom annotation to store settings such as the last selected species, the colors used for them as well as the bounds. Of course you can open any model in the SBML Spatial format. 
+From here, you could simply open one of the example models supplied. We use a custom annotation to store settings such as the last selected species, the colors used for them as well as the bounds. Of course you can open any model in the SBML Spatial format and define these settings yourself: 
+
+- **Selecting the variables to plot**: from the *Palette Assignment* panel, simply select the Species to display, choose one of the palettes distributed with the program, and define the maximum concentration (will be used to scale the palette). Next click 'add'. While it is possible to add multiple species that way I recommend to choose < 3 (and those in the palettes 'black-red', 'black-green' and 'black-blue' as that maps best to the RGB color scheme. 
+- **Displaying Concentrations at a certain point**: Simply click on a coordinate, and concentrations for all selected species will be displayed. 
+- **Modifying the concentrations at a coordinate**: First select the species whose concentrations you would like to change, next specify the concentration and enable the 'Apply' button. Then simply click / drag the mouse along the canvas to change the concentrations at those points. 
+
+Should you have further questions, or concerns please let me know. 
 
 ## Libraries
 This project requires the following libraries: 
