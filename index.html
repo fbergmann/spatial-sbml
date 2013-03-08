@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Spatial-sbml by fbergmann</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Spatial-sbml</h1>
+        <h2>libraries &amp; tools for spatial simulation of SBML models</h2>
+        <a href="https://github.com/fbergmann/spatial-sbml" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>Spatial SBML</h1>
+
+<p>This project contains a library, as well as a front end application for spatial simulation of SBML Models (using <a href="http://sbml.org/Documents/Specifications">SBML Level 3</a> with the <a href="http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Spatial_Geometries_and_Spatial_Processes" title="Spatial package">Spatial package</a> ). This project is made possible in cooperation with the <a href="http://fun.bio.keio.ac.jp/">Funahashi Lab</a> who developed the simulator. (The initial presentation from COMBINE 2011 can still be found online <a href="http://co.mbine.org/events/COMBINE_2011/agenda?q=system/files/2011-09-04-combine-funahashi-spatial-simulator.pdf">here</a>.) </p>
+
+<h2>How to build</h2>
+
+<p>This project uses CMake, as such building ought to be as easy as running:</p>
+
+<pre><code>mkdir build  
+cd build  
+cmake -DBUILD_UI=ON &lt;directory with sources&gt;  
+make  
+make install
+</code></pre>
+
+<h2>Running the GUI</h2>
+
+<p>Once installed, simply double click SpatialUI, and the following interface will come up.   </p>
+
+<p><img src="https://raw.github.com/fbergmann/spatial-sbml/master/screenshots/2012-06-12_fish300x300.png" alt="SpatialUI, the interface"></p>
+
+<p>From here, you could simply open one of the example models supplied. We use a custom annotation to store settings such as the last selected species, the colors used for them as well as the bounds. Of course you can open any model in the SBML Spatial format and define these settings yourself: </p>
+
+<ul>
+<li>
+<strong>Selecting the variables to plot</strong>: from the <em>Palette Assignment</em> panel, simply select the Species to display, choose one of the palettes distributed with the program, and define the maximum concentration (will be used to scale the palette). Next click 'add'. While it is possible to add multiple species that way I recommend to choose &lt; 3 (and those in the palettes 'black-red', 'black-green' and 'black-blue' as that maps best to the RGB color scheme. </li>
+<li>
+<strong>Displaying Concentrations at a certain point</strong>: Simply click on a coordinate, and concentrations for all selected species will be displayed. </li>
+<li>
+<strong>Modifying the concentrations at a coordinate</strong>: First select the species whose concentrations you would like to change, next specify the concentration and enable the 'Apply' button. Then simply click / drag the mouse along the canvas to change the concentrations at those points. </li>
+</ul><p>Should you have further questions, or concerns please let me know. </p>
+
+<h2>Libraries</h2>
+
+<p>This project requires the following libraries: </p>
+
+<ul>
+<li>
+<a href="http://sbml.org/Software/libSBML">libSBML</a> along with a supported xml library (xml2, expat, xerces-c)</li>
+<li>
+<a href="http://qt-project.org/">Qt4</a> for the frontend</li>
+</ul><h2>License</h2>
+
+<p>This project is licensed under the BSD license: </p>
+
+<pre><code>Copyright (c) 2013, Frank T. Bergmann  
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are 
+met: 
+
+Redistributions of source code must retain the above copyright notice, 
+this list of conditions and the following disclaimer. Redistributions in 
+binary form must reproduce the above copyright notice, this list of 
+conditions and the following disclaimer in the documentation and/or 
+other materials provided with the distribution. THIS SOFTWARE IS 
+PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+</code></pre>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/fbergmann/spatial-sbml/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/fbergmann/spatial-sbml/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/fbergmann/spatial-sbml"></a> is maintained by <a href="https://github.com/fbergmann">fbergmann</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
