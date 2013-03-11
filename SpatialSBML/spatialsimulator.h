@@ -6,8 +6,10 @@
 #include <string>
 #include <vector>
 
-LIBSBML_CPP_NAMESPACE_BEGIN
+#ifndef SWIG
 
+LIBSBML_CPP_NAMESPACE_BEGIN
+# endif
 class SBMLDocument;
 class Model;
 class Species;
@@ -22,20 +24,28 @@ class ListOfCompartments;
 class ListOfReactions;
 class ListOfParameters;
 class ListOfRules;
-
+#ifndef SWIG
 LIBSBML_CPP_NAMESPACE_END
+
 
 typedef enum _boundaryType {
   Xp = 0, Xm, Yp, Ym, Zp, Zm
 } boundaryType;
 
+# endif
 #include "spatialstructs.h"
 
 
 class SpatialSimulator 
 {
 public: 
-  SpatialSimulator(SBMLDocument* doc, int xdim, int ydim, int zdim=1);
+  SpatialSimulator();
+  void initFromFile(const std::string &fileName, int xdim, int ydim, int zdim=1);
+  void initFromString(const std::string &sbml, int xdim, int ydim, int zdim=1);
+#ifndef SWIG
+  void initFromModel(SBMLDocument* doc, int xdim, int ydim, int zdim=1);
+  SpatialSimulator(SBMLDocument* doc, int xdim, int ydim, int zdim=1);  
+#endif
   virtual ~SpatialSimulator();
 
   void setGnuplotExecutable(const std::string &location);
@@ -49,31 +59,48 @@ public:
 
   void setParameterUniformly(const std::string &id, double value);
   void setParameter(const std::string &id, double value);
-  void setParameterUniformly(variableInfo *species, double value);
   int getIndexForPosition(double x, double y);
+#ifndef SWIG
+  void setParameterUniformly(variableInfo *species, double value);
+#endif
+#ifndef SWIG
   // return the values for the given variable (as 1d) flat array
   double* getVariable(const std::string &speciesId, int &length);
   double* getGeometry(const std::string &compartmentId, int &length);
+
   boundaryType* getBoundaryType(const std::string &compartmentId, int &length);
+
   int* getBoundary(const std::string &compartmentId, int &length);
   double* getX(int &length);
   double* getY(int &length);
   double* getZ(int &length);
+#endif
 
+  int getVariableLength() const;
+  int getGeometryLength() const;
   int getXDim() const { return Xdiv;}
   int getYDim() const { return Ydiv;}
   int getZDim() const { return Zdiv;}
 
+  double getVariableAt(const std::string& variable, int x, int y, int z=0);
+
+#ifndef SWIG
+
+
   // for comparison allow the old stuff to run too
   static int runOldMain(int argc, const char* argv[]);
 
-  const Model* getModel() const;
 
+  const Model* getModel() const;
   void deleteValuesOutsideDomain(variableInfo *info );
+
+#endif
+
   void deleteValuesOutsideDomain(const std::string& id);
 
 private:
 
+#ifndef SWIG
   Parameter* getDiffusionCoefficientForSpecies(const std::string& id, int index=0);
 
   // prints all values from the current point;
@@ -125,7 +152,7 @@ private:
   ListOfReactions *lor    ;
   ListOfParameters *lop   ;
   ListOfRules *lorules    ;
-
+#endif
 };
 
 #endif //SPATIAL_SIMULATOR_H 

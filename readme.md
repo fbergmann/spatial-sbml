@@ -24,6 +24,8 @@ From here, you could simply open one of the example models supplied. We use a cu
 - **Modifying the concentrations at a coordinate**: First select the species whose concentrations you would like to change, next specify the concentration and enable the 'Apply' button. Then simply click / drag the mouse along the canvas to change the concentrations at those points. 
 
 Should you have further questions, or concerns please let me know. 
+## SpatialSBML API 
+I'm currently in the process of exposing the API through SWIG. A first prototype is available in the examples folder. To test it, compile with with the CMake option `WITH_JAVA=ON`, and then modify the example in `examples/bindings` to adjust the location of the sample file.  
 
 ## Libraries
 This project requires the following libraries: 

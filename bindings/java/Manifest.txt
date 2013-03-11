@@ -1,0 +1,4 @@
+Name: org.spatial
+Implementation-Title: "Spatial SBML Java API"
+Implementation-Version: "Build 1"
+Implementation-Vendor: "The Spatial Team"

@@ -41,7 +41,52 @@ find_path(LIBSBML_INCLUDE_DIR
 )
 
 
+###############################################################################
+#
+# Need some variables set up, such as the name for the libSBML
+# library and the Path and file separator characters. The
+# MISC_PREFIX variable will cause libsbml bindings, examples and
+# documentation to be installed in PREFIX/${MISC_PREFIX}.
+#
+
+if(UNIX OR CYGWIN)
+    set(PATH_SEP "/")
+    set(FILE_SEP ":")
+else()
+    set(PATH_SEP "\\")
+    set(FILE_SEP ";")
+endif()
+
 set(EXTRA_LIBS "" CACHE STRING "List of additional libraries to link against." )
+
+option(WITH_CSHARP   "Generate C# language bindings."     OFF)
+option(WITH_JAVA     "Generate Java language bindings."   OFF)
+
+
+###############################################################################
+#
+# Find the C# compiler to use and set name for resulting library
+#
+
+if(WITH_CSHARP)
+    find_program(CSHARP_COMPILER
+        NAMES gmcs csc
+        PATHS C:/Windows/Microsoft.NET/Framework/v2.0.50727/ /usr/bin /usr/local/bin
+        DOC "The file name of the C# compiler."
+        )
+    if(UNIX)
+    else()
+        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+            # mark libsbml library as x86
+            set(CSHARP_EXTRA_ARGS -platform:x86 )
+        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            # mark libsbml library as x64
+            set(CSHARP_EXTRA_ARGS -platform:x64 )
+        endif()
+    endif()
+
+endif(WITH_CSHARP)
+
 
 if(WIN32 AND NOT CYGWIN)
  add_definitions(-DLIBSBML_EXPORTS -DWIN32)
@@ -107,9 +152,19 @@ message(STATUS
                 
  C   FLAGS      : ${CMAKE_C_FLAGS}
  CXX FLAGS      : ${CMAKE_CXX_FLAGS}
- Extra Libs     : ${EXTRA_LIBS}
- 
+ Extra Libs     : ${EXTRA_LIBS} 
  
 """
 )
+
+if(WITH_CSHARP)
+    message(STATUS "  Using C#                      = ${CSHARP_COMPILER}")
+endif()
+
+if(WITH_JAVA)
+    message(STATUS "  Using Java                    = ${Java_JAVA_EXECUTABLE}")
+endif()
+
+add_subdirectory(bindings)
+
 

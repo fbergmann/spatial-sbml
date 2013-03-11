@@ -804,6 +804,11 @@ void freeRInfo(vector<reactionInfo*> &rInfoList)
   }
 }
 
+int SpatialSimulator::getVariableLength() const
+{
+return (Zindex -1) * Yindex * Xindex + (Yindex-1) * Xindex + Xindex-1;
+}
+
 void reversePolishRK(reactionInfo *&rInfo, variableInfo *&sInfo, int Xindex, int Yindex, int Zindex, double dt, int m, materialType mType, bool inVol, diffCInfo **dci)
 {
   int X, Y, Z, i;
@@ -1114,13 +1119,37 @@ Parameter* SpatialSimulator::getDiffusionCoefficientForSpecies(const std::string
   return NULL;
 }
 
+  SpatialSimulator::SpatialSimulator():
+  Xdiv(100), Ydiv(100), Zdiv(1), model(NULL), volDimension(0), memDimension(0)
+  {
+  }
+  void SpatialSimulator::initFromFile(const std::string &fileName, int xdim, int ydim, int zdim/*=1*/)
+  {
+	SBMLDocument*doc = readSBMLFromFile(fileName.c_str());
+	initFromModel(doc, xdim, ydim, zdim);
+  }
+  void SpatialSimulator::initFromString(const std::string &sbml, int xdim, int ydim, int zdim/*=1*/)
+  {
+    SBMLDocument*doc = readSBMLFromString(sbml.c_str());
+	initFromModel(doc, xdim, ydim, zdim);
+  }
+
+
 SpatialSimulator::SpatialSimulator(SBMLDocument* doc, int xdim, int ydim, int zdim /*=1*/) :
   Xdiv(xdim), Ydiv(ydim), Zdiv(zdim), model(NULL), volDimension(0), memDimension(0)
 {
+  initFromModel(doc, xdim, ydim, zdim);
+}
+
+void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int zdim/*=1*/)
+  {
   unsigned int i, j, k;
   int X = 0, Y = 0, Z = 0, index = 0;	  
   int numOfASTNodes = 0;
 
+  Xdiv = xdim;
+  Ydiv = ydim;
+  Zdiv = zdim;
 
   //sbml core
   ASTNode *ast;
@@ -2627,6 +2656,11 @@ double* SpatialSimulator::getGeometry(const std::string &compartmentId, int &len
   return info->isDomain;
 }
 
+int SpatialSimulator::getGeometryLength() const
+{
+return numOfVolIndexes;
+}
+
 boundaryType* SpatialSimulator::getBoundaryType(const std::string &compartmentId, int &length)
 {
   analyticVolInfo* info = searchAvolInfoByCompartment(avolInfoList, compartmentId.c_str());
@@ -2639,6 +2673,21 @@ int* SpatialSimulator::getBoundary(const std::string &compartmentId, int &length
   analyticVolInfo* info = searchAvolInfoByCompartment(avolInfoList, compartmentId.c_str());
   length = numOfVolIndexes;
   return info->isBoundary;
+}
+
+double SpatialSimulator::getVariableAt(const std::string& variable, int x, int y, int z)
+{  
+  variableInfo *sInfo = searchInfoById(varInfoList, variable.c_str());
+  if (sInfo == NULL)
+  {
+    return 0.0;
+  }
+  
+  int index = getIndexForPosition(x, y);
+  if (index == -1)
+	return 0.0;
+  
+  return sInfo->value[index];
 }
 
 double* SpatialSimulator::getVariable(const std::string &speciesId, int &length)

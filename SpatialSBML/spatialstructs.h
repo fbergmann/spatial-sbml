@@ -4,7 +4,6 @@
 using namespace std;
 LIBSBML_CPP_NAMESPACE_USE;
 
-
 typedef enum _materialTYpe {
   reactants = 0, products
 }materialType;
