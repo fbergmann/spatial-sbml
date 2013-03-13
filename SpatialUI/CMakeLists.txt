@@ -43,7 +43,7 @@ if (APPLE)
  
 set(EXECUTABLE_FLAGS MACOSX_BUNDLE)
 set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/SpatialUI.plist )
-set(MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/ICON_SpatialUI.icns )
+set(MACOSX_BUNDLE_ICON_FILE ICON_SpatialUI.icns )
 set(MACOSX_BUNDLE_BUNDLE_VERSION  "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(MACOSX_BUNDLE_INFO_STRING "SpatialUI ${MACOSX_BUNDLE_BUNDLE_VERSION} is distributed under the BSD." )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER  "org.spatial.SpatialUI" )
@@ -98,7 +98,7 @@ install(CODE "
 else()
 
 install(FILES ${PALETTE_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/MacOS)
-
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ICON_SpatialUI.icns DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/Resources)
 # on OS X everything is different, here we need to first fix the app bundle,
 # and only then install it
 SET(APPS "${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app" CACHE INTERNAL "")
