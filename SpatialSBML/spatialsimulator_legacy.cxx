@@ -46,8 +46,11 @@ void spatialSimulator(SBMLDocument *doc, int argc, const char *argv[])
   //int numOfIndexes = 0;
   char *xaxis = 0, *yaxis = 0, *zaxis = 0;
 
-  //string gnuplotExecutable("/opt/local/bin/gnuplot");
+#ifdef WIN32
   string gnuplotExecutable("C:/gnuplot/bin/gnuplot.exe");
+#else
+  string gnuplotExecutable("gnuplot");
+#endif
 
   //sbml core
   Model *model = doc->getModel();

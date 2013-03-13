@@ -53,7 +53,11 @@ int main(int argc, const char *argv[])
     doc->getPkgRequired("req")) {
       // probably a spatial simulation 
       SpatialSimulator sim(doc, 101, 101);
+#ifdef WIN32
       sim.setGnuplotExecutable("C:/gnuplot/bin/gnuplot.exe");
+#else
+      sim.setGnuplotExecutable("gnuplot");
+#endif
       sim.run(1001, 0.01);
       //spatialSimulator(doc, argc, argv);
   } 
