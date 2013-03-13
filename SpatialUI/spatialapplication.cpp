@@ -54,6 +54,9 @@ void SpatialApplication::setMainWindow(SpatialMainWindow * mainWindow)
 
   processEvents();
 
-  mainWindow->loadFile(file);
   starting = false;
+
+  if (file.isNull() ||  file.isEmpty())
+  return;
+  mainWindow->loadFile(file);
 }
