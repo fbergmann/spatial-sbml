@@ -16,5 +16,6 @@
     <file>images/zoom-original.png</file>
     <file>images/zoom-out.png</file>
     <file>images/format-fill-color.png</file>	
+    <file>images/ICON_Spatial_128x128.png</file>	
   </qresource>
 </RCC>

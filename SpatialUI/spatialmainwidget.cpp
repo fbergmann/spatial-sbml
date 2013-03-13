@@ -55,9 +55,10 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
     palettes.push_back(new ConcentrationPalette(qApp->applicationDirPath() +"/"+ foo[i].fileName()));
     ui->lstPalettes->addItem(foo[i].fileName());
   }
+  
   setCurrentFile("");
   setUnifiedTitleAndToolBarOnMac(true);
-
+  setWindowIcon(QIcon(":/images/ICON_Spatial_128x128.png"));
 
 }
 
