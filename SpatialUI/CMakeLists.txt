@@ -64,7 +64,7 @@ target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${QT_LIBRARIES})
 
 
 file(GLOB PALETTE_FILES palettes/*.txt )
-install(FILES ${PALETTE_FILES} DESTINATION bin)
+
 
 SET(DIRS)
 foreach(${lib} ${EXTRA_LIBS})
@@ -86,6 +86,7 @@ endif()
 if(NOT APPLE)
 
 SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/SpatialUI${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
+install(FILES ${PALETTE_FILES} DESTINATION bin)
 install(TARGETS SpatialUI DESTINATION bin)
 # ensure that next to the binaries also dependencies are copied
 install(CODE "
@@ -94,6 +95,9 @@ install(CODE "
     " COMPONENT Runtime)
 
 else()
+
+install(FILES ${PALETTE_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/MacOS)
+
 # on OS X everything is different, here we need to first fix the app bundle,
 # and only then install it
 SET(APPS "${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app" CACHE INTERNAL "")
