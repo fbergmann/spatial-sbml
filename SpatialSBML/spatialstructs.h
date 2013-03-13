@@ -1,3 +1,11 @@
+/**
+ * \file    spatialstructs.h
+ * \brief   Definition of all internal structures used
+ * \author  Frank T. Bergmann <fbergman@caltech.edu>
+ * \author  Tatsuhiro Matsui 
+ *
+ */
+
 #ifndef SPATIAL_STRUCTS_H_
 #define SPATIAL_STRUCTS_H_
 

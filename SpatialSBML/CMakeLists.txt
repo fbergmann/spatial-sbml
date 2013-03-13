@@ -14,6 +14,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${LIBSBML_INCLUDE_DIR})
 
-add_library(SpatialSBML STATIC ${CPP_FILES} )
+add_library(SpatialSBML STATIC ${CPP_FILES}  ${H_FILES} )
 target_link_libraries(SpatialSBML ${LIBSBML_LIBRARY} ${EXTRA_LIBS})
 

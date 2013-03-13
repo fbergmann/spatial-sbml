@@ -1,4 +1,12 @@
-﻿#include "spatialsimulator.h"
+﻿/**
+ * \file    spatialsimulator.cpp
+ * \brief   implementation of SpatialSimulator the main entry point for SpatialSBML
+ * \author  Frank T. Bergmann <fbergman@caltech.edu>
+ * \author  Tatsuhiro Matsui 
+ *
+ */
+
+#include "spatialsimulator.h"
 
 #define INIT_DOUBLE(destination,size)\
   {\

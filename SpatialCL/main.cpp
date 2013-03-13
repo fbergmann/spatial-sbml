@@ -1,10 +1,10 @@
-//============================================================================
-// Name        : SBMLSimulator.cpp
-// Author      :
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/**
+ * \file    main.cpp
+ * \brief   entry point for the old command line interface
+ * \author  Frank T. Bergmann <fbergman@caltech.edu>
+ * \author  Tatsuhiro Matsui 
+ *
+ */
 
 
 #include <ctime>
