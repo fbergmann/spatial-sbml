@@ -106,7 +106,7 @@ install(CODE "
     include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
     " COMPONENT Runtime)
-install(TARGETS SpatialUI DESTINATION bin)
+install(TARGETS SpatialUI DESTINATION .)
 endif()
 
 include(InstallRequiredSystemLibraries)
