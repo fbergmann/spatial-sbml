@@ -60,7 +60,45 @@ make install
 <strong>Modifying the concentrations at a coordinate</strong>: First select the species whose concentrations you would like to change, next specify the concentration and enable the 'Apply' button. Then simply click / drag the mouse along the canvas to change the concentrations at those points. </li>
 </ul><p>Should you have further questions, or concerns please let me know. </p>
 
-<h2>Libraries</h2>
+<h2>SpatialSBML API</h2>
+
+<p>I'm currently in the process of exposing the API through SWIG. A first prototype is available in the examples folder. To test it, compile with with the CMake option <code>WITH_JAVA=ON</code>, and then modify the example in <code>examples/bindings</code> to adjust the location of the sample file.  </p>
+
+<p>The API consists of these functions: </p>
+
+<ul>
+<li>SpatialSimulator ()</li>
+<li>virtual ~SpatialSimulator ()</li>
+<li>void initFromFile (const std::string &amp;fileName, int xdim, int ydim, int zdim=1)</li>
+<li>void initFromString (const std::string &amp;sbml, int xdim, int ydim, int zdim=1)</li>
+<li>void run (double endTime, double step)</li>
+<li>double oneStep (double initialTime, double step)</li>
+<li>void setParameterUniformly (const std::string &amp;id, double value)</li>
+<li>void setParameter (const std::string &amp;id, double value)</li>
+<li>int getXDim () const </li>
+<li>int getYDim () const </li>
+<li>int getZDim () const </li>
+<li>double getVariableAt (const std::string &amp;id, int x, int y, int z=0)</li>
+</ul><p>Currently I'm also exposing these functions that I'm not happy about as they reveal too much about the underlying implementation. In addition they are not wrapped by the language bindings: </p>
+
+<ul>
+<li>SpatialSimulator (SBMLDocument *doc, int xdim, int ydim, int zdim=1)</li>
+<li>void initFromModel (SBMLDocument *doc, int xdim, int ydim, int zdim=1)</li>
+<li>const Model * getModel () const </li>
+<li>int getIndexForPosition (double x, double y)</li>
+<li>int getVariableLength () const </li>
+<li>int getGeometryLength () const </li>
+<li>void setParameterUniformly (variableInfo *info, double value)</li>
+<li>double * getVariable (const std::string &amp;id, int &amp;length)</li>
+<li>double * getGeometry (const std::string &amp;id, int &amp;length)</li>
+<li>boundaryType * getBoundaryType (const std::string &amp;id, int &amp;length)</li>
+<li>int * getBoundary (const std::string &amp;id, int &amp;length)</li>
+<li>double * getX (int &amp;length)</li>
+<li>double * getY (int &amp;length)</li>
+<li>double * getZ (int &amp;length)</li>
+<li>void setGnuplotExecutable (const std::string &amp;location)</li>
+<li>const std::string &amp; getGnuplotExecutable () const </li>
+</ul><h2>Libraries</h2>
 
 <p>This project requires the following libraries: </p>
 
