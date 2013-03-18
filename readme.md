@@ -27,6 +27,40 @@ Should you have further questions, or concerns please let me know.
 ## SpatialSBML API 
 I'm currently in the process of exposing the API through SWIG. A first prototype is available in the examples folder. To test it, compile with with the CMake option `WITH_JAVA=ON`, and then modify the example in `examples/bindings` to adjust the location of the sample file.  
 
+The API consists of these functions: 
+
+* SpatialSimulator ()
+* virtual ~SpatialSimulator ()
+* void initFromFile (const std::string &fileName, int xdim, int ydim, int zdim=1)
+* void initFromString (const std::string &sbml, int xdim, int ydim, int zdim=1)
+* void run (double endTime, double step)
+* double oneStep (double initialTime, double step)
+* void setParameterUniformly (const std::string &id, double value)
+* void setParameter (const std::string &id, double value)
+* int getXDim () const 
+* int getYDim () const 
+* int getZDim () const 
+* double getVariableAt (const std::string &id, int x, int y, int z=0)
+
+Currently I'm also exposing these functions that I'm not happy about as they reveal too much about the underlying implementation. In addition they are not wrapped by the language bindings: 
+
+* SpatialSimulator (SBMLDocument *doc, int xdim, int ydim, int zdim=1)
+* void initFromModel (SBMLDocument *doc, int xdim, int ydim, int zdim=1)
+* const Model * getModel () const 
+* int getIndexForPosition (double x, double y)
+* int getVariableLength () const 
+* int getGeometryLength () const 
+* void setParameterUniformly (variableInfo *info, double value)
+* double * getVariable (const std::string &id, int &length)
+* double * getGeometry (const std::string &id, int &length)
+* boundaryType * getBoundaryType (const std::string &id, int &length)
+* int * getBoundary (const std::string &id, int &length)
+* double * getX (int &length)
+* double * getY (int &length)
+* double * getZ (int &length)
+* void setGnuplotExecutable (const std::string &location)
+* const std::string & getGnuplotExecutable () const 
+
 ## Libraries
 This project requires the following libraries: 
 

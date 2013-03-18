@@ -34,7 +34,7 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   connect(thread, SIGNAL(visualize(double, const QImage&)), this, SLOT(visualize(double, const QImage&)));
 
   lstSpecies = ui->lstSpecies;
-  
+
   connect(ui->lstPalettes, SIGNAL(activated(int)), this, SLOT(palatteIndexChanged(int)));
   connect(ui->cmdRemove, SIGNAL(clicked ()), this, SLOT(removeSpecies()));
   connect(ui->cmdAdd, SIGNAL(clicked ()), this, SLOT(addSpecies()));
@@ -55,7 +55,7 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
     palettes.push_back(new ConcentrationPalette(qApp->applicationDirPath() +"/"+ foo[i].fileName()));
     ui->lstPalettes->addItem(foo[i].fileName());
   }
-  
+
   setCurrentFile("");
   setUnifiedTitleAndToolBarOnMac(true);
   setWindowIcon(QIcon(":/images/ICON_Spatial_128x128.png"));
@@ -73,11 +73,11 @@ void SpatialMainWindow::updatePosition(int x, int y)
   int transformedY = maxY-1 - y;
 
   if (  (QApplication::mouseButtons().operator&((int)Qt::LeftButton) == (int) Qt::LeftButton)  && 
-        ui->cmdEnableDose->isChecked() &&  thread != NULL
-      )
-      {          
-        thread->applyDose(transformedX, transformedY,  ui->lstDose->currentText(), ui->txtDose->text().toDouble());
-      }
+    ui->cmdEnableDose->isChecked() &&  thread != NULL
+    )
+  {          
+    thread->applyDose(transformedX, transformedY,  ui->lstDose->currentText(), ui->txtDose->text().toDouble());
+  }
 
   // update info 
   vector<pair<string, double> > currentValues = thread->getConcentrationsAt(transformedX, transformedY);
@@ -92,8 +92,8 @@ void SpatialMainWindow::updatePosition(int x, int y)
   {
     pair<string, double> current = currentValues[i];
     ui->lstConcentrations->item(i)->setText(tr("%1 = %2")
-          .arg(current.first.c_str())
-          .arg(current.second));
+      .arg(current.first.c_str())
+      .arg(current.second));
   }
 
 }
@@ -216,7 +216,7 @@ void SpatialMainWindow::open()
 bool SpatialMainWindow::save()
 {
   //if (curFile.isEmpty()) {
-    return saveAs();
+  return saveAs();
   //} else {
   //  return saveFile(curFile);
   //}
@@ -362,7 +362,7 @@ void SpatialMainWindow::createToolBars()
 
   QAction *stepSizeAction = editToolBar->addWidget(txtStepsize);
   stepSizeAction->setStatusTip(tr("Set the timestep used by the spatial simulator"));
-  
+
   editToolBar->addSeparator();
 
   txtUpdate = new QLineEdit("100", this);  
@@ -374,7 +374,7 @@ void SpatialMainWindow::createToolBars()
   QAction *updateAction = editToolBar->addWidget(txtUpdate);
   updateAction ->setStatusTip(tr("Set the frequency for updating the UI"));
 
-  
+
 
 }
 
@@ -550,7 +550,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
 
   restart();
 
-    ui->tblParameters->clear();
+  ui->tblParameters->clear();
   ui->tblParameters->setColumnCount(1);
   ui->tblParameters->setHorizontalHeaderLabels(QStringList() << "Value");
   ui->tblParameters->setRowCount(model->getNumParameters());
@@ -564,11 +564,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
     ui->tblParameters->setItem(i, 0, new QTableWidgetItem( QString::number(param->getValue())));
   }
 
-
-  
   updating = false;
-
-
 
   setCurrentFile(fileName);
   statusBar()->showMessage(tr("File loaded"), 2000);
@@ -603,8 +599,6 @@ void SpatialMainWindow::restart()
       thread->stop();
     }
   }
-
-
 
   thread->mpSimulator = new SpatialSimulator(doc, maxX, maxY);
   thread->mStep = txtStepsize->text().toDouble();

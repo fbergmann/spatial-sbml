@@ -73,7 +73,7 @@ public:
    * Initializes this simulator, by reading the given SBML content and allocating 
    * the needed grid. 
    * 
-   * @param fileName the SBML file to load
+   * @param sbml the SBML content to load
    * @param xdim the dimensions of the grid in the x direction
    * @param ydim the dimensions of the grid in the y direction
    * @param zdim optional dimensions of the grid in the z direction (defaults to 1)
@@ -172,7 +172,7 @@ public:
    * Initializes this simulator, by reading the given SBML document and allocating 
    * the needed grid. 
    * 
-   * @param fileName the SBML file to load
+   * @param doc the SBML document to load
    * @param xdim the dimensions of the grid in the x direction
    * @param ydim the dimensions of the grid in the y direction
    * @param zdim optional dimensions of the grid in the z direction (defaults to 1)
