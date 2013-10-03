@@ -1,10 +1,9 @@
 ####################################################################
 #
-# CMake Build Script for spatial simulator from akira
+# CMake Build Script for SBML Spatial, a UI for the 
+# spatial simulator from Akira
 #
-# $Author$
-# $Id$
-# $HeadURL$
+# Frank T. Bergmann
 #
 
 cmake_minimum_required(VERSION 2.6)
@@ -14,10 +13,13 @@ set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_SOURCE_GENERATOR "ZIP")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/license.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/readme.md")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME
   "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(CPACK_SOURCE_IGNORE_FILES
   "aa;aa.zip;screenshots;.DS_STORE;testmodels/.DS_Store;/build/;/.bzr/;~$;${CPACK_SOURCE_IGNORE_FILES}")
+set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\SBML Spatial.lnk' '\$INSTDIR\\\\bin\\\\SpatialUI.exe'")
 include(CPack)
 
 
@@ -58,6 +60,14 @@ else()
 endif()
 
 set(EXTRA_LIBS "" CACHE STRING "List of additional libraries to link against." )
+set(EXTRA_FLAGS "" CACHE STRING "List of extra flags." )
+set(EXTRA_INCLUDE "" CACHE STRING "List of include diretories." )
+
+if (EXTRA_FLAGS)
+foreach(${flag} ${EXTRA_FLAGS})
+	add_definitions(-D${flag})
+endforeach()
+endif()
 
 option(WITH_CSHARP   "Generate C# language bindings."     OFF)
 option(WITH_JAVA     "Generate Java language bindings."   OFF)
@@ -86,6 +96,7 @@ if(WITH_CSHARP)
     endif()
 
 endif(WITH_CSHARP)
+
 
 
 if(WIN32 AND NOT CYGWIN)
