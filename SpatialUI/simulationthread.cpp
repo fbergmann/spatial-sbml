@@ -61,7 +61,7 @@ void SimulationThread::step(double stepSize)
 
 void SimulationThread::updateUI()
 {
-  long delta = QDateTime::currentMSecsSinceEpoch () - lastUpdated;
+  qint64 delta = QDateTime::currentMSecsSinceEpoch () - lastUpdated;
   if (delta < updateFrequency )
     return;
 

@@ -43,7 +43,7 @@ public slots:
 private:
   void updateImage();
   void updateUI();
-  long lastUpdated;
+  qint64 lastUpdated;
   int updateFrequency; 
   bool mStopped;
   QImage *image;
