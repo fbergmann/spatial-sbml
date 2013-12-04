@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="true" spatial:required="true">
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model id="The_Brusselator_Application0" name="The Brusselator_Application0">
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
@@ -120,10 +120,10 @@
       </species>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="x" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+      <parameter id="x" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
         <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
       </parameter>
-      <parameter id="y" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+      <parameter id="y" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
         <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
       </parameter>
       <parameter id="X_diff" value="0.16" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
@@ -182,7 +182,7 @@
           </vcell:VCellInfo>
         </annotation>
         <listOfProducts>
-          <speciesReference species="X" stoichiometry="1"/>
+          <speciesReference species="X" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -204,10 +204,10 @@
           </vcell:VCellInfo>
         </annotation>
         <listOfReactants>
-          <speciesReference species="Y" stoichiometry="1"/>
+          <speciesReference species="Y" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="X" stoichiometry="1"/>
+          <speciesReference species="X" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -231,10 +231,10 @@
           </vcell:VCellInfo>
         </annotation>
         <listOfReactants>
-          <speciesReference species="X" stoichiometry="1"/>
+          <speciesReference species="X" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="Y" stoichiometry="1"/>
+          <speciesReference species="Y" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -257,7 +257,7 @@
           </vcell:VCellInfo>
         </annotation>
         <listOfReactants>
-          <speciesReference species="X" stoichiometry="1"/>
+          <speciesReference species="X" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -287,17 +287,17 @@
         <spatial:domainType spatial:spatialId="subdomain0_subdomain1_membrane" spatial:spatialDimensions="2"/>
       </spatial:listOfDomainTypes>
       <spatial:listOfDomains>
-        <spatial:domain spatial:spatialId="subdomain00" spatial:domainType="subdomain1" spatial:implicit="false">
+        <spatial:domain spatial:spatialId="subdomain00" spatial:domainType="subdomain1">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="0" spatial:coord2="0" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:spatialId="subdomain11" spatial:domainType="subdomain0" spatial:implicit="false">
+        <spatial:domain spatial:spatialId="subdomain11" spatial:domainType="subdomain0">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="1" spatial:coord2="0" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:spatialId="membrane_subdomain00_subdomain11" spatial:domainType="subdomain0_subdomain1_membrane" spatial:implicit="true"/>
+        <spatial:domain spatial:spatialId="membrane_subdomain00_subdomain11" spatial:domainType="subdomain0_subdomain1_membrane"/>
       </spatial:listOfDomains>
       <spatial:listOfAdjacentDomains>
         <spatial:adjacentDomains spatial:spatialId="membrane_subdomain00_subdomain11_subdomain11" spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain11"/>
@@ -306,45 +306,44 @@
       <spatial:listOfGeometryDefinitions>
         <spatial:analyticGeometry spatial:spatialId="Geometry3">
           <spatial:listOfAnalyticVolumes>
-   
-            <spatial:analyticVolume spatial:spatialId="subdomain0" spatial:domainType="subdomain0" spatial:functionType="layered" spatial:ordinal="0">
+            <spatial:analyticVolume spatial:spatialId="subdomain0" spatial:domainType="subdomain0" spatial:functionType="layered" spatial:ordinal="1">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <piecewise>
                   <piece>
-                    <cn> 1 </cn>
+                    <cn type="integer"> 1 </cn>
                     <apply>
                       <and/>
                       <apply>
                         <geq/>
                         <ci> x </ci>
-                        <cn> 2 </cn>
+                        <cn type="integer"> 2 </cn>
                       </apply>
                       <apply>
                         <leq/>
                         <ci> x </ci>
-                        <cn> 98 </cn>
+                        <cn type="integer"> 98 </cn>
                       </apply>
                       <apply>
                         <geq/>
                         <ci> y </ci>
-                        <cn> 2 </cn>
+                        <cn type="integer"> 2 </cn>
                       </apply>
                       <apply>
                         <leq/>
                         <ci> y </ci>
-                        <cn> 98 </cn>
+                        <cn type="integer"> 98 </cn>
                       </apply>
                     </apply>
                   </piece>
                   <otherwise>
-                    <cn> 0 </cn>
+                    <cn type="integer"> 0 </cn>
                   </otherwise>
                 </piecewise>
               </math>
             </spatial:analyticVolume>
-			<spatial:analyticVolume spatial:spatialId="subdomain1" spatial:domainType="subdomain1" spatial:functionType="layered" spatial:ordinal="1">
+            <spatial:analyticVolume spatial:spatialId="subdomain1" spatial:domainType="subdomain1" spatial:functionType="layered" spatial:ordinal="0">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <cn> 1 </cn>
+                <cn type="integer"> 1 </cn>
               </math>
             </spatial:analyticVolume>
           </spatial:listOfAnalyticVolumes>
