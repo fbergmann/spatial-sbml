@@ -260,7 +260,12 @@ bool SpatialMainWindow::saveAs()
 void SpatialMainWindow::about()
 {
   QMessageBox::about(this, tr("About Spatial UI"),
-    tr("The <b>Spatial UI</b> application opens a file with the SBML spatial extension and allows to simulate it using Akira's simulator."));
+    tr(
+    "The <b>Spatial UI</b> application opens a file with the SBML spatial extension and allows to "
+    "simulate it using Akira's simulator.<br/><br/>"
+    "It uses <a href='http://sbml.org/Software/libSBML'>libSBML</a> Version: %1")
+    .arg(getLibSBMLDottedVersion())
+    );
 }
 
 void SpatialMainWindow::createActions()
