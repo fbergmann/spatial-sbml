@@ -55,6 +55,12 @@ set(MACOSX_BUNDLE_COPYRIGHT ${MACOSX_BUNDLE_INFO_STRING})
 
 endif(APPLE)
 
+if (ENABLE_SBW)
+
+include_directories(${SBW_INCLUDE_DIR})
+add_definitions(-DUSE_SBW_INTEGRATION)
+endif()
+
 add_executable(SpatialUI ${EXECUTABLE_FLAGS} ${CPP_FILES}
 	${H_FILES}
     ${HEADERS_MOC}
@@ -63,6 +69,15 @@ add_executable(SpatialUI ${EXECUTABLE_FLAGS} ${CPP_FILES}
 	${SPATIAL_CPP_FILES}
 	)
 target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${QT_LIBRARIES})
+if (ENABLE_SBW)
+
+target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${SBW_LIBRARY})
+
+if (WIN32)
+target_link_libraries(SpatialUI Ws2_32.lib)
+endif()
+
+endif()
 
 
 file(GLOB PALETTE_FILES palettes/*.txt )

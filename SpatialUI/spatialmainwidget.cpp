@@ -2,6 +2,7 @@
 #include <QtGui>
 #include <QObject>
 #include <QDir>
+#include <QFile>
 #include <QListWidget>
 
 #include "spatialmainwidget.h"
@@ -19,10 +20,27 @@
 #include <string>
 #include <string.h>
 
+#ifdef USE_SBW_INTEGRATION
+#include <stdlib.h>
+#endif // USE_SBW_INTEGRATION
+
+
+
 using namespace std;
 LIBSBML_CPP_NAMESPACE_USE;
 
 SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(0), pickerY(0), maxX(501), maxY(501)
+#ifdef USE_SBW_INTEGRATION
+  , mpSBWModule(NULL)
+  , mSBWAnalyzerModules()
+  , mSBWAnalyzerServices()
+  , mSBWActionMap()
+  , mpSBWActionGroup(NULL)
+  , mpSBWMenu(NULL)
+  , mpSBWAction(NULL)
+  , mSBWIgnoreShutdownEvent(true)
+#endif // USE_SBW_INTEGRATION
+
 {
   QWidget *widget = new QWidget();
   ui = new Ui::SpatialMainWindow();
@@ -48,6 +66,14 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   createStatusBar();
 
   readSettings();
+
+#ifdef USE_SBW_INTEGRATION
+
+  sbwConnect();
+  sbwRegister();
+    
+#endif // USE_SBW_INTEGRATION
+
 
   QDir dir (qApp->applicationDirPath());
   QFileInfoList foo = dir.entryInfoList(QStringList() << "*.txt");
@@ -339,6 +365,14 @@ void SpatialMainWindow::createMenus()
   windowsMenu->addAction(ui->dockDose->toggleViewAction());
   windowsMenu->addAction(ui->dockParameters->toggleViewAction());
 
+
+#ifdef USE_SBW_INTEGRATION
+  // create and populate SBW menu
+  mpSBWMenu = menuBar()->addMenu(tr("S&BW"));
+  mpSBWAction = mpSBWMenu->menuAction();
+#endif // USE_SBW_INTEGRATION
+
+  
   menuBar()->addSeparator();
 
   helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -473,22 +507,8 @@ void SpatialMainWindow::writeSettings()
 
 }
 
-void SpatialMainWindow::loadFile(const QString &fileName)
+void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 {
-  updating = true;
-  stop();
-
-  QFile file(fileName);
-  if (!file.open(QFile::ReadOnly | QFile::Text)) {
-    QMessageBox::warning(this, tr("Application"),
-      tr("Cannot read file %1:\n%2.")
-      .arg(fileName)
-      .arg(file.errorString()));
-    return;
-  }
-
-  lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
-  doc = readSBML(fileName.ascii());
 
   Model* model = doc->getModel();
 
@@ -496,7 +516,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   {
     QMessageBox::critical(this, tr("Spatial UI"),
       tr("fatal errors while reading file %1\n%2.")
-      .arg(fileName)
+      .arg(curFile)
       .arg(doc->getErrorLog()->toString().c_str()));    
     return;
   }
@@ -510,7 +530,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   {
     QMessageBox::critical(this, tr("Spatial UI"),
       tr("It would seem that the given model '%1' does not use the spatial package. Please load one that does. \n")
-      .arg(fileName)
+      .arg(curFile)
       );
     return;
   }
@@ -569,9 +589,45 @@ void SpatialMainWindow::loadFile(const QString &fileName)
     ui->tblParameters->setItem(i, 0, new QTableWidgetItem( QString::number(param->getValue())));
   }
 
+}
+
+void SpatialMainWindow::loadFromString(const std::string& sbml)
+{
+  updating = true;
+  stop();
+
+  doc = readSBMLFromString(sbml.c_str());
+
+  setCurrentFile("fromSBW.xml");
+  loadFromDocument(doc);
+
   updating = false;
 
+  statusBar()->showMessage(tr("File loaded"), 2000);
+}
+
+void SpatialMainWindow::loadFile(const QString &fileName)
+{
+  updating = true;
+  stop();
+
+  QFile file(fileName);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QMessageBox::warning(this, tr("Application"),
+      tr("Cannot read file %1:\n%2.")
+      .arg(fileName)
+      .arg(file.errorString()));
+    return;
+  }
+
+  lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
+  doc = readSBML(fileName.ascii());
+
   setCurrentFile(fileName);
+  loadFromDocument(doc);
+
+  updating = false;
+
   statusBar()->showMessage(tr("File loaded"), 2000);
 }
 
@@ -704,3 +760,412 @@ void SpatialMainWindow::showEvent( QShowEvent *e )
   QWidget::showEvent( e );
 }
 
+
+#ifdef USE_SBW_INTEGRATION
+// Create 2 custom events, one containing the filename to an SBML document to be loaded
+// into COPASI
+SpatialMainWindow::QSBWSBMLEvent::QSBWSBMLEvent(const std::string & SBMLModel):
+  QEvent((QEvent::Type)65433),
+  mSBML(SBMLModel)
+{}
+
+const std::string & SpatialMainWindow::QSBWSBMLEvent::getSBMLModel() const
+{return mSBML;}
+
+SpatialMainWindow::QSBWShutdownEvent::QSBWShutdownEvent():
+  QEvent((QEvent::Type)65434)
+{}
+
+void SpatialMainWindow::registerMethods(SystemsBiologyWorkbench::MethodTable< SpatialMainWindow > & table)
+{
+  table.addMethod(&SpatialMainWindow::sbwAnalysis,
+                  "void doAnalysis(string)",
+                  false,
+                  "Imports a given SBML Model into CopasiUI.");
+
+  table.addMethod(&SpatialMainWindow::sbwGetSBML,
+                  "string getSBML()",
+                  false,
+                  "Retrieves the currently in CopasiUI loaded model in SBML format.");
+}
+
+//virtual
+void SpatialMainWindow::onShutdown()
+{
+  QApplication::postEvent(this, new QSBWShutdownEvent());
+}
+
+void SpatialMainWindow::customEvent(QEvent * event)
+{
+  // handle the file event, that is import the SBML file
+  switch ((int) event->type())
+    {
+      case 65433:
+
+        try
+          {
+            QSBWSBMLEvent *sbwEvent = static_cast< QSBWSBMLEvent *>(event);
+            loadFromString(sbwEvent->getSBMLModel());
+          }
+        catch (...)
+          {}
+
+        break;
+
+      case 65434:
+
+        if (!mSBWIgnoreShutdownEvent)
+          exit(0);
+
+        mSBWIgnoreShutdownEvent = true;
+        break;
+    }
+}
+
+void SpatialMainWindow::sbwConnect()
+{
+  delete mpSBWModule;
+  mpSBWModule = NULL;
+
+  try
+    {
+      // Let us define how COPASI will look to the rest of SBW
+      std::string FullName("Spatial SBML");
+
+      // By belonging to the Analysis category, we tell all other modules that
+      // COPASI can take SBML files and do *something* with them
+      std::string Category("Analysis");
+      std::string Description("Spatial Analyzer - Imports an SBML model into SpatialSBML");
+
+      mpSBWModule =
+        new SystemsBiologyWorkbench::ModuleImpl(FullName, FullName,
+            SystemsBiologyWorkbench::UniqueModule,
+            Description);
+
+      mpSBWModule->addServiceObject(FullName, FullName, Category, this, Description);
+
+      // this lets SBW ask COPASI to shut down
+      SBW::addListener(this);
+
+      // here we start the SBW services and give over to QT's main loop
+      mpSBWModule->enableModuleServices();
+    }
+
+  catch (...)
+    {      
+      delete mpSBWModule;
+      mpSBWModule = NULL;
+    }
+
+  // Update the SBW Menu
+  sbwRefreshMenu();
+}
+
+void SpatialMainWindow::sbwDisconnect()
+{
+  if (mpSBWModule != NULL)
+    {
+      try
+        {
+          SBWLowLevel::disconnect();
+          delete mpSBWModule;
+        }
+
+      catch (...)
+        {}
+
+      mpSBWModule = NULL;
+    }
+}
+
+void SpatialMainWindow::sbwRegister()
+{
+  if (mpSBWModule != NULL)
+    {
+      try
+        {
+          // Set the commandline so that SBW knows how to call us.
+          std::string Self = QCoreApplication::arguments().at(0).ascii();
+
+          mpSBWModule->setCommandLine(Self);
+          mpSBWModule->registerModule();
+
+          sbwRefreshMenu();
+        }
+
+      catch (...)
+        {}
+    }
+}
+
+void SpatialMainWindow::sbwUnregister(const std::string & moduleName) const
+{
+  try
+    {
+      SystemsBiologyWorkbench::Module Module = SBW::getModuleInstance("BROKER");
+      SystemsBiologyWorkbench::Service Service = Module.findServiceByName("BROKER");
+
+      DataBlockWriter Arguments;
+      Arguments.add(moduleName);
+      Service.getMethod("void unregisterModule(string)").call(Arguments);
+    }
+
+  catch (...)
+    {}
+}
+
+// get a list of all SBW analyzers and stick them into a menu
+void SpatialMainWindow::sbwRefreshMenu()
+{
+  if (mpSBWMenu == NULL) return;
+
+  bool Visible = true;
+  bool IsSBWRegistered = false;
+
+  mSBWAnalyzerModules.clear();
+  mSBWAnalyzerServices.clear();
+  mpSBWMenu->clear();
+  mSBWActionMap.clear();
+
+  if (mpSBWActionGroup != NULL)
+    {
+      disconnect(mpSBWActionGroup, SIGNAL(triggered(QAction *)), this, SLOT(sbwSlotMenuTriggered(QAction *)));
+      mpSBWActionGroup->deleteLater();
+      mpSBWActionGroup = NULL;
+    }
+
+  mpSBWActionGroup = new QActionGroup(this);
+  connect(mpSBWActionGroup, SIGNAL(triggered(QAction *)), this, SLOT(sbwSlotMenuTriggered(QAction *)));
+
+  QAction * pAction;
+
+  try
+    {
+      std::vector<DataBlockReader> Services = sbwFindServices("Analysis", true);
+      std::vector<DataBlockReader>::const_iterator it = Services.begin();
+      std::vector<DataBlockReader>::const_iterator end = Services.end();
+
+      QMap< QString, int > SortedNames;
+      QStringList ModuleList;
+      QStringList ServiceList;
+
+      std::string Self = QCoreApplication::arguments().at(0).ascii();
+
+      int i = 0;
+
+      for (; it != end; ++it)
+        {
+          SystemsBiologyWorkbench::ServiceDescriptor Service(*it);
+          SystemsBiologyWorkbench::ModuleDescriptor Module = Service.getModuleDescriptor();
+
+          std::string ModuleName = Module.getName();
+          std::string ServiceName = Service.getName();
+          std::string MenuName = Service.getDisplayName();
+
+          // Check whether the registered service is provided by COPASI
+          if (ServiceName.compare(0, 6, "COPASI") == 0)
+            {
+              std::string CommandLine = Module.getCommandLine();
+
+              // Check whether the registered module points to current CopasiUI
+              if (CommandLine.compare(0, Self.length(), Self) == 0)
+                {
+                  // Check whether the versions match
+                  if (ServiceName != "Spatial SBML")
+                    {
+                      // We transparently update the registration information
+                      sbwUnregister(ModuleName);
+                      return sbwRegister();
+                    }
+
+                  IsSBWRegistered = true;
+                  continue;
+                }
+              else
+                {
+                  // Check whether the CommandLine is still valid
+                  std::string::size_type Length = CommandLine.find(" -sbwmodule");
+
+                  if (Length != std::string::npos)
+                    {
+                      CommandLine = CommandLine.substr(0, Length);
+                    }
+
+                  if (!QFile(CommandLine.c_str()).exists())
+                    {
+                      sbwUnregister(ModuleName);
+                      continue;
+                    }
+                }
+            }
+
+          SortedNames[MenuName.c_str()] = i++;
+          ModuleList.append(ModuleName.c_str());
+          ServiceList.append(ServiceName.c_str());
+        }
+
+      // Add the option to register in SBW
+      if (!IsSBWRegistered)
+        {
+          pAction = new QAction("Register", mpSBWActionGroup);
+          mpSBWMenu->addAction(pAction);
+          mSBWActionMap[pAction] = SortedNames.size();
+
+          mpSBWMenu->addSeparator();
+        }
+
+      QMap< QString, int >::const_iterator itMap = SortedNames.begin();
+      QMap< QString, int >::const_iterator endMap = SortedNames.end();
+
+      for (i = 0; itMap != endMap; ++itMap, i++)
+        {
+          mSBWAnalyzerModules.append(ModuleList[itMap.value()]);
+          mSBWAnalyzerServices.append(ServiceList[itMap.value()]);
+
+          pAction = new QAction(itMap.key(), mpSBWActionGroup);
+          mpSBWMenu->addAction(pAction);
+          mSBWActionMap[pAction] = i;
+        }
+
+      if (mSBWAnalyzerModules.empty())
+        Visible = false;
+    }
+
+  catch (...)
+    {
+      Visible = false;
+    }
+
+  if (!Visible)
+    menuBar()->removeAction(mpSBWAction);
+
+  return;
+}
+
+void SpatialMainWindow::sbwSlotMenuTriggered(QAction * pAction)
+{
+
+  mSBWActionId = mSBWActionMap[pAction];
+
+  if (mSBWActionId == mSBWAnalyzerModules.size())
+    {
+      sbwRegister();
+    }
+  else
+    {
+      try
+        {
+          int nModule = SBWLowLevel::getModuleInstance(mSBWAnalyzerModules[mSBWActionId].ascii());
+          int nService = SBWLowLevel::moduleFindServiceByName(nModule, mSBWAnalyzerServices[mSBWActionId].ascii());
+          int nMethod = SBWLowLevel::serviceGetMethod(nModule, nService, "void doAnalysis(string)");
+
+          DataBlockWriter args;
+          args << writeSBMLToString(doc);
+          SBWLowLevel::methodSend(nModule, nService, nMethod, args);
+        }
+
+      catch (SBWException * pE)
+        {
+          QMessageBox::critical(this, "SBW Error",
+                                 pE->getMessage().c_str(),
+                                 QMessageBox::Ok | QMessageBox::Default,
+                                 QMessageBox::NoButton);
+        }
+      
+    }
+}
+
+std::vector< DataBlockReader > SpatialMainWindow::sbwFindServices(const std::string & category,
+    const bool & recursive)
+{
+  std::vector< DataBlockReader > result;
+
+  try
+    {
+      DataBlockWriter oArguments;
+      oArguments.add(category);
+      oArguments.add(recursive);
+
+      Module oModule = SBW::getModuleInstance("BROKER");
+      Service oService = oModule.findServiceByName("BROKER");
+      oService.getMethod("{}[] findServices(string, boolean)").call(oArguments) >> result;
+    }
+
+  catch (...)
+    {
+      result.clear();
+    }
+
+  return result;
+}
+
+// Here we get an SBML document
+SystemsBiologyWorkbench::DataBlockWriter SpatialMainWindow::sbwAnalysis(SystemsBiologyWorkbench::Module /*from*/, SystemsBiologyWorkbench::DataBlockReader reader)
+{
+  try
+    {
+      std::string sSBMLModel;
+      reader >> sSBMLModel;
+
+      QSBWSBMLEvent *event = new QSBWSBMLEvent(sSBMLModel);
+      QApplication::postEvent(this, event);
+    }
+
+  catch (...)
+    {
+      throw new SystemsBiologyWorkbench::SBWApplicationException("Error in doAnalysis");
+    }
+
+  // and yes ... every SBW method has to return something
+  return SystemsBiologyWorkbench::DataBlockWriter();
+}
+
+SystemsBiologyWorkbench::DataBlockWriter SpatialMainWindow::sbwGetSBML(SystemsBiologyWorkbench::Module /*from*/, SystemsBiologyWorkbench::DataBlockReader /*reader*/)
+{
+  QMutexLocker Locker(&mSBWMutex);
+  mSBWCallFinished = false;
+
+
+  if (!mSBWCallFinished)
+    {
+      mSBWWaitSlot.wait(&mSBWMutex);
+    }
+
+  SystemsBiologyWorkbench::DataBlockWriter result;
+
+  if (mSBWSuccess)
+    {
+      try
+        {
+          // write the current model as SBML and return it
+          result << writeSBMLToString(doc);
+
+          return result;
+        }
+
+      catch (...)
+        {
+          throw new SystemsBiologyWorkbench::SBWApplicationException("Error getting the SBML.");
+        }
+    }
+
+  throw new SystemsBiologyWorkbench::SBWApplicationException("Error getting the SBML.");
+
+  // This will never be reached.
+  return result;
+}
+
+void SpatialMainWindow::sbwSlotGetSBMLFinished(bool success)
+{
+  QMutexLocker Locker(&mSBWMutex);
+
+  mSBWCallFinished = true;
+  mSBWSuccess = success;
+
+  mSBWWaitSlot.wakeAll();
+}
+#else
+//void SpatialMainWindow::slotSBWMenuTriggered(QAction * /* pAction */) {}
+void SpatialMainWindow::customEvent(QEvent * /* event */) {}
+
+#endif // USE_SBW_INTEGRATION

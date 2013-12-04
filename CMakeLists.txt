@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.6)
 project(spatial)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "2")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_SOURCE_GENERATOR "ZIP")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/license.txt")
@@ -68,6 +68,32 @@ foreach(${flag} ${EXTRA_FLAGS})
 	add_definitions(-D${flag})
 endforeach()
 endif()
+
+###############################################################################
+#
+# SBW Integration
+#
+option(ENABLE_SBW   "Enable SBW Integration."     ON)
+if (ENABLE_SBW)
+
+find_library(SBW_LIBRARY
+  NAMES SBW-static.lib SBW-static SBW
+  PATHS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64
+        ${CMAKE_SOURCE_DIR}
+        ${LIBSBML_DEPENDENCY_DIR}/lib
+  DOC "The file name of the SBW library."
+)
+
+find_path(SBW_INCLUDE_DIR
+  NAMES SBW/SBW.h
+  PATHS /usr/include /usr/local/include
+    ${CMAKE_SOURCE_DIR}/include
+    ${LIBSBML_DEPENDENCY_DIR}/include
+  DOC "The SBW include directory."
+)
+
+endif()
+
 
 option(WITH_CSHARP   "Generate C# language bindings."     OFF)
 option(WITH_JAVA     "Generate Java language bindings."   OFF)
