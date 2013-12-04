@@ -186,6 +186,13 @@ public:
   const Model* getModel() const;
 
   /**
+   * flips the order of analytic volumes
+   */ 
+  void flipVolumeOrder();
+  
+
+
+  /**
    * Sets the specified value uniformly on the provided variable info
    * structure. 
    * 

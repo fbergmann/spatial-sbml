@@ -535,7 +535,6 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
     return;
   }
 
-
   lstSpecies->clear();
   ui->lstDose->clear();
 
@@ -573,6 +572,8 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 
 
 
+  restart();
+  thread->mpSimulator->flipVolumeOrder();
   restart();
 
   ui->tblParameters->clear();

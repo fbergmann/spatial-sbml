@@ -267,57 +267,13 @@ void GeometryEditWidget::handleButtons(QAbstractButton * button)
 
 }
 
-struct sort_pair
-{
-  bool operator() (std::pair<int, int> i, std::pair<int, int> j) 
-  {
-    return (i.second < j.second);
-  }
-} sorter;
-
-void flipOrder(AnalyticGeometry& geometry)
-{
-  if (geometry.getNumAnalyticVolumes() == 0) return;
-
-  std::vector<std::pair<int, int>> list;
-  for (size_t i = 0; i < geometry.getNumAnalyticVolumes(); ++i)
-  {
-    AnalyticVolume* current = geometry.getAnalyticVolume(i);
-    list.push_back(std::pair<int, int>((int)i, (int)current->getOrdinal()));
-  }
-
-  std::sort(list.begin(), list.end(), sorter);
-
-  for (std::vector<std::pair<int, int>>::iterator it=list.begin(); it!=list.end(); ++it)
-  {
-    AnalyticVolume* current = geometry.getAnalyticVolume(it->first);
-    current->setOrdinal((geometry.getNumAnalyticVolumes()-1)-it->second);
-  }
-
-
-}
 
 void GeometryEditWidget::flipVolumeOrder()
 {
   if (mpSimulator == NULL) 
     return;
-  Model* model = const_cast<Model*>(mpSimulator->getModel());
-  if (model == NULL)
-    return;
-  SpatialModelPlugin* plugin = dynamic_cast<SpatialModelPlugin*>(model->getPlugin("spatial"));
-  if (plugin == NULL)
-    return;
-
-  Geometry* geometry = plugin->getGeometry();
-
-  for (size_t i = 0; i < geometry->getNumGeometryDefinitions(); ++i)
-  {
-    AnalyticGeometry* definition = dynamic_cast<AnalyticGeometry*>(geometry->getGeometryDefinition(i));
-    if (definition == NULL) 
-      continue;
-    flipOrder(*definition);
-    mNeedReload = true;
-  }
+  mpSimulator->flipVolumeOrder();
+  mNeedReload = true;
 }
 
 void GeometryEditWidget::updateUI()
