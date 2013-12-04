@@ -8,7 +8,7 @@
 class QAbstractButton;
 
 namespace Ui {
-    class GeometryEditWidget;
+  class GeometryEditWidget;
 }
 
 class SpatialSimulator;
@@ -22,21 +22,29 @@ public:
   GeometryEditWidget( SpatialSimulator* simulator = NULL,  QWidget * parent = NULL, Qt::WindowFlags f = 0 );
 
   SpatialSimulator* getSimulator() { return mpSimulator; }
-  
+
   void setSimulator(SpatialSimulator* simulator);
   void setLastDir(const QString& lastDir) { msLastDir = lastDir;}
-  public slots:
 
-    void handleButtons(QAbstractButton * button);
-    void	compartmentChanged ( int index);
+  bool needReload() const;
+
+public slots:
+
+  void flipVolumeOrder();
+  void handleButtons(QAbstractButton * button);
+  void compartmentChanged ( int index);
+
+signals:
+  void reloadModel();
 
 private:
 
   void updateUI();
-  
+
   SpatialSimulator* mpSimulator;
   QString msLastDir;
-    Ui::GeometryEditWidget *ui;
+  Ui::GeometryEditWidget *ui;
+  bool mNeedReload;
 
 };
 

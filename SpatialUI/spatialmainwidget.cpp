@@ -305,6 +305,12 @@ void SpatialMainWindow::editGeometry()
   widget.setLastDir(lastDir);
   widget.exec();
 
+  if (widget.needReload())
+  {
+    restart();
+    return;
+  }
+
   if (wasRunning)
     play();
 
@@ -498,8 +504,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
 
   SpatialModelPlugin *modelPlugin = (SpatialModelPlugin*)model ->getPlugin("spatial");
   bool haveSpatial = modelPlugin != NULL && 
-    doc->getPkgRequired("spatial")  && 
-    doc->getPkgRequired("req");
+    doc->getPkgRequired("spatial");
 
   if (!haveSpatial)
   {

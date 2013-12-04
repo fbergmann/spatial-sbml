@@ -5,6 +5,9 @@
 
 #include <sbml/Model.h>
 #include <sbml/Compartment.h>
+#include <sbml/packages/spatial/common/SpatialExtensionTypes.h>
+#include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
+
 
 #include <QDialog>
 #include <QImage>
@@ -16,7 +19,7 @@
 #include <QFileDialog>
 
 GeometryEditWidget::GeometryEditWidget( SpatialSimulator *simulator, QWidget * parent , Qt::WindowFlags f )
-  : QDialog(parent, f), mpSimulator(simulator), msLastDir("")
+  : QDialog(parent, f), mpSimulator(simulator), msLastDir(""), mNeedReload(false)
 {
   ui = new Ui::GeometryEditWidget();
   ui->setupUi(this);
@@ -24,10 +27,14 @@ GeometryEditWidget::GeometryEditWidget( SpatialSimulator *simulator, QWidget * p
   connect(ui->lstCompartments, SIGNAL(currentRowChanged (int)), this, SLOT(compartmentChanged(int)));
   //connect(ui->boxOkCancel, SIGNAL(clicked(QAbstractButton*)), this, SLOT(handleButtons(QAbstractButton*)));
   connect(ui->boxOpenSave, SIGNAL(clicked(QAbstractButton*)), this, SLOT(handleButtons(QAbstractButton*)));
-
+  connect(ui->cmdFlipReorder, SIGNAL(clicked()), this, SLOT(flipVolumeOrder()));
   updateUI();
 }
 
+bool GeometryEditWidget::needReload() const
+{
+  return mNeedReload;
+}
 
 void GeometryEditWidget::setSimulator(SpatialSimulator *simulator)
 {
@@ -129,11 +136,11 @@ void	GeometryEditWidget::compartmentChanged ( int compIndex)
 
 bool isRedish (const QColor& color)
 {
-  
-        int red = color.red();
-        int green = color.green();
-        int blue = color.blue();
-        return  red > 200 && green < 50 && blue < 50;
+
+  int red = color.red();
+  int green = color.green();
+  int blue = color.blue();
+  return  red > 200 && green < 50 && blue < 50;
 }
 
 void GeometryEditWidget::handleButtons(QAbstractButton * button)
@@ -258,6 +265,59 @@ void GeometryEditWidget::handleButtons(QAbstractButton * button)
   }
 
 
+}
+
+struct sort_pair
+{
+  bool operator() (std::pair<int, int> i, std::pair<int, int> j) 
+  {
+    return (i.second < j.second);
+  }
+} sorter;
+
+void flipOrder(AnalyticGeometry& geometry)
+{
+  if (geometry.getNumAnalyticVolumes() == 0) return;
+
+  std::vector<std::pair<int, int>> list;
+  for (size_t i = 0; i < geometry.getNumAnalyticVolumes(); ++i)
+  {
+    AnalyticVolume* current = geometry.getAnalyticVolume(i);
+    list.push_back(std::pair<int, int>((int)i, (int)current->getOrdinal()));
+  }
+
+  std::sort(list.begin(), list.end(), sorter);
+
+  for (std::vector<std::pair<int, int>>::iterator it=list.begin(); it!=list.end(); ++it)
+  {
+    AnalyticVolume* current = geometry.getAnalyticVolume(it->first);
+    current->setOrdinal((geometry.getNumAnalyticVolumes()-1)-it->second);
+  }
+
+
+}
+
+void GeometryEditWidget::flipVolumeOrder()
+{
+  if (mpSimulator == NULL) 
+    return;
+  Model* model = const_cast<Model*>(mpSimulator->getModel());
+  if (model == NULL)
+    return;
+  SpatialModelPlugin* plugin = dynamic_cast<SpatialModelPlugin*>(model->getPlugin("spatial"));
+  if (plugin == NULL)
+    return;
+
+  Geometry* geometry = plugin->getGeometry();
+
+  for (size_t i = 0; i < geometry->getNumGeometryDefinitions(); ++i)
+  {
+    AnalyticGeometry* definition = dynamic_cast<AnalyticGeometry*>(geometry->getGeometryDefinition(i));
+    if (definition == NULL) 
+      continue;
+    flipOrder(*definition);
+    mNeedReload = true;
+  }
 }
 
 void GeometryEditWidget::updateUI()
