@@ -1329,13 +1329,14 @@ void SpatialSimulator::performStep(double t, double dt)
 
 void SpatialSimulator::updateValues(double dt)
 {
-
+  if (los == NULL) return;
 #pragma region     // update values
   //update values
 #pragma omp parallel for 
   for (int i = 0; i < (int)numOfSpecies; i++) 
   {
-    Species *s = los->get(i);
+    s = los->get(i);
+    if (s == NULL) continue;
     if (s->isSetConstant() && s->getConstant())
       continue;
 
@@ -1352,13 +1353,9 @@ void SpatialSimulator::updateValues(double dt)
 
 void SpatialSimulator::updateSpecies(variableInfo *sInfo, double dt)
 {
-
+    if (sInfo == NULL || sInfo->geoi == NULL) return;
   int X = 0, Y = 0, Z = 0, index = 0, j=0;
   //update values (advection, diffusion, slow reaction)
-  for (size_t i = 0; i < numOfSpecies; ++i) {
-    s = los->get(i);
-    variableInfo *sInfo = searchInfoById(varInfoList, s->getId().c_str());
-    if (sInfo == NULL || sInfo->geoi == NULL) continue;
     if (!s->isSetConstant() || !s->getConstant()) {
       for (j = 0; j < sInfo->geoi->domainIndex.size(); j++) {
         index = sInfo->geoi->domainIndex[j];
@@ -1373,8 +1370,7 @@ void SpatialSimulator::updateSpecies(variableInfo *sInfo, double dt)
       //boundary condition
       if (sInfo->boundaryInfo != 0) {
         calcBoundary(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, 0, dimension);
-      }
-    }
+      }    
   }
 
 
