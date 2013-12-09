@@ -19,7 +19,7 @@ void calcFastReaction(reactionInfo *rInfo, variableInfo *sInfo, int Xindex, int 
 	}
 
 	if (rInfo->reaction->getReversible()) {//equilibrium
-		const KineticLaw *kl = r->getKineticLaw();
+		const KineticLaw *kl = rInfo->reaction->getKineticLaw();
 		ast = const_cast<ASTNode*>(kl->getMath());
 		cloneAst = ast->deepCopy();
 		/*reactantの係数を調べる
@@ -44,26 +44,26 @@ void calcFastReaction(reactionInfo *rInfo, variableInfo *sInfo, int Xindex, int 
 		}
 	}
 }
-
-//astのreactantの値を1に置き換える
-void replaceOne(ASTNode *ast)
-{
-	int i;
-	for (i = 0; i < ast->getNumChildren(); i++) {
-		replaceOne(ast->getChild(i), rpInfo, varInfoList, index_max, freeConstList);
-	}
-	if (ast->isName() && ast->getType() == AST_NAME) {
-		for (i = 0; i < r->getNumReactants(); i++) {
-			if (strcmp(r->getReactants(j)->getSpecies(), ast->getName() == 0)
-				variableInfo *info = searchInfoById(varInfoList, ast->getName());
-				if (info != 0) {
-					if (info->isUniform) {
-					} else {
-						ast->setType(AST_REAL);
-						ast->setValue(1.0);
-					}
-				}
-			}
-		}
-	}
-}
+//
+////astのreactantの値を1に置き換える
+//void replaceOne(ASTNode *ast)
+//{
+//	int i;
+//	for (i = 0; i < ast->getNumChildren(); i++) {
+//		replaceOne(ast->getChild(i), rpInfo, varInfoList, index_max, freeConstList);
+//	}
+//	if (ast->isName() && ast->getType() == AST_NAME) {
+//		for (i = 0; i < r->getNumReactants(); i++) {
+//			if (strcmp(r->getReactants(j)->getSpecies(), ast->getName() == 0) {
+//				variableInfo *info = searchInfoById(varInfoList, ast->getName());
+//				if (info != 0) {
+//					if (info->isUniform) {
+//					} else {
+//						ast->setType(AST_REAL);
+//						ast->setValue(1.0);
+//					}
+//				}
+//			}
+//		}
+//	}
+//}

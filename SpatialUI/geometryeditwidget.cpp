@@ -8,6 +8,7 @@
 #include <sbml/packages/spatial/common/SpatialExtensionTypes.h>
 #include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
 
+#include "spatialstructs.h"
 
 #include <QDialog>
 #include <QImage>
@@ -52,7 +53,7 @@ void	GeometryEditWidget::compartmentChanged ( int compIndex)
   QImage image(maxX, maxY, QImage::Format_RGB32);
 
   int length;
-  double* geometry = mpSimulator->getGeometry(mpSimulator->getModel()->getCompartment(compIndex)->getId(), length);
+  int* geometry = mpSimulator->getGeometry(mpSimulator->getModel()->getCompartment(compIndex)->getId(), length);
   int* values = mpSimulator->getBoundary(mpSimulator->getModel()->getCompartment(compIndex)->getId(), length);
 //  boundaryType* bounds = mpSimulator->getBoundaryType(mpSimulator->getModel()->getCompartment(compIndex)->getId(), length);
   double *xVal = mpSimulator->getX(length);
@@ -168,7 +169,7 @@ void GeometryEditWidget::handleButtons(QAbstractButton * button)
 
     int length;
     int* values = mpSimulator->getBoundary(mpSimulator->getModel()->getCompartment(ui->lstCompartments->currentRow())->getId(), length);
-    double* geometry = mpSimulator->getGeometry(mpSimulator->getModel()->getCompartment(ui->lstCompartments->currentRow())->getId(), length);
+    int* geometry = mpSimulator->getGeometry(mpSimulator->getModel()->getCompartment(ui->lstCompartments->currentRow())->getId(), length);
     boundaryType* bounds = mpSimulator->getBoundaryType(mpSimulator->getModel()->getCompartment(ui->lstCompartments->currentRow())->getId(), length);
     double *xVal = mpSimulator->getX(length);
     double *yVal = mpSimulator->getY(length);
@@ -204,31 +205,56 @@ void GeometryEditWidget::handleButtons(QAbstractButton * button)
             QColor(temp.pixel(flipHorizontally + signH*(x-1), 
           flipVertically + signV*y)) == QColor(Qt::black))
           {
-            bounds[index] = Xm;
+            bounds[index].isBofXm = true;
+            bounds[index].isBofXp = false;
+            bounds[index].isBofYm = false;
+            bounds[index].isBofYp = false;
+            bounds[index].isBofZm = false;
+            bounds[index].isBofZp = false;
           }          
           else if  (y - 1 >= 0  && 
             QColor(temp.pixel(flipHorizontally + signH*(x), 
           flipVertically + signV*(y-1))) == QColor(Qt::black))
           {
-            bounds[index] = Ym;
+            bounds[index].isBofXm = false;
+            bounds[index].isBofXp = false;
+            bounds[index].isBofYm = true;
+            bounds[index].isBofYp = false;
+            bounds[index].isBofZm = false;
+            bounds[index].isBofZp = false;
           }
           else if  (y + 1 < maxY  && 
             QColor(temp.pixel(flipHorizontally + signH*(x), 
             flipVertically + signV*(y+1)))== QColor(Qt::black))
           {
-            bounds[index] = Yp;
+            bounds[index].isBofXm = false;
+            bounds[index].isBofXp = false;
+            bounds[index].isBofYm = false;
+            bounds[index].isBofYp = true;
+            bounds[index].isBofZm = false;
+            bounds[index].isBofZp = false;
           }
           else if  (x + 1 < maxX  && 
             QColor(temp.pixel(flipHorizontally + signH*(x+1), 
           flipVertically + signV*(y))) == QColor(Qt::black))
           {
-            bounds[index] = Xp;
+            bounds[index].isBofXm = false;
+            bounds[index].isBofXp = true;
+            bounds[index].isBofYm = false;
+            bounds[index].isBofYp = false;
+            bounds[index].isBofZm = false;
+            bounds[index].isBofZp = false;
           }
         }
         else
         {
           values[index] = 0;
-          bounds[index] = Xp;
+          bounds[index].isBofXm = false;
+          bounds[index].isBofXp = true;
+          bounds[index].isBofYm = false;
+          bounds[index].isBofYp = false;
+          bounds[index].isBofZm = false;
+          bounds[index].isBofZp = false;
           if (pixel != Qt::black)
           {
             geometry[index] = 1;

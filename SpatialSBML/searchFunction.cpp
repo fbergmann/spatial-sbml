@@ -14,7 +14,7 @@ variableInfo* searchInfoById(vector<variableInfo*> &varInfoList, const char *var
 		if (strcmp((*it)->id, varName) == 0) {
 			return *it;
 		}
-		it++;
+		++it;
 	}
 	return 0;
 }
@@ -26,7 +26,7 @@ GeometryInfo* searchAvolInfoByDomainType(vector<GeometryInfo*> &geoInfoList, con
 		if (strcmp((*it)->domainTypeId, dtId) == 0) {
 			return *it;
 		}
-		it++;
+		++it;
 	}
 	return 0;
 }
@@ -38,7 +38,7 @@ GeometryInfo* searchAvolInfoByDomain(vector<GeometryInfo*> &geoInfoList, const c
 		if (strcmp((*it)->domainId, dId) == 0) {
 			return *it;
 		}
-		it++;
+		++it;
 	}
 	return 0;
 }
@@ -50,7 +50,7 @@ GeometryInfo* searchAvolInfoByCompartment(vector<GeometryInfo*> &geoInfoList, co
 		if (strcmp((*it)->compartmentId, cId) == 0) {
 			return *it;
 		}
-		it++;
+		++it;
 	}
 	return 0;
 }

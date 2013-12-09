@@ -40,63 +40,64 @@ void setCompartmentInfo(Model *model, vector<variableInfo*> &varInfoList)
 void setSpeciesInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, unsigned int volDimension, unsigned int memDimension, int Xindex, int Yindex, int Zindex)
 {
 	Model *model = doc->getModel();
-	XMLNamespaces *xns = doc->getNamespaces();
-	string spatialPrefix = xns->getPrefix("http://www.sbml.org/sbml/level3/version1/spatial/version1");
-	string reqPrefix = xns->getPrefix("http://www.sbml.org/sbml/level3/version1/requiredElements/version1");
 	ListOfSpecies *los = model->getListOfSpecies();
 	unsigned int numOfSpecies = static_cast<unsigned int>(model->getNumSpecies());
 	unsigned int i;
 	int X, Y, Z;
 	int numOfVolIndexes = Xindex * Yindex * Zindex;
-	for (i = 0; i < numOfSpecies; i++) {
-		Species *s = los->get(i);
-		RequiredElementsSBasePlugin* reqplugin = static_cast<RequiredElementsSBasePlugin*>(s->getPlugin(reqPrefix));
-		SpatialSpeciesRxnPlugin* splugin = static_cast<SpatialSpeciesRxnPlugin*>(s->getPlugin(spatialPrefix));
-		//species have spatial extension
-		if (reqplugin->getMathOverridden() == spatialPrefix) {
-			variableInfo *info = new variableInfo;
-			InitializeVarInfo(info);
-			varInfoList.push_back(info);
-			info->sp = s;
-			info->com = model->getCompartment(s->getCompartment());
-			info->id = s->getId().c_str();
-			if (info->com->getSpatialDimensions() == volDimension) {
-				info->inVol = true;
-			} else if (info->com->getSpatialDimensions() == memDimension) {
-				info->inVol = false;
-			}
-			//species value is specified by initial amount, initial value, rule or initial assignment
-			//species is spatially defined
-			if (reqplugin->getCoreHasAlternateMath() && splugin->getIsSpatial()) {
-				if (s->isSetInitialAmount() || s->isSetInitialConcentration()) {//Initial Amount or Initial Concentration
-					info->value = new double[numOfVolIndexes];
-					fill_n(info->value, numOfVolIndexes, 0);
-					if (!s->isSetConstant() || !s->getConstant()) {
-						info->delta = new double[4 * numOfVolIndexes];
-						fill_n(info->delta, 4 * numOfVolIndexes, 0.0);
-					}
-					if (s->isSetInitialAmount()) {//Initial Amount
-						info->isResolved = true;
-						for (Z = 0; Z < Zindex; Z++) {
-							for (Y = 0; Y < Yindex; Y++) {
-								for (X = 0; X < Xindex; X++) {
-									info->value[Z * Yindex * Xindex + Y * Xindex + X] = s->getInitialAmount();
-								}
-							}
-						}
-					} else if (s->isSetInitialConcentration()) {//Initial Concentration
-						for (Z = 0; Z < Zindex; Z++) {
-							for (Y = 0; Y < Yindex; Y++) {
-								for (X = 0; X < Xindex; X++) {
-									info->value[Z * Yindex * Xindex + Y * Xindex + X] = s->getInitialConcentration();
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  for (i = 0; i < numOfSpecies; ++i) {
+    Species *s = los->get(i);
+    SpatialSpeciesRxnPlugin* splugin = static_cast<SpatialSpeciesRxnPlugin*>(s->getPlugin("spatial"));
+    //species have spatial extension
+    variableInfo *info = new variableInfo;
+    InitializeVarInfo(info);
+    varInfoList.push_back(info);
+    info->sp = s;
+    info->com = model->getCompartment(s->getCompartment());
+    info->id = s->getId().c_str();
+    if (info->com->getSpatialDimensions() == volDimension) {
+      info->inVol = true;
+    } else if (info->com->getSpatialDimensions() == memDimension) {
+      info->inVol = false;
+    }
+    //species value is specified by initial amount, initial value, rule or initial assignment
+    //species is spatially defined
+    if (splugin->getIsSpatial()) 
+    {
+      if (s->isSetInitialAmount() || s->isSetInitialConcentration()) {//Initial Amount or Initial Concentration
+        info->value = new double[numOfVolIndexes];
+        fill_n(info->value, numOfVolIndexes, 0);
+        if (!s->isSetConstant() || !s->getConstant()) {
+          info->delta = new double[4 * numOfVolIndexes];
+          fill_n(info->delta, 4 * numOfVolIndexes, 0.0);
+        }
+        if (s->isSetInitialAmount()) {//Initial Amount
+          info->isResolved = true;
+          for (Z = 0; Z < Zindex; Z++) {
+            for (Y = 0; Y < Yindex; Y++) {
+              for (X = 0; X < Xindex; X++) {
+                info->value[Z * Yindex * Xindex + Y * Xindex + X] = s->getInitialAmount();
+              }
+            }
+          }
+        } else if (s->isSetInitialConcentration()) {//Initial Concentration
+          for (Z = 0; Z < Zindex; Z++) {
+            for (Y = 0; Y < Yindex; Y++) {
+              for (X = 0; X < Xindex; X++) {
+                info->value[Z * Yindex * Xindex + Y * Xindex + X] = s->getInitialConcentration();
+              }
+            }
+          }
+        }
+      }
+    }
+    else
+    {
+			info->isResolved = true;
+			info->isUniform = true;
+      info->value = (s->isSetInitialConcentration())? new double(s->getInitialConcentration()): new double(s->getInitialAmount());
+    }
+  }
 }
 
 void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int Xdiv, int Ydiv, int Zdiv, double &Xsize, double &Ysize, double &Zsize, double &deltaX, double &deltaY, double &deltaZ, char *&xaxis, char *&yaxis, char *&zaxis)

@@ -22,8 +22,8 @@ void setBoundaryType(Model *model, vector<variableInfo*> &varInfoList, vector<Ge
 	for (i = 0; i < numOfSpecies; i++) {
 		Species *s = los->get(i);
 		variableInfo *sInfo = searchInfoById(varInfoList, s->getId().c_str());
-		if (sInfo != 0 && searchAvolInfoByCompartment(geoInfoList, s->getCompartment().c_str()) != 0) {
-			sInfo->geoi = searchAvolInfoByCompartment(geoInfoList, s->getCompartment().c_str());
+    if (sInfo != 0 &&  !sInfo->isUniform && searchAvolInfoByCompartment(geoInfoList, s->getCompartment().c_str()) != 0) {
+    	sInfo->geoi = searchAvolInfoByCompartment(geoInfoList, s->getCompartment().c_str());
 			int *isD = sInfo->geoi->isDomain;
 			int *isB = sInfo->geoi->isBoundary;
 			switch (dimension) {

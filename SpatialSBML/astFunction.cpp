@@ -5,8 +5,16 @@
 #include "sbml/packages/spatial/extension/SpatialModelPlugin.h"
 #include "sbml/packages/spatial/extension/SpatialExtension.h"
 #include <vector>
+#include <cmath>
 #include "mystruct.h"
 #include "searchFunction.h"
+
+#ifndef M_E
+#define M_E        2.71828182845904523536
+#endif
+#ifndef  M_PI
+#define M_PI       3.14159265358979323846
+#endif
 
 void parseAST(ASTNode *ast, reversePolishInfo *rpInfo, vector<variableInfo*> &varInfoList, int index_max, vector<double*> &freeConstList)
 {

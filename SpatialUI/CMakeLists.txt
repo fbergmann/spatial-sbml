@@ -1,6 +1,7 @@
 ####################################################################
 #
 # CMake Build Script for the UI for spatial simulator from akira
+# version 2
 #
 # Frank T. Bergmann (fbergman@caltech.edu)
 #

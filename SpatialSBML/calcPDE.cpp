@@ -9,6 +9,14 @@
 #include "mystruct.h"
 #include "searchFunction.h"
 
+#ifdef WIN32
+#define popen _popen
+#define pclose _pclose
+#define copysign _copysign
+#define acosh(x) log(x + sqrt(x*x-1.0))
+#include <math.h>
+#endif
+
 #define stackMax 50
 
 void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, double *value, int numOfASTNodes, int Xindex, int Yindex, int Zindex, bool isAllArea)
@@ -205,7 +213,10 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 	double **d = rInfo->rpInfo->deltaList;
 	int *operation = rInfo->rpInfo->opfuncList;
 	int numOfASTNodes = rInfo->rpInfo->listNum;
-	for (j = 0; j < (int)geoInfo->domainIndex.size(); j++) {
+  //int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
+  //  for (j = 0; j < domainIndexSize; j++) {
+	//	index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[j];
+  for (j = 0; j < (int)geoInfo->domainIndex.size(); j++) {
 		index = geoInfo->domainIndex[j];
 		Z = index / (Xindex * Yindex);
 		Y = (index - Z * Xindex * Yindex) / Xindex;
@@ -384,12 +395,18 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 		st_index--;
 		if (isReaction) {//Reaction
 			for (k = 0; k < numOfReactants; k++) {//reactants
-				if (rInfo->isVariable[k]) rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] -= rInfo->srStoichiometry[k] * rpStack[st_index];
+        if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && ! rInfo->spRefList[k]->isUniform) 
+        {
+          rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] -= rInfo->srStoichiometry[k] * rpStack[st_index];
+        }
 			}
 			for (k = numOfReactants; k < (int)rInfo->spRefList.size(); k++) {//products
-				if (rInfo->isVariable[k]) rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
+				if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && ! rInfo->spRefList[k]->isUniform ) 
+        {
+          rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
+        }
 			}
-		} else if (rInfo->isVariable[0]){//RateRule
+		} else if (rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && ! rInfo->spRefList[0]->isUniform){//RateRule
 			rInfo->spRefList[0]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[0] * rpStack[st_index];
 		}
 	}

@@ -1,6 +1,8 @@
 #ifndef MYSTRUCT_H_
 #define MYSTRUCT_H_
 
+#include <sbml/Reaction.h>
+
 using namespace std;
 
 typedef enum _materialTYpe {

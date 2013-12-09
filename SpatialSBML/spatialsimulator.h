@@ -34,10 +34,6 @@ class ListOfRules;
 LIBSBML_CPP_NAMESPACE_END
 
 
-typedef enum _boundaryType {
-  Xp = 0, Xm, Yp, Ym, Zp, Zm
-} boundaryType;
-
 # endif
 
 #include "spatialstructs.h"
@@ -221,7 +217,7 @@ public:
    * 
    * @return the geometry array, or NULL in case no compartment with given id exists
    */
-  double* getGeometry(const std::string &id, int &length);
+  int* getGeometry(const std::string &id, int &length);
 
   /**
    * Returns the boundary type array of the compartment with the specified id as (1d) flat array. 
@@ -335,19 +331,29 @@ private:
   unsigned int numOfRules        ;
 
   std::vector<variableInfo*> varInfoList           ;
-  std::vector<bcOfSpeciesInfo*> bcOfSpeciesInfoList;
-  std::vector<analyticVolInfo*> avolInfoList       ;
-  std::vector<boundaryCInfo*> bcInfoList           ;
+  vector<GeometryInfo*> geoInfoList;    
   std::vector<reactionInfo*> rInfoList             ;
-  std::vector<adCInfo*> acInfoList                 ;
+  std::vector<reactionInfo*> fast_rInfoList;
   std::vector<const char*> memList                 ;
+  vector<double*> freeConstList;
+  vector<string> spIdList;
   unsigned int dimension                      ;
+  normalUnitVector * nuVec;
+  voronoiInfo *vorI;
+  vector<variableInfo*> orderedARule;
+
+  int Xplus1, Xminus1, Yplus1, Yminus1, Zplus1, Zminus1, divIndex;
 
   variableInfo *t_info;
   variableInfo *xInfo, *yInfo, *zInfo;
   double deltaX, deltaY, deltaZ;
   char *xaxis, *yaxis, *zaxis;
   Model *model               ;
+  Species* s;
+  Reaction *r;
+  SpeciesReference *sr;
+
+  double Xsize, Ysize, Zsize;
   unsigned int volDimension, memDimension ;
   
   int Xindex, Yindex , Zindex, numOfVolIndexes;

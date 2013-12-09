@@ -578,8 +578,8 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 
 
   restart();
-  thread->mpSimulator->flipVolumeOrder();
-  restart();
+  //thread->mpSimulator->flipVolumeOrder();
+  //restart();
 
   ui->tblParameters->clear();
   ui->tblParameters->setColumnCount(1);
@@ -740,6 +740,8 @@ void SpatialMainWindow::togglePlay()
 
 void SpatialMainWindow::stop()
 {
+  if (thread == NULL) return;
+
   thread->mPaused = true;
 
   togglePlayAct->setText(tr("Start"));
