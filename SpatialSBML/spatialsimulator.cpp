@@ -155,17 +155,28 @@ void SpatialSimulator::setParameter(const std::string &id, double value)
   if (pPlugin != NULL && !isNormalParameter(pPlugin))
   {
 
-    if (pPlugin->getDiffusionCoefficient() != 0) {
-      variableInfo *sInfo = searchInfoById(varInfoList, pPlugin->getDiffusionCoefficient()->getVariable().c_str());
+    DiffusionCoefficient *dc = pPlugin->getDiffusionCoefficient();
+    if (dc != NULL) {
+      variableInfo *sInfo = searchInfoById(varInfoList,dc->getVariable().c_str());
       if (sInfo != 0) {
-        DiffusionCoefficient *dc = pPlugin->getDiffusionCoefficient();
-        for (int Z = 0; Z < Zindex; Z++) {
-          for (int Y = 0; Y < Yindex; Y++) {
-            for (int X = 0; X < Xindex; X++) {
-              sInfo->diffCInfo[dc->getCoordinateIndex()]->value[Z * Yindex * Xindex + Y * Xindex + X] = value;
-            }
+        variableInfo *dci = sInfo->diffCInfo[dc->getCoordinateIndex()];
+        if (dci != NULL)
+        {
+          if (dci->isUniform && dci->value != NULL)
+          {
+            *(dci->value) = value;
           }
-        }          
+          else
+          {
+            for (int Z = 0; Z < Zindex; Z++) {
+              for (int Y = 0; Y < Yindex; Y++) {
+                for (int X = 0; X < Xindex; X++) {
+                  dci->value[Z * Yindex * Xindex + Y * Xindex + X] = value;
+                }
+              }
+            }
+        }
+        }
       }
     }
   }
@@ -176,6 +187,12 @@ void SpatialSimulator::setParameterUniformly(variableInfo* info, double value)
 {
   if (info == NULL) return;
 
+  if (info->isUniform && info->value != NULL)
+  {
+    *(info->value) = value;
+  }
+  else
+  {
   for (int Z = 0; Z < Zindex; Z++) {
 #pragma omp parallel for
     for (int Y = 0; Y < Yindex; Y++) {
@@ -183,6 +200,7 @@ void SpatialSimulator::setParameterUniformly(variableInfo* info, double value)
         info->value[Z * Yindex * Xindex + Y * Xindex + X] = value;
       }
     }
+  }
   }
 }
 

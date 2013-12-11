@@ -171,8 +171,8 @@ void SpatialMainWindow::removeSpecies()
   if (item == NULL) return;
   QString selected = item->text();
 
-  bool wasRunning = thread->mPaused;
-  if (wasRunning) pause();
+  bool wasRunning = !thread->mPaused;
+  pause();
 
   vector<DisplayItem*>::reverse_iterator iter;
 
@@ -640,14 +640,14 @@ void SpatialMainWindow::loadFile(const QString &fileName)
 void SpatialMainWindow::parameterChanged(int row, int column)
 {
   if (updating) return;
-  bool wasRunning = thread->mPaused;
+  bool wasRunning = !thread->mPaused;
 
   if (row < 0 || row > (int) doc->getModel()->getNumParameters())
     return;
 
   double newValue = ui->tblParameters->item(row, column)->text().toDouble();
 
-  if (wasRunning) pause();
+  pause();
 
   thread->mpSimulator->setParameter(doc->getModel()->getParameter(row)->getId(), newValue);
 
