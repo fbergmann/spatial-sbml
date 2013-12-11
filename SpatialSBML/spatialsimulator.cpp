@@ -1259,11 +1259,17 @@ void SpatialSimulator::performStep(double t, double dt)
       if (r == NULL) continue;
       if (!rInfoList[i]->isMemTransport) 
       {//normal reaction
-        if (rInfoList[i]->spRefList.size() > 0)
-        {
-          variableInfo* varInfo = rInfoList[i]->spRefList[0];
-          reversePolishRK(rInfoList[i], varInfo != NULL ? varInfo->geoi : NULL, Xindex, Yindex, Zindex, dt, m, r->getNumReactants(), true);
-        }
+
+        GeometryInfo* gInfo = NULL;
+        // get first non-null geometry
+        for (size_t k = 0; k < rInfoList[i]->spRefList.size(); ++k)
+          if (rInfoList[i]->spRefList[k]->geoi != NULL)
+          {
+            gInfo = rInfoList[i]->spRefList[k]->geoi;
+            break;
+          }
+
+          reversePolishRK(rInfoList[i], gInfo, Xindex, Yindex, Zindex, dt, m, r->getNumReactants(), true);
       } 
       else 
       {//membrane transport
