@@ -379,8 +379,8 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
         Compartment *c = loc->get(j);
         cPlugin = static_cast<SpatialCompartmentPlugin*>(c->getPlugin("spatial"));
         if (cPlugin != 0) {
-//          					if (AnalyticVolume *analyticVol = analyticGeo->getAnalyticVolume(cPlugin->getCompartmentMapping()->getDomainType())) {
-//
+          //          					if (AnalyticVolume *analyticVol = analyticGeo->getAnalyticVolume(cPlugin->getCompartmentMapping()->getDomainType())) {
+          //
           AnalyticVolume *analyticVol =  getAnalyticVolumeForType( analyticGeo,cPlugin->getCompartmentMapping()->getDomainType() );
           if (analyticVol != NULL) {
             //  analyticGeo->getAnalyticVolume(cPlugin->getCompartmentMapping()->getDomainType())) {
@@ -422,17 +422,17 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             fill_n(tmp_isDomain, numOfVolIndexes, 0);
             reversePolishInitial(volumeIndexList, geoInfo->rpInfo, tmp_isDomain, numOfASTNodes, Xindex, Yindex, Zindex, false);
             for (k = 0; k < (unsigned int)numOfVolIndexes; k++) {
-							index = k;
-							geoInfo->isDomain[k] = (int)tmp_isDomain[k];
-							//Z = index / (Xindex * Yindex);
-							//Y = (index - Z * Xindex * Yindex) / Xindex;
-							//X = index - Z * Xindex * Yindex - Y * Xindex;
-							//if (geoInfo->isDomain[k] == 1 && string(geoInfo->domainTypeId) == "nucleus") {
-							//	//cerr << X << ", " << Y << ", " << Z << ", " << geoInfo->isDomain[k] << endl;
-							//} else {
-							//	//cout << geoInfo->domainTypeId << endl;
-							//}
-						}
+              index = k;
+              geoInfo->isDomain[k] = (int)tmp_isDomain[k];
+              //Z = index / (Xindex * Yindex);
+              //Y = (index - Z * Xindex * Yindex) / Xindex;
+              //X = index - Z * Xindex * Yindex - Y * Xindex;
+              //if (geoInfo->isDomain[k] == 1 && string(geoInfo->domainTypeId) == "nucleus") {
+              //	//cerr << X << ", " << Y << ", " << Z << ", " << geoInfo->isDomain[k] << endl;
+              //} else {
+              //	//cout << geoInfo->domainTypeId << endl;
+              //}
+            }
             geoInfoList.push_back(geoInfo);
           }
         }
@@ -1232,7 +1232,6 @@ void SpatialSimulator::printValues()
 
 void SpatialSimulator::performStep(double t, double dt)
 {
-  //return;
   unsigned int /* i,*/ j , m;
   int X = 0, Y = 0, Z = 0, index = 0;
 
@@ -1247,50 +1246,27 @@ void SpatialSimulator::performStep(double t, double dt)
   //}
 
   //calculation
-  //advection
-  for (size_t i = 0; i < numOfSpecies; i++) {
-    variableInfo *sInfo = searchInfoById(varInfoList, los->get(i)->getId().c_str());
-    if (sInfo == NULL) continue;
-    //advection
-    if (sInfo->adCInfo != 0) {
-      cipCSLR(sInfo, deltaX, deltaY, deltaZ, dt, Xindex, Yindex, Zindex, dimension);
-    }//end of advection
-  }
-  //cout << "ad time: "<< ((ad_end - ad_start) / static_cast<double>(CLOCKS_PER_SEC)) << endl;
 
   //runge-kutta
   for (m = 0; m < 4; m++) {
-    //diffusion
-    for (size_t i = 0; i < numOfSpecies; ++i) {
-      variableInfo *sInfo = searchInfoById(varInfoList, los->get(i)->getId().c_str());
-      if (sInfo == NULL) continue;
-      //volume diffusion
-      if (sInfo->diffCInfo != 0 && sInfo->geoi->isVol) {
-        calcDiffusion(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dt);
-      }
-      //membane diffusion
-      if (sInfo->diffCInfo != 0 && !sInfo->geoi->isVol) {
-        calcMemDiffusion(sInfo, vorI, Xindex, Yindex, Zindex, m, dt, dimension);
-      }
-      //boundary condition
-      if (sInfo->boundaryInfo != 0 && sInfo->geoi->isVol) {
-        calcBoundary(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dimension);
-      }
-    }
+
     //reaction
     //for (i = 0; i < numOfReactions; i++) {
     //slow reaction
     for (size_t i = 0; i < rInfoList.size(); i++) {
       //Reaction *r = model->getReaction(i);
       Reaction *r = rInfoList[i]->reaction;
-      if (!rInfoList[i]->isMemTransport) {//normal reaction
-        sr = r->getReactant(0);
-        if (sr!=NULL)
+      if (r == NULL) continue;
+      if (!rInfoList[i]->isMemTransport) 
+      {//normal reaction
+        if (rInfoList[i]->spRefList.size() > 0)
         {
-          variableInfo* varInfo = searchInfoById(varInfoList, sr->getSpecies().c_str());
+          variableInfo* varInfo = rInfoList[i]->spRefList[0];
           reversePolishRK(rInfoList[i], varInfo != NULL ? varInfo->geoi : NULL, Xindex, Yindex, Zindex, dt, m, r->getNumReactants(), true);
         }
-      } else {//membrane transport
+      } 
+      else 
+      {//membrane transport
         GeometryInfo *reactantGeo = searchInfoById(varInfoList, r->getReactant(0)->getSpecies().c_str())->geoi;
         GeometryInfo *productGeo = searchInfoById(varInfoList, r->getProduct(0)->getSpecies().c_str())->geoi;
         for (j = 0; j < geoInfoList.size(); j++) {
@@ -1313,6 +1289,7 @@ void SpatialSimulator::performStep(double t, double dt)
         }
       }
     }
+
     //rate rule
     for (size_t i = 0; i < numOfRules; ++i) {
       if (model->getRule(i)->isRate()) {
@@ -1321,10 +1298,36 @@ void SpatialSimulator::performStep(double t, double dt)
         reversePolishRK(rInfoList[i], sInfo->geoi, Xindex, Yindex, Zindex, dt, m, 1, false);
       }
     }
+
+    //diffusion
+    for (size_t i = 0; i < numOfSpecies; ++i) {
+      variableInfo *sInfo = searchInfoById(varInfoList, los->get(i)->getId().c_str());
+      if (sInfo == NULL) continue;
+      //volume diffusion
+      if (sInfo->diffCInfo != 0 && sInfo->geoi->isVol) {
+        calcDiffusion(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dt);
+      }
+      //membane diffusion
+      if (sInfo->diffCInfo != 0 && !sInfo->geoi->isVol) {
+        calcMemDiffusion(sInfo, vorI, Xindex, Yindex, Zindex, m, dt, dimension);
+      }
+      //boundary condition
+      if (sInfo->boundaryInfo != 0 && sInfo->geoi->isVol) {
+        calcBoundary(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dimension);
+      }
+    }
+
   }//end of runge-kutta
 
-
-
+  //advection
+  for (size_t i = 0; i < numOfSpecies; i++) {
+    variableInfo *sInfo = searchInfoById(varInfoList, los->get(i)->getId().c_str());
+    if (sInfo == NULL) continue;
+    //advection
+    if (sInfo->adCInfo != 0) {
+      cipCSLR(sInfo, deltaX, deltaY, deltaZ, dt, Xindex, Yindex, Zindex, dimension);
+    }//end of advection
+  }
 }
 
 void SpatialSimulator::updateValues(double dt)
@@ -1353,26 +1356,29 @@ void SpatialSimulator::updateValues(double dt)
 
 void SpatialSimulator::updateSpecies(variableInfo *sInfo, double dt)
 {
-    if (sInfo == NULL || sInfo->geoi == NULL) return;
+  if (sInfo == NULL || sInfo->geoi == NULL) 
+    return;
   int X = 0, Y = 0, Z = 0, index = 0, j=0;
+  if (sInfo->sp->isSetConstant() && sInfo->sp->getConstant()) 
+    return;
+
   //update values (advection, diffusion, slow reaction)
-    if (!s->isSetConstant() || !s->getConstant()) {
-      for (j = 0; j < sInfo->geoi->domainIndex.size(); j++) {
-        index = sInfo->geoi->domainIndex[j];
-        Z = index / (Xindex * Yindex);
-        Y = (index - Z * Xindex * Yindex) / Xindex;
-        X = index - Z * Xindex * Yindex - Y * Xindex;
-        divIndex = (Z / 2) * Ydiv * Xdiv + (Y / 2) * Xdiv + (X / 2);
-        //update values for the next time
-        sInfo->value[index] += dt * (sInfo->delta[index] + 2.0 * sInfo->delta[numOfVolIndexes + index] + 2.0 * sInfo->delta[2 * numOfVolIndexes + index] + sInfo->delta[3 * numOfVolIndexes + index]) / 6.0;
-        for (size_t k = 0; k < 4; ++k) sInfo->delta[k * numOfVolIndexes + index] = 0.0;
-      }
-      //boundary condition
-      if (sInfo->boundaryInfo != 0) {
-        calcBoundary(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, 0, dimension);
-      }    
+  for (j = 0; j < sInfo->geoi->domainIndex.size(); j++) 
+  {
+    index = sInfo->geoi->domainIndex[j];
+    Z = index / (Xindex * Yindex);
+    Y = (index - Z * Xindex * Yindex) / Xindex;
+    X = index - Z * Xindex * Yindex - Y * Xindex;
+    divIndex = (Z / 2) * Ydiv * Xdiv + (Y / 2) * Xdiv + (X / 2);
+    //update values for the next time
+    sInfo->value[index] += dt * (sInfo->delta[index] + 2.0 * sInfo->delta[numOfVolIndexes + index] + 2.0 * sInfo->delta[2 * numOfVolIndexes + index] + sInfo->delta[3 * numOfVolIndexes + index]) / 6.0;
+    for (size_t k = 0; k < 4; ++k) sInfo->delta[k * numOfVolIndexes + index] = 0.0;
   }
 
+  //boundary condition
+  if (sInfo->boundaryInfo != 0) {
+    calcBoundary(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, 0, dimension);
+  }    
 
 }
 

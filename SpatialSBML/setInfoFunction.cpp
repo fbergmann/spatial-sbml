@@ -371,6 +371,7 @@ void setRateRuleInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 		if (model->getRule(i)->isRate()) {
 			RateRule *rrule = (RateRule*)model->getRule(i);
 			reactionInfo *rInfo = new reactionInfo;
+      rInfo->reaction = NULL;
 			rInfo->id = rrule->getVariable().c_str();
 			rInfo->value = new double[numOfVolIndexes];
 			fill_n(rInfo->value, numOfVolIndexes, 0);

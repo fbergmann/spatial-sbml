@@ -213,11 +213,9 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 	double **d = rInfo->rpInfo->deltaList;
 	int *operation = rInfo->rpInfo->opfuncList;
 	int numOfASTNodes = rInfo->rpInfo->listNum;
-  //int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
-  //  for (j = 0; j < domainIndexSize; j++) {
-	//	index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[j];
-  for (j = 0; j < (int)geoInfo->domainIndex.size(); j++) {
-		index = geoInfo->domainIndex[j];
+  int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
+  for (j = 0; j < domainIndexSize; j++) {
+		index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[j];
 		Z = index / (Xindex * Yindex);
 		Y = (index - Z * Xindex * Yindex) / Xindex;
 		X = index - Z * Xindex * Yindex - Y * Xindex;
@@ -395,18 +393,18 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 		st_index--;
 		if (isReaction) {//Reaction
 			for (k = 0; k < numOfReactants; k++) {//reactants
-        if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && ! rInfo->spRefList[k]->isUniform) 
+        if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && !rInfo->spRefList[k]->isUniform) 
         {
           rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] -= rInfo->srStoichiometry[k] * rpStack[st_index];
         }
 			}
 			for (k = numOfReactants; k < (int)rInfo->spRefList.size(); k++) {//products
-				if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && ! rInfo->spRefList[k]->isUniform ) 
+				if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && !rInfo->spRefList[k]->isUniform ) 
         {
           rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
         }
 			}
-		} else if (rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && ! rInfo->spRefList[0]->isUniform){//RateRule
+		} else if (rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && !rInfo->spRefList[0]->isUniform){//RateRule
 			rInfo->spRefList[0]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[0] * rpStack[st_index];
 		}
 	}
