@@ -6,6 +6,8 @@
 #include <QImage>
 #include <vector>
 
+#include <sbml/SBMLTypes.h>
+
 using namespace std;
 
 SimulationThread::SimulationThread()
@@ -160,11 +162,21 @@ void SimulationThread::applyDose(int x, int y,const QString &id, double value)
   int length;
   int index = mpSimulator->getIndexForPosition(x, y);
   if (index == -1) return;
+
+  std::string sId = id.toStdString();
+  const Model* model = mpSimulator->getModel();
+  if (model == NULL) return;
+  const Species* species = model->getSpecies(sId);
+  if (species == NULL) return;
+  std::string comp = species->getCompartment();
+  if (mpSimulator->getGeometry(comp, length)[index] == 0)
+    return;
+
   for (unsigned int ind = 0; ind < mpDisplayItems->size(); ind++)
   {
     if ((*mpDisplayItems)[ind]->getId() != id)
       continue;
-    mpSimulator->getVariable(id.ascii(), length)[index] = value;
+    mpSimulator->getVariable(sId, length)[index] = value;
   }
 
   mPaused = wasRunning;

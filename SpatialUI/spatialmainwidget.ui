@@ -40,9 +40,15 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QDockWidget" name="dockAssignment">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>2000</width>
            <height>524287</height>
           </size>
          </property>
@@ -114,9 +120,15 @@
        </item>
        <item>
         <widget class="QDockWidget" name="dockInfo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>2000</width>
            <height>524287</height>
           </size>
          </property>
@@ -208,9 +220,15 @@
        </item>
        <item>
         <widget class="QDockWidget" name="dockDose">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>2000</width>
            <height>524287</height>
           </size>
          </property>
@@ -262,9 +280,15 @@
        </item>
        <item>
         <widget class="QDockWidget" name="dockParameters">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>2000</width>
            <height>524287</height>
           </size>
          </property>
