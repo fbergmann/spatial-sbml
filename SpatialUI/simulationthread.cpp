@@ -146,7 +146,10 @@ const std::vector<std::pair<std::string, double> > SimulationThread::getConcentr
   for (unsigned int ind = 0; ind < mpDisplayItems->size(); ind++)
   {
     string id = (*mpDisplayItems)[ind]->getId();
-    std::pair<std::string, double> current (id,mpSimulator->getVariable(id, length)[index]);
+    double *values = mpSimulator->getVariable(id, length);
+    int dom = mpSimulator->getGeometry(mpSimulator->getModel()->getSpecies(id)->getCompartment(), length)[index];
+    double concentration = values[index];    
+    std::pair<std::string, double> current (id,concentration);
     result.push_back(current);
   }
 
@@ -157,20 +160,20 @@ void SimulationThread::applyDose(int x, int y,const QString &id, double value)
 {
   if (mpDisplayItems == NULL || mpDisplayItems->size() == 0) return;
 
-  bool wasRunning = mPaused;
+  bool oldValue = mPaused;
   mPaused = true;
   int length;
   int index = mpSimulator->getIndexForPosition(x, y);
-  if (index == -1) return;
+  if (index == -1) { mPaused = oldValue; return; }
 
   std::string sId = id.toStdString();
   const Model* model = mpSimulator->getModel();
-  if (model == NULL) return;
+  if (model == NULL) { mPaused = oldValue; return; }
   const Species* species = model->getSpecies(sId);
-  if (species == NULL) return;
+  if (species == NULL) { mPaused = oldValue; return; }
   std::string comp = species->getCompartment();
   if (mpSimulator->getGeometry(comp, length)[index] == 0)
-    return;
+    { mPaused = oldValue; return; }
 
   for (unsigned int ind = 0; ind < mpDisplayItems->size(); ind++)
   {
@@ -179,7 +182,7 @@ void SimulationThread::applyDose(int x, int y,const QString &id, double value)
     mpSimulator->getVariable(sId, length)[index] = value;
   }
 
-  mPaused = wasRunning;
+  mPaused = oldValue;
 }
 
 void SimulationThread::run()

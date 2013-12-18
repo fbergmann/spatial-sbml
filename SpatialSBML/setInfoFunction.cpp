@@ -159,12 +159,27 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 					sInfo->diffCInfo = new variableInfo*[3];
 					fill_n(sInfo->diffCInfo, 3, reinterpret_cast<variableInfo*>(0));
 				}
+        if (!pPlugin->getDiffusionCoefficient()->isSetCoordinateIndex())
+        {
+          for (int coordIndex = 0 ; coordIndex < 3; ++coordIndex)
+          {
+            sInfo->diffCInfo[coordIndex] = info;
+            if (model->getRule(info->id) == 0 && p->isSetValue()) {
+              info->isResolved = true;
+              info->isUniform = true;
+              sInfo->diffCInfo[coordIndex]->value = new double(p->getValue());
+            }
+          }
+        }
+        else
+        {
 				sInfo->diffCInfo[pPlugin->getDiffusionCoefficient()->getCoordinateIndex()] = info;
 				if (model->getRule(info->id) == 0 && p->isSetValue()) {
 					info->isResolved = true;
 					info->isUniform = true;
 					sInfo->diffCInfo[pPlugin->getDiffusionCoefficient()->getCoordinateIndex()]->value = new double(p->getValue());
 				}
+        }
 				break;
 			case SBML_SPATIAL_ADVECTIONCOEFFICIENT://advection coefficient
 				sInfo = searchInfoById(varInfoList, pPlugin->getAdvectionCoefficient()->getVariable().c_str());

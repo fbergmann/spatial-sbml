@@ -585,10 +585,16 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       for (j = 0; j < analyticGeo->getNumAnalyticVolumes(); j++) {
         AnalyticVolume *analyticVolEx = analyticGeo->getAnalyticVolume(j);
         GeometryInfo *geoInfoEx = searchAvolInfoByDomainType(geoInfoList, analyticVolEx->getDomainType().c_str());
+        if (geoInfoEx == NULL)
+          continue;
+
         for (k = 0; k < analyticGeo->getNumAnalyticVolumes(); k++) {
           AnalyticVolume *analyticVolIn = analyticGeo->getAnalyticVolume(k);
           if (analyticVolEx->getOrdinal() < analyticVolIn->getOrdinal()) {//ex's ordinal is smaller than in's ordinal
             GeometryInfo *geoInfoIn = searchAvolInfoByDomainType(geoInfoList, analyticVolIn->getDomainType().c_str());
+            if (geoInfoIn == NULL)
+              continue;
+
             //merge
             for (Z = 0; Z < Zindex; Z += 2) {
               for (Y = 0; Y < Yindex; Y += 2) {
@@ -711,8 +717,15 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     AdjacentDomains *adDomain = geometry->getAdjacentDomains(i);
     Domain *ad1 = geometry->getDomain(adDomain->getDomain1());
     Domain *ad2 = geometry->getDomain(adDomain->getDomain2());
+
+    if (ad1 == NULL || ad2 == NULL)
+      continue;
+
     GeometryInfo *geoi1 = searchAvolInfoByDomainType(geoInfoList, ad1->getDomainType().c_str());
     GeometryInfo *geoi2 = searchAvolInfoByDomainType(geoInfoList, ad2->getDomainType().c_str());
+    if (geoi1 == NULL || geoi2 == NULL)
+      continue;
+
     if (geoi1->adjacentGeo1 == 0) {
       geoi1->adjacentGeo1 = geoi2;
     } else if (geoi1->adjacentGeo2 == 0 && geoi1->adjacentGeo1 != geoi2) {
@@ -1057,6 +1070,8 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
         parseAST(ast, info->rpInfo, varInfoList, info->rpInfo->listNum, freeConstList);
         bool isAllArea = (info->sp != 0)? false: true;
         if (info->sp != 0) info->geoi = searchAvolInfoByCompartment(geoInfoList, info->sp->getCompartment().c_str());
+        if (info->geoi == NULL)
+          continue;
         reversePolishInitial(info->geoi->domainIndex, info->rpInfo, info->value, info->rpInfo->listNum, Xindex, Yindex, Zindex, isAllArea);
         info->isResolved = true;
         if (info->hasAssignmentRule) orderedARule.push_back(info);
@@ -1194,6 +1209,11 @@ double* SpatialSimulator::getZ(int &length)
 int* SpatialSimulator::getGeometry(const std::string &compartmentId, int &length)
 {
   GeometryInfo* info = searchAvolInfoByCompartment(geoInfoList, compartmentId.c_str());
+  if (info == NULL) 
+  {
+    length = 0;
+    return NULL;
+  }
   length = numOfVolIndexes;
   return info->isDomain;
 }
@@ -1206,6 +1226,11 @@ int SpatialSimulator::getGeometryLength() const
 boundaryType* SpatialSimulator::getBoundaryType(const std::string &compartmentId, int &length)
 {
   GeometryInfo* info = searchAvolInfoByCompartment(geoInfoList, compartmentId.c_str());
+  if (info == NULL)
+  {
+    length = 0;
+    return NULL;
+  }
   length = numOfVolIndexes;
   return info->bType;
 }
@@ -1213,6 +1238,11 @@ boundaryType* SpatialSimulator::getBoundaryType(const std::string &compartmentId
 int* SpatialSimulator::getBoundary(const std::string &compartmentId, int &length)
 {
   GeometryInfo* info = searchAvolInfoByCompartment(geoInfoList, compartmentId.c_str());
+   if (info == NULL)
+  {
+    length = 0;
+    return NULL;
+  }
   length = numOfVolIndexes;
   return info->isBoundary;
 }
@@ -1227,6 +1257,9 @@ double SpatialSimulator::getVariableAt(const std::string& variable, int x, int y
 
   int index = getIndexForPosition(x, y);
   if (index == -1)
+    return 0.0;
+
+  if (sInfo->geoi == NULL || sInfo->geoi->isDomain[index] == 0)
     return 0.0;
 
   return sInfo->value[index];
