@@ -60,6 +60,14 @@ if (ENABLE_SBW)
 
 include_directories(${SBW_INCLUDE_DIR})
 add_definitions(-DUSE_SBW_INTEGRATION)
+
+if (APPLE)
+add_definitions(-DDARWIN)
+endif()
+
+if (UNIX)
+add_definitions(-DLINUX)
+endif()
 endif()
 
 add_executable(SpatialUI ${EXECUTABLE_FLAGS} ${CPP_FILES}

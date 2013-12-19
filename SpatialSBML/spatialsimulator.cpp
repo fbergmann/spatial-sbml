@@ -1663,7 +1663,7 @@ void flipOrder(AnalyticGeometry& geometry)
 {
   if (geometry.getNumAnalyticVolumes() == 0) return;
 
-  std::vector<std::pair<int, int>> list;
+  std::vector< std::pair<int, int> > list;
   for (size_t i = 0; i < geometry.getNumAnalyticVolumes(); ++i)
   {
     AnalyticVolume* current = geometry.getAnalyticVolume(i);
@@ -1672,7 +1672,7 @@ void flipOrder(AnalyticGeometry& geometry)
 
   std::sort(list.begin(), list.end(), sorter);
 
-  for (std::vector<std::pair<int, int>>::iterator it=list.begin(); it!=list.end(); ++it)
+  for (std::vector< std::pair<int, int> >::iterator it=list.begin(); it!=list.end(); ++it)
   {
     AnalyticVolume* current = geometry.getAnalyticVolume(it->first);
     current->setOrdinal((geometry.getNumAnalyticVolumes()-1)-it->second);
