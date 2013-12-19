@@ -68,7 +68,7 @@ public slots:
   void loadFile(const QString &fileName);
   void loadFromString(const std::string& sbml);
   void visualize(double time, const QImage& image);
-
+  
 private slots:;
   void newFile();
   void open();
@@ -81,6 +81,7 @@ private slots:;
   void stop();
   void restart();
   void editGeometry();
+  void toggledHideBC(bool);
 
   void updatePosition(int x, int y);
 
@@ -97,6 +98,7 @@ public:
   virtual void showEvent( QShowEvent *e );
 
 private:
+  void fillParameters();
   void createActions();
   void createMenus();
   void createToolBars();

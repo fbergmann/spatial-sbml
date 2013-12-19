@@ -300,6 +300,26 @@
            <item row="0" column="0">
             <widget class="QTableWidget" name="tblParameters"/>
            </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="chkHideBC">
+             <property name="text">
+              <string>Hide Boundary Conditions</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+		  <item row="2" column="0">
+            <widget class="QCheckBox" name="chkHideDiff">
+             <property name="text">
+              <string>Hide Diffusion Coefficients</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>

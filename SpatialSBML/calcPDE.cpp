@@ -421,6 +421,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 	double* d = sInfo->delta;
 	double rk[4] = {0, 0.5, 0.5, 1.0};
 	GeometryInfo *geoInfo = sInfo->geoi;
+  if (!sInfo->isResolved) return;
 	//flux
 	//2d
 	//J = -D * dval / deltaX
@@ -829,6 +830,7 @@ void cipCSLR(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, d
 
 void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, int Xindex, int Yindex, int Zindex, int m, int dimension)
 {
+  if (!sInfo->isResolved) return;
 	int Xp = 0, Xm = 0, Yp = 0, Ym = 0, Zp = 0, Zm = 0, X = 0, Y = 0, Z = 0;
 	int divIndexXp = 0, divIndexXm = 0, divIndexYp = 0,divIndexYm = 0, divIndexZp = 0, divIndexZm = 0;
 	int numOfVolIndexes = Xindex * Yindex * Zindex;
@@ -918,13 +920,17 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 	int *operation = rInfo->rpInfo->opfuncList;
 	int numOfASTNodes = rInfo->rpInfo->listNum;
 	variableInfo *symbolInfo = 0;
-	for (k = 0; k < (int)geoInfo->domainIndex.size(); k++) {
-		index = geoInfo->domainIndex[k];
+	//for (k = 0; k < (int)geoInfo->domainIndex.size(); k++) {
+	//	index = geoInfo->domainIndex[k];
+  int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
+  for (k = 0; k < domainIndexSize; k++) {
+		index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[k];
 		Z = index / (Xindex * Yindex);
 		Y = (index - Z * Xindex * Yindex) / Xindex;
 		X = index - Z * Xindex * Yindex - Y * Xindex;
 		if ((dimension == 3 && (X * Y * Z == 0 || X == Xindex - 1 || Y == Yindex - 1 || Z == Zindex - 1))
 			|| (dimension == 2 && (X * Y == 0 || X == Xindex - 1 || Y == Yindex - 1))) {
+        if (geoInfo != NULL)
 			continue;
 		}
 		st_index = 0;

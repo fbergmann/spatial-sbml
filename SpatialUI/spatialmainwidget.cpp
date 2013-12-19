@@ -16,6 +16,7 @@
 #include <sbml/SBMLTypes.h>
 #include <sbml/packages/spatial/extension/SpatialSpeciesRxnPlugin.h>
 #include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
+#include <sbml/packages/spatial/extension/SpatialParameterPlugin.h>
 
 #include <string>
 #include <string.h>
@@ -59,6 +60,8 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   connect(ui->lstAssignments, SIGNAL(currentRowChanged(int)), this, SLOT(selectedSpeciesChanged(int)));
   connect(ui->lblImage, SIGNAL(positionChanged(int, int)), this, SLOT(updatePosition(int,int)));
   connect(ui->tblParameters, SIGNAL(cellChanged(int, int)), this, SLOT(parameterChanged(int,int)));
+  connect(ui->chkHideBC, SIGNAL(toggled(bool)), this, SLOT(toggledHideBC(bool)));
+  connect(ui->chkHideDiff, SIGNAL(toggled(bool)), this, SLOT(toggledHideBC(bool)));
 
   createActions();
   createMenus();
@@ -212,6 +215,11 @@ void SpatialMainWindow::closeEvent(QCloseEvent *event)
 
 
   event->accept();
+}
+
+void SpatialMainWindow::toggledHideBC(bool)
+{
+  fillParameters();
 }
 
 void SpatialMainWindow::newFile()
@@ -581,20 +589,42 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
   //thread->mpSimulator->flipVolumeOrder();
   //restart();
 
+  fillParameters();
+
+}
+
+void SpatialMainWindow::fillParameters()
+{
+  if (thread == NULL || thread->mpSimulator == NULL) return;
+  const Model* model = thread->mpSimulator->getModel();
+  if (model == NULL) return;
+  bool hideBC = ui->chkHideBC->isChecked();
+  bool hideDiff = ui->chkHideDiff->isChecked();
   ui->tblParameters->clear();
+  ui->tblParameters->setRowCount(model->getNumParameters());
   ui->tblParameters->setColumnCount(1);
   ui->tblParameters->setHorizontalHeaderLabels(QStringList() << "Value");
-  ui->tblParameters->setRowCount(model->getNumParameters());
   ui->tblParameters->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
   ui->tblParameters->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  for (unsigned int i =0; i < model->getNumParameters(); i++)
+  int count = 0;
+  for (unsigned int i =0; i < model->getNumParameters(); ++i)
   {
     const Parameter* param = model->getParameter(i);
+    const SpatialParameterPlugin* plug = dynamic_cast<const SpatialParameterPlugin*>(param->getPlugin("spatial"));
+    if (hideBC && plug != NULL && plug->getType() == SBML_SPATIAL_BOUNDARYCONDITION)
+      continue;
+    if (hideDiff && plug != NULL && plug->getType() == SBML_SPATIAL_DIFFUSIONCOEFFICIENT)
+      continue;
+    if (plug != NULL && plug->getType() == SBML_SPATIAL_SPATIALSYMBOLREFERENCE)
+      continue;
     QTableWidgetItem* item = new QTableWidgetItem(param->getId().c_str()); 
-    ui->tblParameters->setVerticalHeaderItem(i, item);
-    ui->tblParameters->setItem(i, 0, new QTableWidgetItem( QString::number(param->getValue())));
+    ui->tblParameters->setVerticalHeaderItem(count, item);
+    ui->tblParameters->setItem(count, 0, new QTableWidgetItem( QString::number(param->getValue())));
+    ++count;
   }
+  ui->tblParameters->setRowCount(count);
 
+  ui->tblParameters->repaint();
 }
 
 void SpatialMainWindow::loadFromString(const std::string& sbml)

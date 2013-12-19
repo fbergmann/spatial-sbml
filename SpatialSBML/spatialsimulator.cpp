@@ -1326,6 +1326,39 @@ void SpatialSimulator::performStep(double t, double dt)
       {//membrane transport
         GeometryInfo *reactantGeo = searchInfoById(varInfoList, r->getReactant(0)->getSpecies().c_str())->geoi;
         GeometryInfo *productGeo = searchInfoById(varInfoList, r->getProduct(0)->getSpecies().c_str())->geoi;
+
+        if (reactantGeo == NULL)
+        {
+          const std::string& speciesId = r->getReactant(0)->getSpecies();
+          const std::string& compartment = model->getSpecies(speciesId)->getCompartment();
+          for (size_t i = 0; i < model->getNumSpecies(); ++i)
+          {
+            const Species* current = model->getSpecies(i);
+            if (current->getId() != speciesId && current->getCompartment() == compartment)
+            {
+              reactantGeo = searchInfoById(varInfoList, current->getId().c_str())->geoi;
+              if (reactantGeo != NULL) 
+                break;
+            }
+          }
+        }
+
+        if (productGeo == NULL)
+        {
+          const std::string& speciesId = r->getProduct(0)->getSpecies();
+          const std::string& compartment = model->getSpecies(speciesId)->getCompartment();
+          for (size_t i = 0; i < model->getNumSpecies(); ++i)
+          {
+            const Species* current = model->getSpecies(i);
+            if (current->getId() != speciesId && current->getCompartment() == compartment)
+            {
+              productGeo = searchInfoById(varInfoList, current->getId().c_str())->geoi;
+              if (productGeo != NULL) 
+                break;
+            }
+          }
+        }
+
         for (j = 0; j < geoInfoList.size(); j++) {
           if (!geoInfoList[j]->isVol) {
             if ((geoInfoList[j]->adjacentGeo1 == reactantGeo && geoInfoList[j]->adjacentGeo2 == productGeo)
@@ -1336,11 +1369,15 @@ void SpatialSimulator::performStep(double t, double dt)
             }
           }
         }
-        if (reactantGeo->isVol ^ productGeo->isVol) {
-          if (!reactantGeo->isVol) {
+
+        bool haveReactantVol = reactantGeo != NULL && reactantGeo->isVol;
+        bool haveProductVol = productGeo != NULL && productGeo->isVol;
+
+        if (haveReactantVol ^ haveProductVol) {
+          if (!haveReactantVol) {
             calcMemTransport(rInfoList[i], reactantGeo, nuVec, Xindex, Yindex, Zindex, dt, m, deltaX, deltaY, deltaZ, dimension, r->getNumReactants());
           }
-          if (!productGeo->isVol) {
+          if (!haveProductVol) {
             calcMemTransport(rInfoList[i], productGeo, nuVec, Xindex, Yindex, Zindex, dt, m, deltaX, deltaY, deltaZ, dimension, r->getNumReactants());
           }
         }
