@@ -679,7 +679,10 @@ void SpatialMainWindow::parameterChanged(int row, int column)
 
   pause();
 
-  thread->mpSimulator->setParameter(doc->getModel()->getParameter(row)->getId(), newValue);
+  const std::string& id = ui->tblParameters->
+    verticalHeaderItem(row)->text().toStdString();
+
+  thread->mpSimulator->setParameter(id, newValue);
 
   if (wasRunning) play();
 
