@@ -42,7 +42,7 @@ void parseAST(ASTNode *ast, reversePolishInfo *rpInfo, vector<variableInfo*> &va
 		if (rpInfo->deltaList != 0) rpInfo->deltaList[index] = 0;
 		freeConstList.push_back(rpInfo->constList[index]);
 	} else if (ast->isConstant()) {//ast is constant
-		ASTNodeType_t type = ast->getType();
+		int type = (int)ast->getType();
 		if (type == AST_CONSTANT_E) {
 			rpInfo->varList[index] = 0;
 			rpInfo->constList[index] = new double(M_E);
@@ -70,7 +70,7 @@ void parseAST(ASTNode *ast, reversePolishInfo *rpInfo, vector<variableInfo*> &va
 		}
 	}
 	else if (ast->isName()) {
-		ASTNodeType_t type = ast->getType();
+		int type = (int)ast->getType();
 		if (type == AST_NAME) {
 			variableInfo *info = searchInfoById(varInfoList, ast->getName());
 			if (info != 0) {
@@ -118,7 +118,7 @@ void countAST(ASTNode *ast, int &numOfASTNodes)
 void rearrangeAST(ASTNode *ast)
 {
 	unsigned int i, j;
-	ASTNodeType_t type = ast->getType();
+	int type = (int)ast->getType();
 	if (type == AST_MINUS && ast->getNumChildren() == 1) {//minus which has one child
 		//"-a" to "-1.0 * a"
 		ast->setType(AST_TIMES);
