@@ -115,8 +115,12 @@ void countAST(ASTNode *ast, int &numOfASTNodes)
 	numOfASTNodes++;
 }
 
+
 void rearrangeAST(ASTNode *ast)
 {
+//  static int _count = 0;
+//  ++_count;
+//  std::string before = SBML_formulaToString(ast);
 	unsigned int i, j;
 	int type = (int)ast->getType();
 	if (type == AST_MINUS && ast->getNumChildren() == 1) {//minus which has one child
@@ -205,15 +209,29 @@ void rearrangeAST(ASTNode *ast)
 			(ast->getLeftChild()->isInteger() && ast->getLeftChild()->getInteger() == 0) ||
 			(ast->getRightChild()->isReal() && fabs(ast->getRightChild()->getReal()) == 0) ||
 			(ast->getRightChild()->isInteger() && ast->getRightChild()->getInteger() == 0)) {
+			ast->removeChild(0);
+			ast->removeChild(0);
 			ast->setType(AST_REAL);
 			ast->setValue(0.0);
-			ast->removeChild(0);
-			ast->removeChild(0);
 		}
 	}
+
+#if LIBSBML_VERSION >= 50903
+  if (type == AST_TIMES || type == AST_PLUS)
+  {
+    ast->reduceToBinary();
+  }
+#endif 
+
 	for (i = 0; i < ast->getNumChildren(); i++) {
 		rearrangeAST(ast->getChild(i));
 	}
+  //std::string after = SBML_formulaToString(ast);
+  //if (after != before)
+  //{
+  //  cout << "before: " << before << endl;
+  //  cout << "after: " << after << endl << endl;
+  //}
 }
 
 void parseDependence(const ASTNode *ast, vector<variableInfo*> &dependence, vector<variableInfo*> &varInfoList)
