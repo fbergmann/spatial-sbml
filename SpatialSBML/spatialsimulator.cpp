@@ -221,7 +221,7 @@ Parameter* SpatialSimulator::getDiffusionCoefficientForSpecies(const std::string
 }
 
 SpatialSimulator::SpatialSimulator():
-  Xdiv(100), Ydiv(100), Zdiv(1), model(NULL), volDimension(0), memDimension(0)
+  Xdiv(100), Ydiv(100), Zdiv(1), model(NULL), volDimension(0), memDimension(0), deltaX(0), deltaY(0), deltaZ(0)
 {
 }
 void SpatialSimulator::initFromFile(const std::string &fileName, int xdim, int ydim, int zdim/*=1*/)
@@ -1399,7 +1399,7 @@ void SpatialSimulator::performStep(double t, double dt)
       if (sInfo == NULL) continue;
       //volume diffusion
       if (sInfo->diffCInfo != 0 && sInfo->geoi->isVol) {
-        calcDiffusion(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dt);
+        calcDiffusion(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dt, dimension);
       }
       //membane diffusion
       if (sInfo->diffCInfo != 0 && !sInfo->geoi->isVol) {
@@ -1452,12 +1452,12 @@ void SpatialSimulator::updateSpecies(variableInfo *sInfo, double dt)
 {
   if (sInfo == NULL || sInfo->geoi == NULL) 
     return;
-  int X = 0, Y = 0, Z = 0, index = 0, j=0;
+  int X = 0, Y = 0, Z = 0, index = 0;
   if (sInfo->sp->isSetConstant() && sInfo->sp->getConstant()) 
     return;
 
   //update values (advection, diffusion, slow reaction)
-  for (j = 0; j < sInfo->geoi->domainIndex.size(); j++) 
+  for (size_t j = 0; j < sInfo->geoi->domainIndex.size(); ++j) 
   {
     index = sInfo->geoi->domainIndex[j];
     Z = index / (Xindex * Yindex);
@@ -1499,7 +1499,7 @@ void SpatialSimulator::deleteValuesOutsideDomain(variableInfo *info )
 void SpatialSimulator::updateAssignmentRules()
 {
 
-  int X = 0, Y = 0, Z = 0, index = 0, j =0;
+  int X = 0, Y = 0, Z = 0, index = 0;
   //fast reaction
   // 		for (i = 0; i < fast_rInfoList.size(); i++) {
   // 			Reaction *r = fast_rInfoList[i]->reaction;
@@ -1549,7 +1549,7 @@ void SpatialSimulator::updateAssignmentRules()
     variableInfo *sInfo = searchInfoById(varInfoList, s->getId().c_str());
     if (sInfo == NULL|| sInfo->geoi == NULL) continue;
     if (!sInfo->geoi->isVol) {
-      for (j = 0; j < sInfo->geoi->pseudoMemIndex.size(); j++) {
+      for (size_t j = 0; j < sInfo->geoi->pseudoMemIndex.size(); ++j) {
         index = sInfo->geoi->pseudoMemIndex[j];
         Z = index / (Xindex * Yindex);
         Y = (index - Z * Xindex * Yindex) / Xindex;

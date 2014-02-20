@@ -33,7 +33,8 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 		Y = (index - Z * Xindex * Yindex) / Xindex;
 		X = index - Z * Xindex * Yindex - Y * Xindex;
 		st_index = 0;
-		for (i = 0; i < numOfASTNodes; i++) {
+		for (i = 0; i < numOfASTNodes; i++) 
+    {
 			if (rpInfo->varList[i] != 0) {//set variable into the stack
 				rpStack[st_index] = rpInfo->varList[i][index];
 				st_index++;
@@ -410,7 +411,7 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 	}
 }
 
-void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, int Xindex, int Yindex, int Zindex, int m, double dt)
+void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, int Xindex, int Yindex, int Zindex, int m, double dt, int dimension)
 {
 	int X = 0, Y = 0, Z = 0, index = 0;
 	unsigned int j;
@@ -461,7 +462,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 						sInfo->delta[m * numOfVolIndexes + index] += sInfo->diffCInfo[1]->value[dcIndex] * (val[Yminus2] - val[index]) / pow(deltaY, 2);
 					}
 				}
-				if (sInfo->diffCInfo[2] != 0) {//z-diffusion
+        if (sInfo->diffCInfo[2] != 0 && dimension > 2) {//z-diffusion
 					if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofZp == false) {
 						sInfo->delta[m * numOfVolIndexes + index] += sInfo->diffCInfo[2]->value[dcIndex] * (val[Zplus2] - val[index]) / pow (deltaZ, 2);
@@ -501,7 +502,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 							 - (val[index] + rk[m] * dt * d[(m - 1) * numOfVolIndexes + index])) / pow(deltaY, 2);
 					}
 				}
-				if (sInfo->diffCInfo[2] != 0) {//z-diffusion
+				if (sInfo->diffCInfo[2] != 0  && dimension > 2) {//z-diffusion
 					if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofZp == false) {
 						sInfo->delta[m * numOfVolIndexes + index]
