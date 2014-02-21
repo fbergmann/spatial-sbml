@@ -155,7 +155,7 @@ void SpatialMainWindow::addSpecies()
   else
   {
     item = new DisplayItem(
-      currentSpecies.ascii(),
+      currentSpecies.toStdString(),
       palettes[index]
     );
     displayItems.push_back(item);
@@ -577,7 +577,7 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
     .size() > 0)
   {
     displayItems.push_back(new DisplayItem(
-      lstSpecies->itemText(0).ascii(),
+      lstSpecies->itemText(0).toStdString(),
       palettes[0]
     ));
     ui->lstAssignments->addItem(lstSpecies->itemText(0));
@@ -657,7 +657,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   }
 
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
-  doc = readSBML(fileName.ascii());
+  doc = readSBML(fileName.toStdString().c_str());
 
   setCurrentFile(fileName);
   loadFromDocument(doc);
@@ -926,7 +926,7 @@ void SpatialMainWindow::sbwRegister()
       try
         {
           // Set the commandline so that SBW knows how to call us.
-          std::string Self = QCoreApplication::arguments().at(0).ascii();
+          std::string Self = QCoreApplication::arguments().at(0).toStdString();
 
           mpSBWModule->setCommandLine(Self);
           mpSBWModule->registerModule();
@@ -990,7 +990,7 @@ void SpatialMainWindow::sbwRefreshMenu()
       QStringList ModuleList;
       QStringList ServiceList;
 
-      std::string Self = QCoreApplication::arguments().at(0).ascii();
+      std::string Self = QCoreApplication::arguments().at(0).toStdString();
 
       int i = 0;
 
@@ -1083,6 +1083,10 @@ void SpatialMainWindow::sbwRefreshMenu()
   return;
 }
 
+void SpatialMainWindow::sbwSlotMenuTriggeredFinished(bool success)
+{
+}
+
 void SpatialMainWindow::sbwSlotMenuTriggered(QAction * pAction)
 {
 
@@ -1096,8 +1100,8 @@ void SpatialMainWindow::sbwSlotMenuTriggered(QAction * pAction)
     {
       try
         {
-          int nModule = SBWLowLevel::getModuleInstance(mSBWAnalyzerModules[mSBWActionId].ascii());
-          int nService = SBWLowLevel::moduleFindServiceByName(nModule, mSBWAnalyzerServices[mSBWActionId].ascii());
+          int nModule = SBWLowLevel::getModuleInstance(mSBWAnalyzerModules[mSBWActionId].toStdString().c_str());
+          int nService = SBWLowLevel::moduleFindServiceByName(nModule, mSBWAnalyzerServices[mSBWActionId].toStdString().c_str());
           int nMethod = SBWLowLevel::serviceGetMethod(nModule, nService, "void doAnalysis(string)");
 
           DataBlockWriter args;

@@ -286,7 +286,7 @@ void GeometryEditWidget::handleButtons(QAbstractButton * button)
     QPixmap temp(*ui->imageLabel->pixmap());
     if (!temp.save(fileName))
     {
-      cerr << "saving: " << fileName.ascii() << " failed!!!!!" << endl;
+      cerr << "saving: " << fileName.toStdString() << " failed!!!!!" << endl;
     }
   }
 

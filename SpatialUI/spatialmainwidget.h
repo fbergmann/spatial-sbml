@@ -9,10 +9,10 @@
 
 
 #ifdef USE_SBW_INTEGRATION
-# include <QtGui/QApplication>
-# include <QtCore/QEvent>
-# include <QtCore/QMutex>
-# include <QtCore/QWaitCondition>
+# include <QApplication>
+# include <QEvent>
+# include <QMutex>
+# include <QWaitCondition>
 
 # define WIN32_LEAN_AND_MEAN
 # include <SBW/SBW.h>

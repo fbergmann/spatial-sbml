@@ -7,19 +7,26 @@
 #
 project (SpatialUI)
 
-find_package(Qt4 4.7.0 REQUIRED QtCore QtOpenGL QtGui Qt3Support)
+include(${CMAKE_CURRENT_SOURCE_DIR}/ChooseQtVersion.cmake)
+QT_FIND_MODULES(Core Gui OpenGL) 
+
+#find_package(Qt4 4.7.0 REQUIRED QtCore QtOpenGL QtGui Qt3Support)
 
 file(GLOB CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
 file(GLOB   H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h )
 file(GLOB  UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.ui )
 file(GLOB RCC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc )
 
-qt4_wrap_cpp(HEADERS_MOC ${H_FILES})
-qt4_wrap_ui(FORMS_HEADERS ${UI_FILES})
+if (Qt5_FOUND)
+qt5_add_resources(RESOURCES_RCC ${RCC_FILES})
+elseif(Qt4_FOUND OR QT4_FOUND)
 qt4_add_resources(RESOURCES_RCC ${RCC_FILES})
+endif()
 
-include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS})
+#qt4_wrap_cpp(HEADERS_MOC ${H_FILES})
+#qt4_wrap_ui(FORMS_HEADERS ${UI_FILES})
+#include(${QT_USE_FILE})
+#add_definitions(${QT_DEFINITIONS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -70,69 +77,76 @@ add_definitions(-DLINUX)
 endif()
 endif()
 
+
 add_executable(SpatialUI ${EXECUTABLE_FLAGS} ${CPP_FILES}
 	${H_FILES}
-    ${HEADERS_MOC}
-    ${FORMS_HEADERS}
-    ${RESOURCES_RCC}
+     ${HEADERS_MOC}
+     ${FORMS_HEADERS}
+     ${RESOURCES_RCC}
 	${SPATIAL_CPP_FILES}
-	)
-target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${QT_LIBRARIES})
+)
+
+QT_BIND_TO_TARGET(SpatialUI)
+
+target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML)
+
 if (ENABLE_SBW)
-
-target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${SBW_LIBRARY})
-
-if (WIN32)
-target_link_libraries(SpatialUI Ws2_32.lib)
-endif()
+  target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${SBW_LIBRARY})
+  
+  if (WIN32)
+    target_link_libraries(SpatialUI Ws2_32.lib)
+  endif()
 
 endif()
 
 
 file(GLOB PALETTE_FILES palettes/*.txt )
 
-
 SET(DIRS)
+
 foreach(${lib} ${EXTRA_LIBS})
   if (EXISTS ${lib})
 	get_filename_component(dir ${lib} PATH)	
 	SET(DIRS  ${DIRS} ${dir})
   endif()
 endforeach()
+
 if (NOT DIRS)
    if (EXISTS "${EXTRA_LIBS}")
 	get_filename_component(DIRS ${EXTRA_LIBS} PATH)
    endif()
 endif()
+
 if (QT_BINARY_DIR)
-SET(DIRS ${QT_BINARY_DIR} ${DIRS})
+  SET(DIRS ${QT_BINARY_DIR} ${DIRS})
 endif()
 
 
 if(NOT APPLE)
 
-SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/SpatialUI${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
-install(FILES ${PALETTE_FILES} DESTINATION bin)
-install(TARGETS SpatialUI DESTINATION bin)
-# ensure that next to the binaries also dependencies are copied
-install(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
-    " COMPONENT Runtime)
+  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/SpatialUI${CMAKE_EXECUTABLE_SUFFIX}" CACHE INTERNAL "")
+  install(FILES ${PALETTE_FILES} DESTINATION bin)
+  install(TARGETS SpatialUI DESTINATION bin)
+  # ensure that next to the binaries also dependencies are copied
+  install(CODE "
+      include(BundleUtilities)
+      fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
+      " COMPONENT Runtime)
 
 else()
 
-install(FILES ${PALETTE_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/MacOS)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ICON_SpatialUI.icns DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/Resources)
-# on OS X everything is different, here we need to first fix the app bundle,
-# and only then install it
-SET(APPS "${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app" CACHE INTERNAL "")
-# ensure that next to the binaries also dependencies are copied
-install(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
-    " COMPONENT Runtime)
-install(TARGETS SpatialUI DESTINATION .)
+  install(FILES ${PALETTE_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/MacOS)
+  install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/ICON_SpatialUI.icns DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app/Contents/Resources)
+  # on OS X everything is different, here we need to first fix the app bundle,
+  # and only then install it
+  SET(APPS "${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app" CACHE INTERNAL "")
+  # ensure that next to the binaries also dependencies are copied
+  install(CODE "
+      include(BundleUtilities)
+      fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
+      " COMPONENT Runtime)
+  install(TARGETS SpatialUI DESTINATION .)
+
 endif()
 
 include(InstallRequiredSystemLibraries)

@@ -9,9 +9,33 @@
 cmake_minimum_required(VERSION 2.6)
 project(spatial)
 
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "2")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
+
+
+set(SPATIAL_VERSION_MAJOR)
+set(SPATIAL_VERSION_MINOR)
+set(SPATIAL_VERSION_PATCH)
+set(SPATIAL_VERSION_RELEASE)
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt")
+
+    file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION.txt" VersionString NEWLINE_CONSUME)
+    string(STRIP "${VersionString}" VersionString)
+    string(REPLACE "." ";" VersionString "${VersionString}" )
+    string(REPLACE "-" ";" VersionString "${VersionString}" )
+    list(LENGTH VersionString versionLength)
+    list(GET VersionString 0 SPATIAL_VERSION_MAJOR )
+    list(GET VersionString 1 SPATIAL_VERSION_MINOR )
+    list(GET VersionString 2 SPATIAL_VERSION_PATCH )
+
+    if(${versionLength} GREATER 3)
+        list(GET VersionString 3 SPATIAL_VERSION_RELEASE )
+    endif()
+
+endif()
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${SPATIAL_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${SPATIAL_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${SPATIAL_VERSION_PATCH}")
 set(CPACK_SOURCE_GENERATOR "ZIP")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/license.txt")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/readme.md")
@@ -30,7 +54,7 @@ find_library(LIBSBML_LIBRARY
   NAMES sbml-static.lib sbml-static sbml
   PATHS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64
         ${CMAKE_SOURCE_DIR}
-        ${LIBSBML_DEPENDENCY_DIR}/lib
+        ${SPATIAL_DEPENDENCY_DIR}/lib
   DOC "The file name of the libsbml library."
 )
 
@@ -38,9 +62,15 @@ find_path(LIBSBML_INCLUDE_DIR
   NAMES sbml/SBase.h
   PATHS /usr/include /usr/local/include
     ${CMAKE_SOURCE_DIR}/include
-    ${LIBSBML_DEPENDENCY_DIR}/include
+    ${SPATIAL_DEPENDENCY_DIR}/include
   DOC "The libsbml include directory."
 )
+
+option(LIBSBML_STATIC   "Linking against the static libSBML."     ON)
+if (LIBSBML_STATIC)
+  add_definitions(-DLIBSBML_STATIC -DLIBLAX_STATIC)
+  set(BUILD_DEFINITIONS "${BUILD_DEFINITIONS} -DLIBSBML_STATIC -DLIBLAX_STATIC")
+endif()
 
 
 ###############################################################################
@@ -80,7 +110,7 @@ find_library(SBW_LIBRARY
   NAMES SBW-static.lib SBW-static SBW
   PATHS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64
         ${CMAKE_SOURCE_DIR}
-        ${LIBSBML_DEPENDENCY_DIR}/lib
+        ${SPATIAL_DEPENDENCY_DIR}/lib
   DOC "The file name of the SBW library."
 )
 
@@ -88,7 +118,7 @@ find_path(SBW_INCLUDE_DIR
   NAMES SBW/SBW.h
   PATHS /usr/include /usr/local/include
     ${CMAKE_SOURCE_DIR}/include
-    ${LIBSBML_DEPENDENCY_DIR}/include
+    ${SPATIAL_DEPENDENCY_DIR}/include
   DOC "The SBW include directory."
 )
 
@@ -128,8 +158,8 @@ endif(WITH_CSHARP)
 if(WIN32 AND NOT CYGWIN)
  add_definitions(-DLIBSBML_EXPORTS -DWIN32)
  if(MSVC)
-        add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
-        set(BUILD_DEFINITIONS "${BUILD_DEFINITIONS} -D_CRT_SECURE_NO_WARNINGS")
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS)
+        set(BUILD_DEFINITIONS "${BUILD_DEFINITIONS} -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS")
         option(WITH_STATIC_RUNTIME "Compile using the static MSVC Runtime." OFF)
         if(WITH_STATIC_RUNTIME)
             foreach(flag_var
