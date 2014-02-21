@@ -48,8 +48,6 @@ macro(QT_FIND_MODULES)
     # Find Qt libraries
     find_package(Qt5 QUIET COMPONENTS ${_modules_qt5})
     if( NOT Qt5_FOUND)
-        message("qt5 not found!")
-    
         find_package(Qt4 QUIET COMPONENTS ${_modules_qt4})
         if(Qt4_FOUND OR QT4_FOUND)
             include(${QT_USE_FILE})
