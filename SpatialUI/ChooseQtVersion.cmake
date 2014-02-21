@@ -37,7 +37,6 @@ macro(QT_FIND_MODULES)
     set(_modules_qt5)
     # Prepare modules
     foreach(_module ${ARGN})
-        message("Added ${_module}")
         list(APPEND _modules_qt4 Qt${_module})
         list(APPEND _modules_qt5 ${_module})
         if(_module MATCHES "Gui")
@@ -49,6 +48,8 @@ macro(QT_FIND_MODULES)
     # Find Qt libraries
     find_package(Qt5 QUIET COMPONENTS ${_modules_qt5})
     if( NOT Qt5_FOUND)
+        message("qt5 not found!")
+    
         find_package(Qt4 QUIET COMPONENTS ${_modules_qt4})
         if(Qt4_FOUND OR QT4_FOUND)
             include(${QT_USE_FILE})
@@ -60,7 +61,7 @@ endmacro(QT_FIND_MODULES)
 
 macro(QT_BIND_TO_TARGET _target)
     # Enable AUTOMOC
-    set_target_properties(${_target} PROPERTIES AUTOMOC TRUE)
+    #set_target_properties(${_target} PROPERTIES AUTOMOC TRUE)
     if(Qt5_FOUND)
         qt5_use_modules(${_target} ${_modules_qt5})
     else(Qt5_FOUND)

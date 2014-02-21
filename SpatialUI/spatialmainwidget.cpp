@@ -1,9 +1,3 @@
-#include <QApplication>
-#include <QtGui>
-#include <QObject>
-#include <QDir>
-#include <QFile>
-#include <QListWidget>
 
 #include "spatialmainwidget.h"
 #include "spatialsimulator.h"
@@ -12,6 +6,21 @@
 #include "ui_spatialmainwidget.h"
 #include "simulationthread.h"
 #include "geometryeditwidget.h"
+
+#include <QApplication>
+#include <QtGui>
+#include <QObject>
+#include <QDir>
+#include <QFile>
+#include <QListWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QMenu>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QStatusBar>
+
+
 
 #include <sbml/SBMLTypes.h>
 #include <sbml/packages/spatial/extension/SpatialSpeciesRxnPlugin.h>
@@ -604,8 +613,10 @@ void SpatialMainWindow::fillParameters()
   ui->tblParameters->setRowCount(model->getNumParameters());
   ui->tblParameters->setColumnCount(1);
   ui->tblParameters->setHorizontalHeaderLabels(QStringList() << "Value");
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   ui->tblParameters->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
   ui->tblParameters->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+#endif
   int count = 0;
   for (unsigned int i =0; i < model->getNumParameters(); ++i)
   {
@@ -657,7 +668,7 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   }
 
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
-  doc = readSBML(fileName.toStdString().c_str());
+  doc = readSBMLFromFile(fileName.toStdString().c_str());
 
   setCurrentFile(fileName);
   loadFromDocument(doc);
@@ -920,15 +931,15 @@ void SpatialMainWindow::sbwDisconnect()
 }
 
 void SpatialMainWindow::sbwRegister()
-{
+{  
   if (mpSBWModule != NULL)
     {
       try
         {
           // Set the commandline so that SBW knows how to call us.
-          std::string Self = QCoreApplication::arguments().at(0).toStdString();
+          const std::string& Self = QCoreApplication::arguments().at(0).toStdString();
 
-          mpSBWModule->setCommandLine(Self);
+          mpSBWModule->setCommandLine(Self.c_str());
           mpSBWModule->registerModule();
 
           sbwRefreshMenu();
@@ -958,7 +969,8 @@ void SpatialMainWindow::sbwUnregister(const std::string & moduleName) const
 // get a list of all SBW analyzers and stick them into a menu
 void SpatialMainWindow::sbwRefreshMenu()
 {
-  if (mpSBWMenu == NULL) return;
+  if (mpSBWMenu == NULL) 
+    return;
 
   bool Visible = true;
   bool IsSBWRegistered = false;
@@ -1003,8 +1015,8 @@ void SpatialMainWindow::sbwRefreshMenu()
           std::string ServiceName = Service.getName();
           std::string MenuName = Service.getDisplayName();
 
-          // Check whether the registered service is provided by COPASI
-          if (ServiceName.compare(0, 6, "COPASI") == 0)
+          // Check whether the registered service is provided by Spatial SBML
+          if (ServiceName.compare(0, 12, "Spatial SBML") == 0)
             {
               std::string CommandLine = Module.getCommandLine();
 

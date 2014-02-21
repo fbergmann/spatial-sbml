@@ -1,18 +1,8 @@
 #ifndef SPATIAL_MAIN_WIDGET
 #define SPATIAL_MAIN_WIDGET
 
-#include <QMainWindow>
-#include <QMap>
-#include <QActionGroup>
-#include <vector>
-#include <string>
-
-
 #ifdef USE_SBW_INTEGRATION
-# include <QApplication>
-# include <QEvent>
-# include <QMutex>
-# include <QWaitCondition>
+
 
 # define WIN32_LEAN_AND_MEAN
 # include <SBW/SBW.h>
@@ -20,10 +10,25 @@
 # undef ERROR
 # undef TRUE
 # undef FALSE
+# undef min
 using namespace SystemsBiologyWorkbench;
+
+# include <QApplication>
+# include <QEvent>
+# include <QMutex>
+# include <QWaitCondition>
 #else
 class SBWListener;
 #endif  // USE_SBW_INTEGRATION
+
+
+#include <QMainWindow>
+#include <QMap>
+#include <QActionGroup>
+#include <vector>
+#include <string>
+
+
 
 
 class QAction;

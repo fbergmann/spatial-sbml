@@ -7,6 +7,10 @@
 #
 project (SpatialUI)
 
+if (PREFIX_PATH)
+set (CMAKE_PREFIX_PATH "${PREFIX_PATH}")
+endif()
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/ChooseQtVersion.cmake)
 QT_FIND_MODULES(Core Gui OpenGL) 
 
@@ -19,12 +23,14 @@ file(GLOB RCC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc )
 
 if (Qt5_FOUND)
 qt5_add_resources(RESOURCES_RCC ${RCC_FILES})
+qt5_wrap_cpp(HEADERS_MOC ${H_FILES})
+qt5_wrap_ui(FORMS_HEADERS ${UI_FILES})
 elseif(Qt4_FOUND OR QT4_FOUND)
 qt4_add_resources(RESOURCES_RCC ${RCC_FILES})
+qt4_wrap_cpp(HEADERS_MOC ${H_FILES})
+qt4_wrap_ui(FORMS_HEADERS ${UI_FILES})
 endif()
 
-#qt4_wrap_cpp(HEADERS_MOC ${H_FILES})
-#qt4_wrap_ui(FORMS_HEADERS ${UI_FILES})
 #include(${QT_USE_FILE})
 #add_definitions(${QT_DEFINITIONS})
 
