@@ -7,14 +7,15 @@
 #
 project (SpatialUI)
 
+cmake_policy(SET CMP0020 NEW)
+
+
 if (PREFIX_PATH)
 set (CMAKE_PREFIX_PATH "${PREFIX_PATH}")
 endif()
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/ChooseQtVersion.cmake)
 QT_FIND_MODULES(Core Gui OpenGL) 
-
-#find_package(Qt4 4.7.0 REQUIRED QtCore QtOpenGL QtGui Qt3Support)
 
 file(GLOB CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
 file(GLOB   H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h )
@@ -107,6 +108,8 @@ endif()
 
 
 file(GLOB PALETTE_FILES palettes/*.txt )
+file(COPY ${PALETTE_FILES} DESTINATION  ${CMAKE_CURRENT_BINARY_DIR})
+
 
 SET(DIRS)
 

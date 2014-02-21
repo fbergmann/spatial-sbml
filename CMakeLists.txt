@@ -9,6 +9,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(spatial)
 
+cmake_policy(SET CMP0020 NEW)
+
 
 
 set(SPATIAL_VERSION_MAJOR)
@@ -208,7 +210,7 @@ install(FILES ${EXAMPLE_FILES} DESTINATION examples)
 
 
 message(STATUS         
-"""
+"
  Project Spatial SBML ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}
  ==========================
  
@@ -221,7 +223,7 @@ message(STATUS
  CXX FLAGS      : ${CMAKE_CXX_FLAGS}
  Extra Libs     : ${EXTRA_LIBS} 
  
-"""
+"
 )
 
 if(WITH_CSHARP)
