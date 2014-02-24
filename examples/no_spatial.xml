@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" 
+level="3" version="1">
+  <model metaid="COPASI1" id="New_Model_Application0" name="New Model_Application0">
+    <listOfUnitDefinitions>
+      <unitDefinition id="substance">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="volume">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="molecules">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="umol_um3_litre_1">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-021"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um3">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um2">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_um3_molecules_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-021"/>
+          <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="0.001"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_zero__001_m3_mol_1_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="0.001"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one__0E_6">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_000000_0">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000000"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_000_0_m_3_mol_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="M">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="compartment_1" name="compartment_1" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="species_1" initialConcentration="6" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" />
+      <species id="species_2" initialConcentration="0.1" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" />
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="v1" value="0.06" constant="true"/>
+      <parameter id="v2" value="0.12" constant="true"/>
+      <parameter id="V" value="0.5" constant="true"/>
+      <parameter id="Km" value="0.1" constant="true"/>
+      <parameter id="k1" value="1" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction metaid="COPASI2" id="reaction_1" name="reaction_1" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="species_1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> species_1 </ci>
+              <ci> species_2 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI3" id="reaction_2" name="reaction_2" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="species_1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <ci> v2 </ci>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI4" id="reaction_3" name="reaction_3" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <ci> v1 </ci>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI5" id="reaction_4" name="reaction_4" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> V </ci>
+              <ci> species_2 </ci>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <plus/>
+                  <ci> Km </ci>
+                  <ci> species_2 </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
