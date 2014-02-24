@@ -290,6 +290,10 @@
         <listOfProducts>
           <speciesReference species="u" stoichiometry="1" constant="true"/>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="v"/>
+          <modifierSpeciesReference species="w"/>
+        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -414,6 +418,10 @@
         <listOfProducts>
           <speciesReference species="v" stoichiometry="1" constant="true"/>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="u"/>
+          <modifierSpeciesReference species="w"/>
+        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -538,6 +546,10 @@
         <listOfProducts>
           <speciesReference species="w" stoichiometry="1" constant="true"/>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="u"/>
+          <modifierSpeciesReference species="v"/>
+        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
