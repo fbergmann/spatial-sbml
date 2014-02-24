@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="true" spatial:required="true">
+  <model metaid="COPASI1" id="New_Model_Application0" name="New Model_Application0">
+    <listOfUnitDefinitions>
+      <unitDefinition id="substance">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="volume">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="molecules">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="umol_um3_litre_1">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-021"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um3">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um2">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_um3_molecules_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-021"/>
+          <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="0.001"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_zero__001_m3_mol_1_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="0.001"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one__0E_6">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-006"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_000000_0">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000000"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_000_0_m_3_mol_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="M">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="compartment_1" name="compartment_1" spatialDimensions="3" size="1" constant="true">
+        <spatial:compartmentMapping spatial:spatialId="subdomain0compartment_1" spatial:compartment="compartment_1" spatial:domainType="subdomain0" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="c2" name="c2" spatialDimensions="3" size="1" constant="true">
+        <spatial:compartmentMapping spatial:spatialId="subdomain1c2" spatial:compartment="c2" spatial:domainType="subdomain1" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="Membrane2" name="Membrane2" spatialDimensions="2" size="1" constant="true">
+        <spatial:compartmentMapping spatial:spatialId="subdomain0_subdomain1_membraneMembrane2" spatial:compartment="Membrane2" spatial:domainType="subdomain0_subdomain1_membrane" spatial:unitSize="1"/>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="species_1" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true"/>
+      <species id="species_2" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="x" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="y" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="species_1_diff" value="4" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="species_1" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="species_1_diff_Y" value="4" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="species_1" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="species_1_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_1" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_1_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_1" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_1_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_1" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_1_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_1" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_2_diff" value="0.4" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="species_2" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="species_2_diff_y" value="0.4" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="species_2" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="species_2_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_2" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_2_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_2" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_2_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_2" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="species_2_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="species_2" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="v1" value="0.06" constant="true"/>
+      <parameter id="v2" value="0.12" constant="true"/>
+      <parameter id="V" value="0.5" constant="true"/>
+      <parameter id="Km" value="0.1" constant="true"/>
+      <parameter id="k1" value="1" constant="true"/>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="species_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <piecewise>
+            <piece>
+              <cn> 20 </cn>
+              <apply>
+                <and/>
+                <apply>
+                  <and/>
+                  <apply>
+                    <gt/>
+                    <ci> x </ci>
+                    <cn> 20 </cn>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci> x </ci>
+                    <cn> 25 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <gt/>
+                    <ci> y </ci>
+                    <cn> 20 </cn>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci> y </ci>
+                    <cn> 25 </cn>
+                  </apply>
+                </apply>
+              </apply>
+            </piece>
+            <otherwise>
+              <cn> 0.5 </cn>
+            </otherwise>
+          </piecewise>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="species_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <cn> 0.1 </cn>
+        </math>
+      </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfReactions>
+      <reaction metaid="COPASI2" id="reaction_1" name="reaction_1" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <listOfReactants>
+          <speciesReference species="species_1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> species_1 </ci>
+              <ci> species_2 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI3" id="reaction_2" name="reaction_2" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <listOfProducts>
+          <speciesReference species="species_1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <ci> v2 </ci>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI4" id="reaction_3" name="reaction_3" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <listOfProducts>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <ci> v1 </ci>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI5" id="reaction_4" name="reaction_4" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <listOfReactants>
+          <speciesReference species="species_2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> V </ci>
+              <ci> species_2 </ci>
+              <apply>
+                <divide/>
+                <cn> 1 </cn>
+                <apply>
+                  <plus/>
+                  <ci> Km </ci>
+                  <ci> species_2 </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <spatial:geometry spatial:coordinateSystem="Cartesian">
+      <spatial:listOfCoordinateComponents>
+        <spatial:coordinateComponent spatial:spatialId="x" spatial:componentType="cartesianX" spatial:sbmlUnit="um" spatial:index="0">
+          <spatial:boundaryMin spatial:spatialId="Xmin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Xmax" spatial:value="50"/>
+        </spatial:coordinateComponent>
+        <spatial:coordinateComponent spatial:spatialId="y" spatial:componentType="cartesianY" spatial:sbmlUnit="um" spatial:index="1">
+          <spatial:boundaryMin spatial:spatialId="Ymin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Ymax" spatial:value="50"/>
+        </spatial:coordinateComponent>
+      </spatial:listOfCoordinateComponents>
+      <spatial:listOfDomainTypes>
+        <spatial:domainType spatial:spatialId="subdomain1" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="subdomain0" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="subdomain0_subdomain1_membrane" spatial:spatialDimensions="2"/>
+      </spatial:listOfDomainTypes>
+      <spatial:listOfDomains>
+        <spatial:domain spatial:spatialId="subdomain10" spatial:domainType="subdomain1">
+          <spatial:listOfInteriorPoints>
+            <spatial:interiorPoint spatial:coord1="0" spatial:coord2="0" spatial:coord3="5"/>
+          </spatial:listOfInteriorPoints>
+        </spatial:domain>
+        <spatial:domain spatial:spatialId="subdomain01" spatial:domainType="subdomain0">
+          <spatial:listOfInteriorPoints>
+            <spatial:interiorPoint spatial:coord1="1" spatial:coord2="0" spatial:coord3="5"/>
+          </spatial:listOfInteriorPoints>
+        </spatial:domain>
+        <spatial:domain spatial:spatialId="membrane_subdomain10_subdomain01" spatial:domainType="subdomain0_subdomain1_membrane"/>
+      </spatial:listOfDomains>
+      <spatial:listOfAdjacentDomains>
+        <spatial:adjacentDomains spatial:spatialId="membrane_subdomain10_subdomain01_subdomain01" spatial:domain1="membrane_subdomain10_subdomain01" spatial:domain2="subdomain01"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_subdomain10_subdomain01_subdomain10" spatial:domain1="membrane_subdomain10_subdomain01" spatial:domain2="subdomain10"/>
+      </spatial:listOfAdjacentDomains>
+      <spatial:listOfGeometryDefinitions>
+        <spatial:analyticGeometry spatial:spatialId="Geometry4">
+          <spatial:listOfAnalyticVolumes>
+            <spatial:analyticVolume spatial:spatialId="subdomain0" spatial:domainType="subdomain0" spatial:functionType="layered" spatial:ordinal="1">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <piecewise>
+                  <piece>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <and/>
+                      <apply>
+                        <geq/>
+                        <ci> x </ci>
+                        <cn type="integer"> 1 </cn>
+                      </apply>
+                      <apply>
+                        <leq/>
+                        <ci> x </ci>
+                        <cn type="integer"> 49 </cn>
+                      </apply>
+                      <apply>
+                        <geq/>
+                        <ci> y </ci>
+                        <cn type="integer"> 1 </cn>
+                      </apply>
+                      <apply>
+                        <leq/>
+                        <ci> y </ci>
+                        <cn type="integer"> 49 </cn>
+                      </apply>
+                    </apply>
+                  </piece>
+                  <otherwise>
+                    <cn type="integer"> 0 </cn>
+                  </otherwise>
+                </piecewise>
+              </math>
+            </spatial:analyticVolume>
+            <spatial:analyticVolume spatial:spatialId="subdomain1" spatial:domainType="subdomain1" spatial:functionType="layered" spatial:ordinal="0">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <cn type="integer"> 1 </cn>
+              </math>
+            </spatial:analyticVolume>
+          </spatial:listOfAnalyticVolumes>
+        </spatial:analyticGeometry>
+      </spatial:listOfGeometryDefinitions>
+    </spatial:geometry>
+  </model>
+</sbml>
