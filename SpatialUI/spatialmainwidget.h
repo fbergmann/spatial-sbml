@@ -86,6 +86,8 @@ private slots:;
   void stop();
   void restart();
   void editGeometry();
+  void exportConcentration();
+  void importConcentration();
   void toggledHideBC(bool);
 
   void updatePosition(int x, int y);

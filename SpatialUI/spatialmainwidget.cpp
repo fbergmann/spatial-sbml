@@ -7,6 +7,9 @@
 #include "simulationthread.h"
 #include "geometryeditwidget.h"
 
+#include <SpatialSBML/datahelper.hh>
+
+
 #include <QApplication>
 #include <QtGui>
 #include <QObject>
@@ -66,6 +69,8 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   connect(ui->lstPalettes, SIGNAL(activated(int)), this, SLOT(palatteIndexChanged(int)));
   connect(ui->cmdRemove, SIGNAL(clicked ()), this, SLOT(removeSpecies()));
   connect(ui->cmdAdd, SIGNAL(clicked ()), this, SLOT(addSpecies()));
+  connect(ui->cmdExportConc, SIGNAL(clicked ()), this, SLOT(exportConcentration()));
+  connect(ui->cmdImportConc, SIGNAL(clicked ()), this, SLOT(importConcentration()));
   connect(ui->lstAssignments, SIGNAL(currentRowChanged(int)), this, SLOT(selectedSpeciesChanged(int)));
   connect(ui->lblImage, SIGNAL(positionChanged(int, int)), this, SLOT(updatePosition(int,int)));
   connect(ui->tblParameters, SIGNAL(cellChanged(int, int)), this, SLOT(parameterChanged(int,int)));
@@ -138,6 +143,105 @@ void SpatialMainWindow::updatePosition(int x, int y)
 
 void SpatialMainWindow::selectedSpeciesChanged(int row)
 {
+}
+
+void SpatialMainWindow::importConcentration()
+{
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Import Concentration"), lastDir, tr("Dump files (*.dmp)"));
+  if (fileName.isEmpty())
+    return;
+
+  lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
+
+  const auto& currentSpecies = ui->lstDose->currentText();
+  const auto& index = ui->lstDose->currentIndex();
+
+  DataHelper helper(fileName.toStdString());
+  if (!helper.isValid()) return;
+
+  for (int i = 0; i < maxX; ++i)
+    for(int j = 0; j < maxY; ++j)
+    {
+
+      int transformedX = i;
+      int transformedY = maxY-1 - j;
+
+      thread->applyDose(transformedX, transformedY, currentSpecies, helper(transformedX,transformedY));
+    }
+
+}
+
+void SpatialMainWindow::exportConcentration()
+{
+
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Export  Concentration"), lastDir, tr("Dump files (*.dmp)"));
+  if (fileName.isEmpty())
+    return;
+
+  lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
+
+  const auto& currentSpecies = ui->lstDose->currentText();
+  const auto& index = ui->lstDose->currentIndex();
+
+  DataHelper helper(thread->mpSimulator->getXDim(), thread->mpSimulator->getYDim());
+  
+  for (int x = 0; x < thread->mpSimulator->getXDim(); ++x)
+  {
+    for (int y = 0; y < thread->mpSimulator->getYDim(); ++y)
+    {
+      const auto& all = thread->getConcentrationsAt(x, y);
+      auto& it = all.cbegin();
+      bool wrote = false;
+      while( it != all.end())
+      {
+        if ((*it).first == currentSpecies.toStdString())
+        {
+          helper(x, y) = it->second;
+          wrote = true;
+          break;
+        }
+        ++it;
+      }
+      if (!wrote)
+          helper(x, y) = 0;
+    }
+  }
+
+  helper.writeToFile(fileName.toStdString());
+  
+ /* ofstream data(fileName.toStdString().c_str(), ios_base::binary);
+  
+  data << thread->mpSimulator->getXDim() << " ";
+  data << thread->mpSimulator->getYDim() << endl;
+
+  for (int x = 0; x < thread->mpSimulator->getXDim(); ++x)
+  {
+    for (int y = 0; y < thread->mpSimulator->getYDim(); ++y)
+    {
+      const auto& all = thread->getConcentrationsAt(x, y);
+      auto& it = all.cbegin();
+      bool wrote = false;
+      while( it != all.end())
+      {
+        if ((*it).first == currentSpecies.toStdString())
+        {
+          data << it->second << " ";
+          wrote = true;
+          break;
+        }
+        ++it;
+      }
+      if (!wrote)
+        data << "0 ";
+    }
+    
+    data << endl;
+  }
+
+
+  data.flush();
+  data.close();*/
+
 }
 
 void SpatialMainWindow::addSpecies()
