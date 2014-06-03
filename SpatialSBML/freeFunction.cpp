@@ -11,7 +11,8 @@ void freeVarInfo(vector<variableInfo*> &varInfoList)
 {
 	for (size_t i = 0; i < varInfoList.size(); i++) {
 		variableInfo *info = varInfoList[i];
-		if (strcmp(info->id, "t") != 0) {
+    if (info == NULL) continue;
+		if (info->id != NULL && strcmp(info->id, "t") != 0) {
 			//value
 			delete[] info->value;
 			info->value = 0;
@@ -59,6 +60,7 @@ void freeAvolInfo(vector<GeometryInfo*> &geoInfoList)
 {
 	for (size_t i = 0; i < geoInfoList.size(); i++) {
 		GeometryInfo *geoInfo = geoInfoList[i];
+    if (geoInfo == NULL) continue;
 		if (geoInfo->rpInfo != 0) {
 			//varList
 			delete[] geoInfo->rpInfo->varList;
@@ -95,6 +97,7 @@ void freeRInfo(vector<reactionInfo*> &rInfoList)
 {
 	for (size_t i = 0; i < rInfoList.size(); i++) {
 		reactionInfo *rInfo = rInfoList[i];
+    if (rInfo == NULL) continue;
 		//value
 		delete[] rInfo->value;
 		rInfo->value = 0;

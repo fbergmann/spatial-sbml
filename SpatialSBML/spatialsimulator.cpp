@@ -166,7 +166,7 @@ void SpatialSimulator::setParameter(const std::string &id, double value)
           {
             *(dci->value) = value;
           }
-          else
+          else if (dci->value != NULL)
           {
             for (int Z = 0; Z < Zindex; Z++) {
               for (int Y = 0; Y < Yindex; Y++) {
@@ -191,7 +191,7 @@ void SpatialSimulator::setParameterUniformly(variableInfo* info, double value)
   {
     *(info->value) = value;
   }
-  else
+  else if(info->value != NULL)
   {
   for (int Z = 0; Z < Zindex; Z++) {
 #pragma omp parallel for

@@ -222,6 +222,8 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 			case SBML_SPATIAL_SPATIALSYMBOLREFERENCE://spatial simbol refference
 				if (pPlugin->getSpatialSymbolReference()->getType() == "coordinateComponent") {
 					cc = geometry->getCoordinateComponent(p->getId());
+          if (cc == NULL)
+            break;
 					double min = cc->getBoundaryMin()->getValue();
 					double max = cc->getBoundaryMax()->getValue();
 					if (cc->getComponentType() == "cartesianX") {

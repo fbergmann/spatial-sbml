@@ -34,14 +34,14 @@ double checkDiffusionStab(variableInfo* sInfo, double deltaX, double deltaY, dou
 					min_dt = min(min_dt, pow(deltaX, 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex]));
 				}
 			}
-			if (sInfo->diffCInfo[1] != 0) {//y-diffusion
+			if (sInfo->diffCInfo[0] != NULL && sInfo->diffCInfo[1] != 0) {//y-diffusion
 				if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
 				if (dt >= pow(deltaY, 2) / (2.0 * sInfo->diffCInfo[1]->value[dcIndex])) {
 					min_dt = min(min_dt, pow(deltaY, 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex]));
 				}
 			}
-			if (sInfo->diffCInfo[2] != 0) {//z-diffusion
-				if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
+			if (sInfo->diffCInfo[0] != NULL && sInfo->diffCInfo[2] != 0) {//z-diffusion
+				if (  sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
 				if (dt >= pow(deltaZ, 2) / (2.0 * sInfo->diffCInfo[2]->value[dcIndex])) {
 					min_dt = min(min_dt, pow(deltaZ, 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex]));
 				}
