@@ -42,22 +42,29 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 				rpStack[st_index] = *(rpInfo->constList[i]);
 				st_index++;
 			} else {//operation
+        if (st_index > 0)
 				st_index--;
+        
 				switch (rpInfo->opfuncList[i]) {
 				case AST_PLUS:
-					rpStack[st_index - 1] += rpStack[st_index];
+          if (st_index > 0)
+          rpStack[st_index - 1] += rpStack[st_index];
 					break;
 				case AST_MINUS:
+          if (st_index > 0)
 					rpStack[st_index - 1] -= rpStack[st_index];
 					break;
 				case AST_TIMES:
+          if (st_index > 0)
 					rpStack[st_index - 1] *= rpStack[st_index];
 					break;
 				case AST_DIVIDE:
+          if (st_index > 0)
 					rpStack[st_index - 1] /= rpStack[st_index];
 					break;
 				case AST_POWER:
 				case AST_FUNCTION_POWER:
+          if (st_index > 0)
 					rpStack[st_index - 1] = pow(rpStack[st_index - 1], rpStack[st_index]);
 					break;
 				case AST_FUNCTION_ABS:
@@ -129,6 +136,7 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 					st_index++;
 					break;
 				case AST_FUNCTION_LOG:
+          if (st_index > 0)
 					rpStack[st_index - 1] = log(rpStack[st_index]) / log(rpStack[st_index - 1]);
 					break;
 				case AST_FUNCTION_PIECEWISE:
@@ -160,6 +168,7 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 				case AST_LAMBDA:
 					break;
 				case AST_LOGICAL_AND:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (static_cast<int>(rpStack[st_index - 1]) == 1 && static_cast<int>(rpStack[st_index] == 1)) ? 1.0: 0.0;
 					break;
 				case AST_LOGICAL_NOT:
@@ -167,30 +176,38 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 					st_index++;
 					break;
 				case AST_LOGICAL_OR:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (static_cast<int>(rpStack[st_index - 1]) == 1 || static_cast<int>(rpStack[st_index] == 1)) ? 1.0: 0.0;
 					break;
 				case AST_LOGICAL_XOR:
+          if (st_index > 0)
 					rpStack[st_index - 1] = ((static_cast<int>(rpStack[st_index - 1]) == 1 && static_cast<int>(rpStack[st_index] == 0))
 											 || (static_cast<int>(rpStack[st_index - 1]) == 0 && static_cast<int>(rpStack[st_index] == 1))) ? 1.0: 0.0;
 					break;
 				case AST_RATIONAL:
 					break;
 				case AST_RELATIONAL_EQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] == rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_GEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] >= rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_GT:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] > rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_LEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] <= rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_LT:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] < rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_NEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] != rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				default:
@@ -198,6 +215,8 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 				}
 			}
 		}
+
+    if (st_index > 0)
 		value[index] = rpStack[--st_index];
 	}
 }
@@ -234,22 +253,28 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 				rpStack[st_index] = *(constant[i]);
 				st_index++;
 			} else {//operation
-				st_index--;
+				if (st_index > 0)
+        st_index--;
 				switch (operation[i]) {
 				case AST_PLUS:
+          if (st_index > 0)
 					rpStack[st_index - 1] += rpStack[st_index];
 					break;
 				case AST_MINUS:
+          if (st_index > 0)
 					rpStack[st_index - 1] -= rpStack[st_index];
 					break;
 				case AST_TIMES:
+          if (st_index > 0)
 					rpStack[st_index - 1] *= rpStack[st_index];
 					break;
 				case AST_DIVIDE:
+          if (st_index > 0)
 					rpStack[st_index - 1] /= rpStack[st_index];
 					break;
 				case AST_POWER:
 				case AST_FUNCTION_POWER:
+          if (st_index > 0)
 					rpStack[st_index - 1] = pow(rpStack[st_index - 1], rpStack[st_index]);
 					break;
 				case AST_FUNCTION_ABS:
@@ -321,6 +346,7 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 					st_index++;
 					break;
 				case AST_FUNCTION_LOG:
+          if (st_index > 0)
 					rpStack[st_index - 1] = log(rpStack[st_index]) / log(rpStack[st_index - 1]);
 					break;
 				case AST_FUNCTION_PIECEWISE:
@@ -352,6 +378,7 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 				case AST_LAMBDA:
 					break;
 				case AST_LOGICAL_AND:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (static_cast<int>(rpStack[st_index - 1]) == 1 && static_cast<int>(rpStack[st_index] == 1)) ? 1.0: 0.0;
 					break;
 				case AST_LOGICAL_NOT:
@@ -359,30 +386,38 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 					st_index++;
 					break;
 				case AST_LOGICAL_OR:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (static_cast<int>(rpStack[st_index - 1]) == 1 || static_cast<int>(rpStack[st_index] == 1)) ? 1.0: 0.0;
 					break;
 				case AST_LOGICAL_XOR:
+          if (st_index > 0)
 					rpStack[st_index - 1] = ((static_cast<int>(rpStack[st_index - 1]) == 1 && static_cast<int>(rpStack[st_index] == 0))
 											 || (static_cast<int>(rpStack[st_index - 1]) == 0 && static_cast<int>(rpStack[st_index] == 1))) ? 1.0: 0.0;
 					break;
 				case AST_RATIONAL:
 					break;
 				case AST_RELATIONAL_EQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] == rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_GEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] >= rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_GT:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] > rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_LEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] <= rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_LT:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] < rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				case AST_RELATIONAL_NEQ:
+          if (st_index > 0)
 					rpStack[st_index - 1] = (rpStack[st_index - 1] != rpStack[st_index]) ? 1.0: 0.0;
 					break;
 				default:
@@ -391,8 +426,9 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 				//rp(rpStack, st_index, operation[i]);
 			}
 		}
+    if (st_index > 0)
 		st_index--;
-		if (isReaction) {//Reaction
+		if (st_index >= 0 && isReaction) {//Reaction
 			for (k = 0; k < numOfReactants; k++) {//reactants
         if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && !rInfo->spRefList[k]->isUniform) 
         {
@@ -405,7 +441,7 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
           rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
         }
 			}
-		} else if (rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && !rInfo->spRefList[0]->isUniform){//RateRule
+		} else if (st_index >= 0 && rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && !rInfo->spRefList[0]->isUniform){//RateRule
 			rInfo->spRefList[0]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[0] * rpStack[st_index];
 		}
 	}
@@ -1210,6 +1246,7 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 			}
 			//area = dx * dy
 			//du / dt = -(Jx * dy) / area = -Jx / dx, du / dt = -Jy / dy
+      if (st_index > 1)
 			st_index--;
 			for (j = 0; j < numOfReactants; j++) {//reactants
 				if (rInfo->isVariable[j]) {
@@ -1252,7 +1289,7 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 					}
 				}
 			}
-			for (j = numOfReactants; j < (int)rInfo->spRefList.size(); j++) {//products
+			for (j = numOfReactants; st_index >= 0 && j < (int)rInfo->spRefList.size(); j++) {//products
 				if (rInfo->isVariable[j]) {
 					if (geoInfo->bType[index].isBofXp || geoInfo->bType[index].isBofXm) {//x transport or x binding
 						//transport

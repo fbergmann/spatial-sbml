@@ -115,8 +115,10 @@ void SpatialMainWindow::updatePosition(int x, int y)
   int transformedX = x;
   int transformedY = maxY-1 - y;
 
+  if (thread == NULL) return;
+
   if (  (QApplication::mouseButtons().operator&((int)Qt::LeftButton) == (int) Qt::LeftButton)  && 
-    ui->cmdEnableDose->isChecked() &&  thread != NULL
+    ui->cmdEnableDose->isChecked()
     )
   {          
     thread->applyDose(transformedX, transformedY,  ui->lstDose->currentText(), ui->txtDose->text().toDouble());
@@ -813,12 +815,14 @@ void SpatialMainWindow::restart()
     {
       thread->stop();
     }
+
+    thread->mpSimulator = new SpatialSimulator(doc, maxX, maxY);
+    thread->mStep = txtStepsize->text().toDouble();
+    thread->mTime = 0;
+    thread->start();
+
   }
 
-  thread->mpSimulator = new SpatialSimulator(doc, maxX, maxY);
-  thread->mStep = txtStepsize->text().toDouble();
-  thread->mTime = 0;
-  thread->start();
   togglePlay();
 
 }

@@ -1400,10 +1400,15 @@ voronoiInfo* setVoronoiInfo(normalUnitVector *nuVec, variableInfo *xInfo, variab
 							}
 							vorI[index].diXY[l] = (d_ij + d_ji) / 2.0;
 							vorI[index].siXY[l] = (s_ij + s_ji) / 2.0;
-							vorI[vorI[index].adjacentIndexXY[l]].diXY[k] = vorI[index].diXY[l];
+              vorI[index].isAveXY[l] = true;
+							
+              // k == 2! but only defined for k < 2! 
+              //k=1;
+              {
+              vorI[vorI[index].adjacentIndexXY[l]].diXY[k] = vorI[index].diXY[l];
 							vorI[vorI[index].adjacentIndexXY[l]].siXY[k] = vorI[index].siXY[l];
-							vorI[index].isAveXY[l] = true;
 							vorI[vorI[index].adjacentIndexXY[l]].isAveXY[k] = true;
+              }
 						}
 					}
 				}
