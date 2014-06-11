@@ -418,6 +418,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             }
             geoInfo->isVol = true;
             ast = const_cast<ASTNode*>(analyticVol->getMath());
+            if (ast == NULL) continue;
             rearrangeAST(ast);
             numOfASTNodes = 0;
             countAST(ast, numOfASTNodes);

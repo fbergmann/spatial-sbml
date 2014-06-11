@@ -118,6 +118,7 @@ void countAST(ASTNode *ast, int &numOfASTNodes)
 
 void rearrangeAST(ASTNode *ast)
 {
+  if (ast == NULL) return;
 //  static int _count = 0;
 //  ++_count;
 //  std::string before = SBML_formulaToString(ast);
