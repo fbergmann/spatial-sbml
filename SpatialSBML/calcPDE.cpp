@@ -889,7 +889,7 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Xmax]->isUniform) divIndexXp = Xp;
 				if (!sInfo->boundaryInfo[Xmin]->isUniform) divIndexXm = Xm;
 				if (sInfo->geoi->isDomain[Xp] == 1) {//Xp
-					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Xp] += 2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
+					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Xp] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
 					else if (maxSideBC->getType() == "Value") sInfo->value[Xp] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
 				}
 				if (sInfo->geoi->isDomain[Xm] == 1) {//Xm
@@ -910,7 +910,7 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = Yp;
 				if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = Ym;
 				if (sInfo->geoi->isDomain[Yp] == 1) {//Yp
-					if (maxSideBC->getType() == "Flux")	sInfo->delta[m * numOfVolIndexes + Yp] += 2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
+					if (maxSideBC->getType() == "Flux")	sInfo->delta[m * numOfVolIndexes + Yp] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
 					else if (maxSideBC->getType() == "Value") sInfo->value[Yp] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
 				}
 				if (sInfo->geoi->isDomain[Ym] == 1) {//Ym
@@ -931,7 +931,7 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Zmax]->isUniform) divIndexZp = Zp;
 				if (!sInfo->boundaryInfo[Zmin]->isUniform) divIndexZm = Zm;
 				if (sInfo->geoi->isDomain[Zp] == 1) {//Zp
-					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Zp] += 2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
+					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Zp] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
 					else if (maxSideBC->getType() == "Value") sInfo->value[Zp] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
 				}
 				if (sInfo->geoi->isDomain[Zm] == 1) {//Zm
