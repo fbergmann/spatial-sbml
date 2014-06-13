@@ -81,6 +81,7 @@ void setSpeciesInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, unsig
             }
           }
         } else if (s->isSetInitialConcentration()) {//Initial Concentration
+          info->isResolved = true;
           for (Z = 0; Z < Zindex; Z++) {
             for (Y = 0; Y < Yindex; Y++) {
               for (X = 0; X < Xindex; X++) {

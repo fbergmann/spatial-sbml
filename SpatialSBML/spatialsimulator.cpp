@@ -1060,7 +1060,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
   unsigned int resolved_count = 0;
 
   if (notOrderedInfo.size() != 0) {
-    for (i = 0;;++i) {
+    for (i = 0;i < notOrderedInfo.size();++i) {
       variableInfo *info = notOrderedInfo[i];
       if (isResolvedAll(info->dependence) && info->isResolved == false) {
         if (model->getInitialAssignment(info->id) != 0) {//initial assignment

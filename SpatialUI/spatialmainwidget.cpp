@@ -698,7 +698,25 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
     ui->lstAssignments->addItem(lstSpecies->itemText(0));
   }
 
+  if (lstSpecies->count() > 1 && palettes
+    .size() > 1)
+  {
+    displayItems.push_back(new DisplayItem(
+      lstSpecies->itemText(1).toStdString(),
+      palettes[1]
+    ));
+    ui->lstAssignments->addItem(lstSpecies->itemText(1));
+  }
 
+  if (lstSpecies->count() > 2 && palettes
+    .size() > 2)
+  {
+    displayItems.push_back(new DisplayItem(
+      lstSpecies->itemText(2).toStdString(),
+      palettes[2]
+    ));
+    ui->lstAssignments->addItem(lstSpecies->itemText(2));
+  }
 
   restart();
   //thread->mpSimulator->flipVolumeOrder();
