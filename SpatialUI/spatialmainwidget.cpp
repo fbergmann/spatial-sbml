@@ -839,6 +839,13 @@ void SpatialMainWindow::restart()
     thread->mTime = 0;
     thread->start();
 
+  } 
+  else
+  {
+    thread = new SimulationThread();
+    thread->mpDisplayItems = &displayItems;
+    connect(thread, SIGNAL(visualize(double, const QImage&)), this, SLOT(visualize(double, const QImage&)));
+
   }
 
   togglePlay();
@@ -878,6 +885,7 @@ QString SpatialMainWindow::strippedName(const QString &fullFileName)
 
 void SpatialMainWindow::pause()
 {
+  if (thread == NULL ) return;
   if (!thread->mPaused )
   {
     thread->mPaused = true;
@@ -888,6 +896,7 @@ void SpatialMainWindow::pause()
 
 void SpatialMainWindow::play()
 {
+  if (thread == NULL ) return;
   if (thread->mPaused)
   {
     thread->mPaused = false;
@@ -898,6 +907,8 @@ void SpatialMainWindow::play()
 
 void SpatialMainWindow::togglePlay()
 {
+  if (thread == NULL ) return;
+
   if (!thread->mPaused)
   {
     pause();

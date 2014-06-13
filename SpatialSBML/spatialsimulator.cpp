@@ -756,6 +756,10 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
         geoInfo->bType[j].isBofZp = false;
         geoInfo->bType[j].isBofZm = false;
       }
+
+      if (geoInfo->adjacentGeo1 == NULL || geoInfo->adjacentGeo2 == NULL)
+        continue;
+
       switch (dimension) {
       case 1:
         for (X = 0; X < Xindex; X++) {

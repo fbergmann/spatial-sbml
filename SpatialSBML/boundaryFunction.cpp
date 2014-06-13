@@ -26,6 +26,10 @@ void setBoundaryType(Model *model, vector<variableInfo*> &varInfoList, vector<Ge
     	sInfo->geoi = searchAvolInfoByCompartment(geoInfoList, s->getCompartment().c_str());
 			int *isD = sInfo->geoi->isDomain;
 			int *isB = sInfo->geoi->isBoundary;
+
+      if (isD == NULL || isB == NULL)
+        continue;
+
 			switch (dimension) {
 			case 1:
 				if (sInfo->geoi->isVol == true) {
