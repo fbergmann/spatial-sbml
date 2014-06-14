@@ -94,7 +94,7 @@ double checkMemDiffusionStab(variableInfo *sInfo, voronoiInfo* vorI, int Xindex,
 			}
 			//cout << min_dt << endl;
 			//yz plane (only 3D)
-			if (dimension == 3 && (geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+			if (dimension == 3 && ((geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 				for (j = 0; j < 2; j++) {
 					if (dt >= pow(vorI[index].diYZ[j], 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex])) {
 						min_dt = min(min_dt,  pow(vorI[index].diYZ[j], 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex]));
@@ -103,7 +103,7 @@ double checkMemDiffusionStab(variableInfo *sInfo, voronoiInfo* vorI, int Xindex,
 				}
 			}
 			//xz plane (only 3D)
-			if (dimension == 3 && (geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+			if (dimension == 3 && ((geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 				for (j = 0; j < 2; j++) {
 					if (dt >= pow(vorI[index].diXZ[j], 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex])) {
 						min_dt = min(min_dt,  pow(vorI[index].diXZ[j], 2) / (2.0 * sInfo->diffCInfo[0]->value[dcIndex]));

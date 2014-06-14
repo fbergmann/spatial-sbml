@@ -344,14 +344,14 @@ private:
 
   int Xplus1, Xminus1, Yplus1, Yminus1, Zplus1, Zminus1, divIndex;
 
-  variableInfo *t_info;
+  //variableInfo *t_info;
   variableInfo *xInfo, *yInfo, *zInfo;
   double deltaX, deltaY, deltaZ;
   char *xaxis, *yaxis, *zaxis;
   Model *model               ;
   Species* s;
-  Reaction *r;
-  SpeciesReference *sr;
+  //Reaction *r;
+  //SpeciesReference *sr;
 
   double Xsize, Ysize, Zsize;
   unsigned int volDimension, memDimension ;

@@ -439,7 +439,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 	int Zdiv = (Zindex + 1) / 2;
 	double hX = 1.0, hY = 1.0, hZ = 1.0;//grid size
 	double hXY = 1.0, hYZ = 1.0, hXZ = 1.0;
-	double XYratio = Ysize / Xsize, XZratio = Zsize / Xsize;
+	//double XYratio = Ysize / Xsize;//, XZratio = Zsize / Xsize;
 	int xyPlaneX[2] = {0}, xyPlaneY[2] = {0}, yzPlaneY[2] = {0}, yzPlaneZ[2] = {0}, xzPlaneX[2] = {0}, xzPlaneZ[2] = {0};
 
 	/*
@@ -493,7 +493,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 						for (k = 0; k < geoInfo->domainIndex.size(); k++) {
 							if ((Y + 2 < Yindex) &&
 								(isD[Z * Yindex * Xindex + (Y + 2) * Xindex + X] == 1 && isD[Z * Yindex * Xindex + (Y + 1) * Xindex + X] == 2 && preD != S)) {//north
-								X = X;
+								//X = X;
 								Y = Y + 2;
 								preD = N;
 							} else if (isD[Z * Yindex * Xindex + (Y + 1) * Xindex + (X + 1)] == 1 && preD != SW) {//northeast
@@ -502,7 +502,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 								preD = NE;
 							} else if (isD[Z * Yindex * Xindex + Y * Xindex + (X + 2)] == 1 && isD[Z * Yindex * Xindex + Y * Xindex + (X + 1)] == 2 && preD != W) {//east
 								X = X + 2;
-								Y = Y;
+								//Y = Y;
 								preD = E;
 							} else if (isD[Z * Yindex * Xindex + (Y - 1) * Xindex + (X + 1)] == 1 && preD != NW) {//southeast
 								X = X + 1;
@@ -510,7 +510,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 								preD = SE;
 							} else if ((Y - 2 >= 0) &&
 									   (isD[Z * Yindex * Xindex + (Y - 2) * Xindex + X] == 1 && isD[Z * Yindex * Xindex + (Y - 1) * Xindex + X] == 2 && preD != N)) {//south
-								X = X;
+								//X = X;
 								Y = Y - 2;
 								preD = S;
 							} else if (isD[Z * Yindex * Xindex + (Y - 1) * Xindex + (X - 1)] == 1 && preD != NE) {//southwest
@@ -519,7 +519,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 								preD = SW;
 							} else if (isD[Z * Yindex * Xindex + Y * Xindex + (X - 2)] == 1 && isD[Z * Yindex * Xindex + Y * Xindex + (X - 1)] == 2 && preD != E) {//west
 								X = X - 2;
-								Y = Y;
+								//Y = Y;
 								preD = W;
 							} else if (isD[Z * Yindex * Xindex + (Y + 1) * Xindex + (X - 1)] == 1 && preD != SE) {//northwest
 								X = X - 1;
@@ -541,7 +541,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 							for (k = 0; k < geoInfo->domainIndex.size(); k++) {
 								if ((Z + 2 < Zindex) &&
 									(isD[(Z + 2) * Yindex * Xindex + Y * Xindex + X] == 1 && isD[(Z + 1) * Yindex * Xindex + Y * Xindex + X] == 2 && preD != S)) {//north
-									Y = Y;
+									//Y = Y;
 									Z = Z + 2;
 									preD = N;
 								} else if (isD[(Z + 1) * Yindex * Xindex + (Y + 1) * Xindex + X] == 1 && preD != SW) {//northeast
@@ -550,7 +550,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = NE;
 								} else if (isD[Z * Yindex * Xindex + (Y + 2) * Xindex + X] == 1 && isD[Z * Yindex * Xindex + (Y + 1) * Xindex + X] == 2 && preD != W) {//east
 									Y = Y + 2;
-									Z = Z;
+									//Z = Z;
 									preD = E;
 								} else if (isD[(Z - 1) * Yindex * Xindex + (Y + 1) * Xindex + X] == 1 && preD != NW) {//southeast
 									Y = Y + 1;
@@ -558,7 +558,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = SE;
 								} else if ((Z - 2 >= 0) &&
 										   (isD[(Z - 2) * Yindex * Xindex + Y * Xindex + X] == 1 && isD[(Z - 1) * Yindex * Xindex + Y * Xindex + X] == 2 && preD != N)) {//south
-									Y = Y;
+									//Y = Y;
 									Z = Z - 2;
 									preD = S;
 								} else if (isD[(Z - 1) * Yindex * Xindex + (Y - 1) * Xindex + X] == 1 && preD != NE) {//southwest
@@ -567,7 +567,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = SW;
 								} else if (isD[Z * Yindex * Xindex + (Y - 2) * Xindex + X] == 1 && isD[Z * Yindex * Xindex + (Y - 1) * Xindex + X] == 2 && preD != E) {//west
 									Y = Y - 2;
-									Z = Z;
+									//Z = Z;
 									preD = W;
 								} else if (isD[(Z + 1) * Yindex * Xindex + (Y - 1) * Xindex + X] == 1 && preD != SE) {//northwest
 									Y = Y - 1;
@@ -588,7 +588,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 							for (k = 0; k < geoInfo->domainIndex.size(); k++) {
 								if ((Z + 2 < Zindex) &&
 									(isD[(Z + 2) * Yindex * Xindex + Y * Xindex + X] == 1 && isD[(Z + 1) * Yindex * Xindex + Y * Xindex + X] == 2 && preD != S)) {//north
-									X = X;
+									//X = X;
 									Z = Z + 2;
 									preD = N;
 								} else if (isD[(Z + 1) * Yindex * Xindex + Y * Xindex + (X + 1)] == 1 && preD != SW) {//northeast
@@ -597,7 +597,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = NE;
 								} else if (isD[Z * Yindex * Xindex + Y * Xindex + (X + 2)] == 1 && isD[Z * Yindex * Xindex + Y * Xindex + (X + 1)] == 2 && preD != W) {//east
 									X = X + 2;
-									Z = Z;
+									//Z = Z;
 									preD = E;
 								} else if (isD[(Z - 1) * Yindex * Xindex + Y * Xindex + (X + 1)] == 1 && preD != NW) {//southeast
 									X = X + 1;
@@ -605,7 +605,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = SE;
 								} else if ((Z - 2 >= 0) &&
 										   (isD[(Z - 2) * Yindex * Xindex + Y * Xindex + X] == 1 && isD[(Z - 1) * Yindex * Xindex + Y * Xindex + X] == 2 && preD != N)) {//south
-									X = X;
+									//X = X;
 									Z = Z - 2;
 									preD = S;
 								} else if (isD[(Z - 1) * Yindex * Xindex + Y * Xindex + (X - 1)] == 1 && preD != NE) {//southwest
@@ -614,7 +614,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 									preD = SW;
 								} else if (isD[Z * Yindex * Xindex + Y * Xindex + (X - 2)] == 1 && isD[Z * Yindex * Xindex + Y * Xindex + (X - 1)] == 2 && preD != E) {//west
 									X = X - 2;
-									Z = Z;
+									//Z = Z;
 									preD = W;
 								} else if (isD[(Z + 1) * Yindex * Xindex + Y * Xindex + (X - 1)] == 1 && preD != SE) {//northwest
 									X = X - 1;
@@ -1075,7 +1075,7 @@ voronoiInfo* setVoronoiInfo(normalUnitVector *nuVec, variableInfo *xInfo, variab
 	int Xdiv = (Xindex + 1) / 2;
 	int Ydiv = (Yindex + 1) / 2;
 	int Zdiv = (Zindex + 1) / 2;
-	double X_proj = 0.0, Y_proj = 0.0, Z_proj = 0.0;
+	//double X_proj = 0.0, Y_proj = 0.0, Z_proj = 0.0;
 	double deltaX = 0.0, deltaY = 0.0, deltaZ = 0.0;
 	double inner_pro = 0.0;
 	double d_ij = 0.0, d_ji = 0.0, s_ij = 0.0, s_ji = 0.0;
@@ -1177,7 +1177,7 @@ voronoiInfo* setVoronoiInfo(normalUnitVector *nuVec, variableInfo *xInfo, variab
 
 					double rotRi_x = cos(theta) * (xInfo->value[index] * cos(phi) + yInfo->value[index] * sin(phi)) - zInfo->value[index] * sin(theta);
 					double rotRi_y = -xInfo->value[index] * sin(phi) + yInfo->value[index] * cos(phi);
-					double rotRi_z = sin(theta) * (xInfo->value[index] * cos(phi) + yInfo->value[index] * sin(phi)) + zInfo->value[index] * cos(theta);
+					//double rotRi_z = sin(theta) * (xInfo->value[index] * cos(phi) + yInfo->value[index] * sin(phi)) + zInfo->value[index] * cos(theta);
 					//xy-yz
 					if (((geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm))
 						&& ((geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {

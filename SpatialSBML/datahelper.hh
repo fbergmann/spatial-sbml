@@ -10,7 +10,7 @@ class DataHelper
 {
 
 private:
-  std::vector<std::vector<double>> mData;
+  std::vector< std::vector<double> > mData;
   int maxX;
   int maxY;
   bool valid;

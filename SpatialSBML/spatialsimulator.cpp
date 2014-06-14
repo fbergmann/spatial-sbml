@@ -221,7 +221,7 @@ Parameter* SpatialSimulator::getDiffusionCoefficientForSpecies(const std::string
 }
 
 SpatialSimulator::SpatialSimulator():
-  Xdiv(100), Ydiv(100), Zdiv(1), model(NULL), volDimension(0), memDimension(0), deltaX(0), deltaY(0), deltaZ(0)
+  Xdiv(100), Ydiv(100), Zdiv(1),  deltaX(0), deltaY(0), deltaZ(0), model(NULL),volDimension(0), memDimension(0)
 {
 }
 void SpatialSimulator::initFromFile(const std::string &fileName, int xdim, int ydim, int zdim/*=1*/)
@@ -1289,10 +1289,11 @@ void SpatialSimulator::printValues()
 void SpatialSimulator::performStep(double t, double dt)
 {
   unsigned int /* i,*/ j , m;
-  int X = 0, Y = 0, Z = 0, index = 0;
+  //int X = 0, Y = 0, Z = 0;
+  //int index = 0;
 
-  int Xplus = 0, Xminus = 0, Yplus = 0, Yminus = 0, Zplus = 0, Zminus = 0;
-  double end_time=1000;
+  //int Xplus = 0, Xminus = 0, Yplus = 0, Yminus = 0, Zplus = 0, Zminus = 0;
+  //double end_time=1000;
   sim_time = t * dt;
   //output
   //if (count % out_step == 0) {

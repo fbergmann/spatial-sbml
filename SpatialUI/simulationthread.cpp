@@ -147,7 +147,7 @@ const std::vector<std::pair<std::string, double> > SimulationThread::getConcentr
   {
     string id = (*mpDisplayItems)[ind]->getId();
     double *values = mpSimulator->getVariable(id, length);
-    int dom = mpSimulator->getGeometry(mpSimulator->getModel()->getSpecies(id)->getCompartment(), length)[index];
+    //int dom = mpSimulator->getGeometry(mpSimulator->getModel()->getSpecies(id)->getCompartment(), length)[index];
     double concentration = values[index];    
     std::pair<std::string, double> current (id,concentration);
     result.push_back(current);

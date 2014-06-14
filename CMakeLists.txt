@@ -48,8 +48,11 @@ set(CPACK_SOURCE_IGNORE_FILES
 set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\SBML Spatial.lnk' '\$INSTDIR\\\\bin\\\\SpatialUI.exe'")
 include(CPack)
 
-
+option(WITH_TEST_OPENMP   "Test whether compiler supports OpenMP"     OFF)
+if (WITH_TEST_OPENMP)
 find_package(OpenMP)
+endif()
+
 find_package(ZLIB)
 
 find_library(LIBSBML_LIBRARY

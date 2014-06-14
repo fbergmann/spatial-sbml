@@ -1386,14 +1386,14 @@ void calcMemDiffusion(variableInfo *sInfo, voronoiInfo *vorI, int Xindex, int Yi
 					}
 				}
 				//yz plane (only 3D)
-				if (dimension == 3 && (geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+				if (dimension == 3 && ((geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 					for (j = 0; j < 2; j++) {
 						sInfo->delta[m * numOfVolIndexes + index] +=
 							((sInfo->diffCInfo[0]->value[dcIndex] * (val[vorI[index].adjacentIndexYZ[j]] - val[index]) * vorI[index].siYZ[j]) / vorI[index].diYZ[j]) / area;
 					}
 				}
 				//xz plane (only 3D)
-				if (dimension == 3 && (geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+				if (dimension == 3 && ((geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 					for (j = 0; j < 2; j++) {
 						sInfo->delta[m * numOfVolIndexes + index] +=
 							((sInfo->diffCInfo[0]->value[dcIndex] * (val[vorI[index].adjacentIndexXZ[j]] - val[index]) * vorI[index].siXZ[j]) / vorI[index].diXZ[j]) / area;
@@ -1410,7 +1410,7 @@ void calcMemDiffusion(variableInfo *sInfo, voronoiInfo *vorI, int Xindex, int Yi
 					}
 				}
 				//yz plane (only 3D)
-				if (dimension == 3 && (geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+				if (dimension == 3 && ((geoInfo->bType[index].isBofYp && geoInfo->bType[index].isBofYm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 					for (j = 0; j < 2; j++) {
 						sInfo->delta[m * numOfVolIndexes + index]
 							+= sInfo->diffCInfo[0]->value[dcIndex] *
@@ -1419,7 +1419,7 @@ void calcMemDiffusion(variableInfo *sInfo, voronoiInfo *vorI, int Xindex, int Yi
 					}
 				}
 				//xz plane (only 3D)
-				if (dimension == 3 && (geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm)) {
+				if (dimension == 3 && ((geoInfo->bType[index].isBofXp && geoInfo->bType[index].isBofXm) || (geoInfo->bType[index].isBofZp && geoInfo->bType[index].isBofZm))) {
 					for (j = 0; j < 2; j++) {
 						sInfo->delta[m * numOfVolIndexes + index]
 							+= sInfo->diffCInfo[0]->value[dcIndex] *

@@ -156,7 +156,7 @@ void SpatialMainWindow::importConcentration()
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
 
   const auto& currentSpecies = ui->lstDose->currentText();
-  const auto& index = ui->lstDose->currentIndex();
+  //const auto& index = ui->lstDose->currentIndex();
 
   DataHelper helper(fileName.toStdString());
   if (!helper.isValid()) return;
@@ -182,8 +182,8 @@ void SpatialMainWindow::exportConcentration()
 
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
 
-  const auto& currentSpecies = ui->lstDose->currentText();
-  const auto& index = ui->lstDose->currentIndex();
+  const QString& currentSpecies = ui->lstDose->currentText();
+  //int index = ui->lstDose->currentIndex();
 
   DataHelper helper(thread->mpSimulator->getXDim(), thread->mpSimulator->getYDim());
   
@@ -191,8 +191,8 @@ void SpatialMainWindow::exportConcentration()
   {
     for (int y = 0; y < thread->mpSimulator->getYDim(); ++y)
     {
-      const auto& all = thread->getConcentrationsAt(x, y);
-      auto& it = all.cbegin();
+      const std::vector<std::pair<std::string, double> >& all = thread->getConcentrationsAt(x, y);
+      std::vector<std::pair<std::string, double> >::const_iterator it = all.cbegin();
       bool wrote = false;
       while( it != all.end())
       {

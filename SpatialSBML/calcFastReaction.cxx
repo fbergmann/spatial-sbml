@@ -1,15 +1,16 @@
 void calcFastReaction(reactionInfo *rInfo, variableInfo *sInfo, int Xindex, int Yindex, int Zindex, double dt, int m, materialType mType, double stoichimetry)
 {
 	int X, Y, Z;
-	int st_index = 0, index = 0, numOfVolIndexes = Xindex * Yindex * Zindex;
-	double rpStack[stackMax] = {0};
-	double rk[4] = {0, 0.5, 0.5, 1.0};
-	double **variable = rInfo->rpInfo->varList;
-	double **constant = rInfo->rpInfo->constList;
-	double **d = rInfo->rpInfo->deltaList;
-	int *operation = rInfo->rpInfo->opfuncList;
-	int numOfASTNodes = rInfo->rpInfo->listNum;
-	GeometryInfo *geoInfo = sInfo->geoi;
+  int index = 0;
+	//int st_index = 0, index = 0;//, numOfVolIndexes = Xindex * Yindex * Zindex;
+	//double rpStack[stackMax] = {0};
+	//double rk[4] = {0, 0.5, 0.5, 1.0};
+	//double **variable = rInfo->rpInfo->varList;
+	//double **constant = rInfo->rpInfo->constList;
+	//double **d = rInfo->rpInfo->deltaList;
+	//int *operation = rInfo->rpInfo->opfuncList;
+	//int numOfASTNodes = rInfo->rpInfo->listNum;
+	//GeometryInfo *geoInfo = sInfo->geoi;
 	int increment = 0;
 	ASTNode *ast, *cloneAst;
 	if (sInfo->inVol == true) {
