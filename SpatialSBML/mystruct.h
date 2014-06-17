@@ -172,6 +172,9 @@ typedef struct _coordinateDesc
     int zp, int zpp, 
     int zm, int zmm)
   {
+    val = v; 
+    max = m;
+
     X.p = xp; X.pp = xpp;
     X.m = xm; X.mm = xmm;
     X.update(m);

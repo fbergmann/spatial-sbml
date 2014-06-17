@@ -962,11 +962,11 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 
           if (!sInfo->boundaryInfo[Xmax]->isUniform) divIndexXp = desc.X.p;
           if (!sInfo->boundaryInfo[Xmin]->isUniform) divIndexXm = desc.X.m;
-          if (sInfo->geoi->isDomain[desc.X.p] == 1 && ( desc.X.ppOutside || sInfo->geoi->isDomain[desc.X.pp] == 0)) {//Xp
+          if ((!desc.X.pOutside && sInfo->geoi->isDomain[desc.X.p] == 1) && ( desc.X.ppOutside || sInfo->geoi->isDomain[desc.X.pp] == 0)) {//Xp
             if (maxSideIsNeumannX) sInfo->delta[m * numOfVolIndexes + desc.X.p] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
             else if (maxSideIsDirichletX) sInfo->value[desc.X.p] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
           }
-          if (sInfo->geoi->isDomain[desc.X.m] == 1 && ( desc.X.mmOutside || sInfo->geoi->isDomain[desc.X.mm] == 0)) {//Xm
+          if ((!desc.Y.mOutside && sInfo->geoi->isDomain[desc.X.m] == 1) && ( desc.X.mmOutside || sInfo->geoi->isDomain[desc.X.mm] == 0)) {//Xm
             if (minSideIsNeumannX) sInfo->delta[m * numOfVolIndexes + desc.X.m] += -2.0 * (-sInfo->boundaryInfo[Xmin]->value[divIndexXm]) / deltaX;
             else if (minSideIsDirichletX) sInfo->value[desc.X.m] = sInfo->boundaryInfo[Xmin]->value[divIndexXm];
           }
@@ -977,11 +977,11 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 
           if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = desc.Y.p;
           if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = desc.Y.m;
-          if (sInfo->geoi->isDomain[desc.Y.p] == 1 && ( desc.Y.ppOutside || sInfo->geoi->isDomain[desc.Y.pp] == 0)) {//Yp
+          if ((!desc.Y.pOutside && sInfo->geoi->isDomain[desc.Y.p] == 1) && ( desc.Y.ppOutside || sInfo->geoi->isDomain[desc.Y.pp] == 0)) {//Yp
             if (maxSideIsNeumannY)	sInfo->delta[m * numOfVolIndexes + desc.Y.p] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
             else if (maxSideIsDirichletY) sInfo->value[desc.Y.p] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
           }
-          if (sInfo->geoi->isDomain[desc.Y.m] == 1 && ( desc.Y.mmOutside || sInfo->geoi->isDomain[desc.Y.mm] == 0)) {//Ym
+          if ((!desc.Y.mOutside && sInfo->geoi->isDomain[desc.Y.m] == 1) && ( desc.Y.mmOutside || sInfo->geoi->isDomain[desc.Y.mm] == 0)) {//Ym
             if (minSideIsNeumannY) sInfo->delta[m * numOfVolIndexes + desc.Y.m] += -2.0 * (-sInfo->boundaryInfo[Ymin]->value[divIndexYm]) / deltaY;
             else if (minSideIsDirichletY) sInfo->value[desc.Y.m] = sInfo->boundaryInfo[Ymin]->value[divIndexYm];
           }
@@ -992,11 +992,11 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
         {
           if (!sInfo->boundaryInfo[Zmax]->isUniform) divIndexZp = desc.Z.p;
           if (!sInfo->boundaryInfo[Zmin]->isUniform) divIndexZm = desc.Z.m;
-          if (sInfo->geoi->isDomain[desc.Z.p] == 1 && ( desc.Z.ppOutside || sInfo->geoi->isDomain[desc.Z.pp] == 0)) {//Zp
+          if ((!desc.Z.pOutside && sInfo->geoi->isDomain[desc.Z.p] == 1) && ( desc.Z.ppOutside || sInfo->geoi->isDomain[desc.Z.pp] == 0)) {//Zp
             if (maxSideIsNeumannZ) sInfo->delta[m * numOfVolIndexes + desc.Z.p] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
             else if (maxSideIsDirichletZ) sInfo->value[desc.Z.p] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
           }
-          if (sInfo->geoi->isDomain[desc.Z.m] == 1 && ( desc.Z.mmOutside || sInfo->geoi->isDomain[desc.Z.mm] == 0)) {//Zm
+          if ((!desc.Z.mOutside && sInfo->geoi->isDomain[desc.Z.m] == 1) && ( desc.Z.mmOutside || sInfo->geoi->isDomain[desc.Z.mm] == 0)) {//Zm
             if (minSideIsNeumannZ) sInfo->delta[m * numOfVolIndexes + desc.Z.m] += -2.0 * (-sInfo->boundaryInfo[Zmin]->value[divIndexZm]) / deltaZ;
             else if (minSideIsDirichletZ) sInfo->value[desc.Z.mm] = sInfo->boundaryInfo[Zmin]->value[divIndexZm];
           }
