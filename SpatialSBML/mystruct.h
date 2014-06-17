@@ -134,4 +134,59 @@ typedef struct _planeAdjacent {
 	normalUnitVector XZcontour[2];
 }planeAdjacent;
 
+typedef struct _singleCoordinateDesc
+{
+  int p;
+  bool pOutside;
+  int pp;
+  bool ppOutside;
+  int m;
+  bool mOutside;
+  int mm;
+  bool mmOutside;
+
+  void update(int max)
+  {
+    pOutside = (p >= max);
+    ppOutside = (pp >= max);
+    mOutside = (m < 0);
+    mmOutside = (mm < 0);
+  }
+
+} singleCoordinateDesc;
+
+typedef struct _coordinateDesc
+{
+  int max;
+  int val;
+
+  _singleCoordinateDesc X;
+  _singleCoordinateDesc Y;
+  _singleCoordinateDesc Z;
+
+  void set(int v, int m, 
+    int xp, int xpp, 
+    int xm, int xmm, 
+    int yp, int ypp, 
+    int ym, int ymm, 
+    int zp, int zpp, 
+    int zm, int zmm)
+  {
+    X.p = xp; X.pp = xpp;
+    X.m = xm; X.mm = xmm;
+    X.update(m);
+
+    Y.p = yp; Y.pp = ypp;
+    Y.m = ym; Y.mm = ymm;
+    Y.update(m);
+
+    Z.p = xp; Z.pp = zpp;
+    Z.m = xm; Z.mm = zmm;
+    Z.update(m);
+
+  }
+
+
+} coordinateDesc;
+
 #endif /* MYSTRUCT_H_ */

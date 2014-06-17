@@ -868,7 +868,8 @@ void cipCSLR(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, d
 void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, int Xindex, int Yindex, int Zindex, int m, int dimension)
 {
   if (!sInfo->isResolved) return;
-	int Xp = 0, Xm = 0, Yp = 0, Ym = 0, Zp = 0, Zm = 0, X = 0, Y = 0, Z = 0;
+	//int Xp = 0, Xm = 0, Yp = 0, Ym = 0, Zp = 0, Zm = 0, 
+  int X = 0, Y = 0, Z = 0;
 	int divIndexXp = 0, divIndexXm = 0, divIndexYp = 0,divIndexYm = 0, divIndexZp = 0, divIndexZm = 0;
 	int numOfVolIndexes = Xindex * Yindex * Zindex;
 	// 	int Xdiv = (Xindex + 1) / 2, Ydiv = (Yindex + 1) / 2, Zdiv = (Zindex + 1) / 2;
@@ -877,87 +878,133 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 	//2d
 	//x direction: d = (-J * deltaY) / (deltaY * (deltaX / 2.0)) = -2.0 * J / deltaX
 	//3d
-	//x direction: d = (-J * deltaY * deltaZ) / (deltaY * deltaZ * (deltaX / 2.0)) = -2.0 * J / deltaX
-	if (dimension >= 1) 
+  //x direction: d = (-J * deltaY * deltaZ) / (deltaY * deltaZ * (deltaX / 2.0)) = -2.0 * J / deltaX
+
+  bool maxSideIsDirichletX = false;
+  bool maxSideIsNeumannX   = false;
+  bool minSideIsDirichletX = false;
+  bool minSideIsNeumannX   = false;
+  
+  bool maxSideIsDirichletY = false;
+  bool maxSideIsNeumannY   = false;
+  bool minSideIsDirichletY = false;
+  bool minSideIsNeumannY   = false;
+  
+  bool maxSideIsDirichletZ = false;
+  bool maxSideIsNeumannZ   = false;
+  bool minSideIsDirichletZ = false;
+  bool minSideIsNeumannZ   = false;
+
+  if (dimension >= 1)
   {
-		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmax]->para->getPlugin("spatial"))->getBoundaryCondition();
-		minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
-    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
-    bool minSideIsDirichlet = minSideBC->getType() == "Value";
-    bool minSideIsNeumann = minSideBC->getType() == "Flux";
-		//Xp, Xm
-		for (Z = 0; Z < Zindex; Z += 2) {
-			for (Y = 0; Y < Yindex; Y += 2) {
-				Xp = Z * Yindex * Xindex + Y * Xindex + (Xindex - 1);
-				Xm = Z * Yindex * Xindex + Y * Xindex;
-				if (!sInfo->boundaryInfo[Xmax]->isUniform) divIndexXp = Xp;
-				if (!sInfo->boundaryInfo[Xmin]->isUniform) divIndexXm = Xm;
-				if (sInfo->geoi->isDomain[Xp] == 1) {//Xp
-					if (maxSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Xp] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
-					else if (maxSideIsDirichlet) sInfo->value[Xp] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
-				}
-				if (sInfo->geoi->isDomain[Xm] == 1) {//Xm
-					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Xm] += -2.0 * (-sInfo->boundaryInfo[Xmin]->value[divIndexXm]) / deltaX;
-					else if (minSideIsDirichlet) sInfo->value[Xm] = sInfo->boundaryInfo[Xmin]->value[divIndexXm];
-				}
-			}
-		}
-	}
-	//Yp, Ym
-	if (dimension >= 2) 
+    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmax]->para->getPlugin("spatial"))->getBoundaryCondition();
+    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmin]->para->getPlugin("spatial"))->getBoundaryCondition();
+    maxSideIsDirichletX = maxSideBC->getType() == "Value";
+    maxSideIsNeumannX   = maxSideBC->getType() == "Flux";
+    minSideIsDirichletX = minSideBC->getType() == "Value";
+    minSideIsNeumannX   = minSideBC->getType() == "Flux";
+  }
+
+  if (dimension >= 2)
   {
-		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymax]->para->getPlugin("spatial"))->getBoundaryCondition();		
+    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymax]->para->getPlugin("spatial"))->getBoundaryCondition();		
     minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
-    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
-    bool minSideIsDirichlet = minSideBC->getType() == "Value";
-    bool minSideIsNeumann = minSideBC->getType() == "Flux";
+    maxSideIsDirichletY = maxSideBC->getType() == "Value";
+    maxSideIsNeumannY   = maxSideBC->getType() == "Flux";
+    minSideIsDirichletY = minSideBC->getType() == "Value";
+    minSideIsNeumannY   = minSideBC->getType() == "Flux";
+  }
 
-		for (Z = 0; Z < Zindex; Z += 2) {
-			for (X = 0; X < Xindex; X += 2) {
-				Yp = Z * Yindex * Xindex + (Yindex - 1) * Xindex + X;
-				Ym = Z * Yindex * Xindex + X;
-				if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = Yp;
-				if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = Ym;
-				if (sInfo->geoi->isDomain[Yp] == 1) {//Yp
-					if (maxSideIsNeumann)	sInfo->delta[m * numOfVolIndexes + Yp] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
-					else if (maxSideIsDirichlet) sInfo->value[Yp] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
-				}
-				if (sInfo->geoi->isDomain[Ym] == 1) {//Ym
-					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Ym] += -2.0 * (-sInfo->boundaryInfo[Ymin]->value[divIndexYm]) / deltaY;
-					else if (minSideIsDirichlet) sInfo->value[Ym] = sInfo->boundaryInfo[Ymin]->value[divIndexYm];
-				}
-			}
-		}
-	}
-	//Zp, Zm
-	if (dimension >= 3) 
+  if (dimension >= 3)
   {
-		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmax]->para->getPlugin("spatial"))->getBoundaryCondition();
-		minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
-    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
-    bool minSideIsDirichlet = minSideBC->getType() == "Value";
-    bool minSideIsNeumann = minSideBC->getType() == "Flux";
+    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmax]->para->getPlugin("spatial"))->getBoundaryCondition();
+    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmin]->para->getPlugin("spatial"))->getBoundaryCondition();
+    maxSideIsDirichletZ = maxSideBC->getType() == "Value";
+    maxSideIsNeumannZ   = maxSideBC->getType() == "Flux";
+    minSideIsDirichletZ = minSideBC->getType() == "Value";
+    minSideIsNeumannZ   = minSideBC->getType() == "Flux";
+  }
 
-		for (Y = 0; Y < Yindex; Y += 2) {
-			for (X = 0; X < Xindex; X += 2) {
-				Zp = (Zindex - 1) * Yindex * Xindex + Y * Xindex + X;
-				Zm = Y * Xindex + X;
-				if (!sInfo->boundaryInfo[Zmax]->isUniform) divIndexZp = Zp;
-				if (!sInfo->boundaryInfo[Zmin]->isUniform) divIndexZm = Zm;
-				if (sInfo->geoi->isDomain[Zp] == 1) {//Zp
-					if (maxSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Zp] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
-					else if (maxSideIsDirichlet) sInfo->value[Zp] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
-				}
-				if (sInfo->geoi->isDomain[Zm] == 1) {//Zm
-					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Zm] += -2.0 * (-sInfo->boundaryInfo[Zmin]->value[divIndexZm]) / deltaZ;
-					else if (minSideIsDirichlet) sInfo->value[Zm] = sInfo->boundaryInfo[Zmin]->value[divIndexZm];
-				}
-			}
-		}
-	}
+  coordinateDesc desc;
+
+  for (Z = 0; Z < Zindex; Z += 2) {
+    for (Y = 0; Y < Yindex; Y += 2) {
+      for (X = 0; X < Xindex; X += 2) {
+
+        desc.set(
+          Z * Yindex * Xindex + Y * Xindex + (X), 
+          numOfVolIndexes,
+
+          Z * Yindex * Xindex + Y * Xindex + (X + 2), 
+          Z * Yindex * Xindex + Y * Xindex + (X + 4), 
+
+          Z * Yindex * Xindex + Y * Xindex + (X - 2), 
+          Z * Yindex * Xindex + Y * Xindex + (X - 4), 
+
+          Z * Yindex * Xindex + (Y + 2) * Xindex + X, 
+          Z * Yindex * Xindex + (Y + 4) * Xindex + X, 
+
+          Z * Yindex * Xindex + (Y - 2) * Xindex + X, 
+          Z * Yindex * Xindex + (Y - 4) * Xindex + X, 
+
+          (Z + 2) * Yindex * Xindex + Y * Xindex + X,
+          (Z + 4) * Yindex * Xindex + Y * Xindex + X,
+
+          (Z - 2) * Yindex * Xindex + Y * Xindex + X,
+          (Z - 4) * Yindex * Xindex + Y * Xindex + X
+
+          );
+
+
+        if (dimension >= 1) 
+        {
+          //Xp, Xm
+
+          if (!sInfo->boundaryInfo[Xmax]->isUniform) divIndexXp = desc.X.p;
+          if (!sInfo->boundaryInfo[Xmin]->isUniform) divIndexXm = desc.X.m;
+          if (sInfo->geoi->isDomain[desc.X.p] == 1 && ( desc.X.ppOutside || sInfo->geoi->isDomain[desc.X.pp] == 0)) {//Xp
+            if (maxSideIsNeumannX) sInfo->delta[m * numOfVolIndexes + desc.X.p] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
+            else if (maxSideIsDirichletX) sInfo->value[desc.X.p] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
+          }
+          if (sInfo->geoi->isDomain[desc.X.m] == 1 && ( desc.X.mmOutside || sInfo->geoi->isDomain[desc.X.mm] == 0)) {//Xm
+            if (minSideIsNeumannX) sInfo->delta[m * numOfVolIndexes + desc.X.m] += -2.0 * (-sInfo->boundaryInfo[Xmin]->value[divIndexXm]) / deltaX;
+            else if (minSideIsDirichletX) sInfo->value[desc.X.m] = sInfo->boundaryInfo[Xmin]->value[divIndexXm];
+          }
+        }
+        //Yp, Ym
+        if (dimension >= 2) 
+        {
+
+          if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = desc.Y.p;
+          if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = desc.Y.m;
+          if (sInfo->geoi->isDomain[desc.Y.p] == 1 && ( desc.Y.ppOutside || sInfo->geoi->isDomain[desc.Y.pp] == 0)) {//Yp
+            if (maxSideIsNeumannY)	sInfo->delta[m * numOfVolIndexes + desc.Y.p] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
+            else if (maxSideIsDirichletY) sInfo->value[desc.Y.p] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
+          }
+          if (sInfo->geoi->isDomain[desc.Y.m] == 1 && ( desc.Y.mmOutside || sInfo->geoi->isDomain[desc.Y.mm] == 0)) {//Ym
+            if (minSideIsNeumannY) sInfo->delta[m * numOfVolIndexes + desc.Y.m] += -2.0 * (-sInfo->boundaryInfo[Ymin]->value[divIndexYm]) / deltaY;
+            else if (minSideIsDirichletY) sInfo->value[desc.Y.m] = sInfo->boundaryInfo[Ymin]->value[divIndexYm];
+          }
+        }
+
+        //Zp, Zm
+        if (dimension >= 3) 
+        {
+          if (!sInfo->boundaryInfo[Zmax]->isUniform) divIndexZp = desc.Z.p;
+          if (!sInfo->boundaryInfo[Zmin]->isUniform) divIndexZm = desc.Z.m;
+          if (sInfo->geoi->isDomain[desc.Z.p] == 1 && ( desc.Z.ppOutside || sInfo->geoi->isDomain[desc.Z.pp] == 0)) {//Zp
+            if (maxSideIsNeumannZ) sInfo->delta[m * numOfVolIndexes + desc.Z.p] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
+            else if (maxSideIsDirichletZ) sInfo->value[desc.Z.p] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
+          }
+          if (sInfo->geoi->isDomain[desc.Z.m] == 1 && ( desc.Z.mmOutside || sInfo->geoi->isDomain[desc.Z.mm] == 0)) {//Zm
+            if (minSideIsNeumannZ) sInfo->delta[m * numOfVolIndexes + desc.Z.m] += -2.0 * (-sInfo->boundaryInfo[Zmin]->value[divIndexZm]) / deltaZ;
+            else if (minSideIsDirichletZ) sInfo->value[desc.Z.mm] = sInfo->boundaryInfo[Zmin]->value[divIndexZm];
+          }
+        }
+      }
+
+    }
+  }
 }
 
 void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVector *nuVec, int Xindex, int Yindex, int Zindex, double dt, int m, double deltaX, double deltaY, double deltaZ, int dimension, int numOfReactants)
