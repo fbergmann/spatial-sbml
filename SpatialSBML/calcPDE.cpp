@@ -878,9 +878,14 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 	//x direction: d = (-J * deltaY) / (deltaY * (deltaX / 2.0)) = -2.0 * J / deltaX
 	//3d
 	//x direction: d = (-J * deltaY * deltaZ) / (deltaY * deltaZ * (deltaX / 2.0)) = -2.0 * J / deltaX
-	if (dimension >= 1) {
+	if (dimension >= 1) 
+  {
 		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmax]->para->getPlugin("spatial"))->getBoundaryCondition();
 		minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmin]->para->getPlugin("spatial"))->getBoundaryCondition();
+    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
+    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
+    bool minSideIsDirichlet = minSideBC->getType() == "Value";
+    bool minSideIsNeumann = minSideBC->getType() == "Flux";
 		//Xp, Xm
 		for (Z = 0; Z < Zindex; Z += 2) {
 			for (Y = 0; Y < Yindex; Y += 2) {
@@ -889,20 +894,26 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Xmax]->isUniform) divIndexXp = Xp;
 				if (!sInfo->boundaryInfo[Xmin]->isUniform) divIndexXm = Xm;
 				if (sInfo->geoi->isDomain[Xp] == 1) {//Xp
-					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Xp] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
-					else if (maxSideBC->getType() == "Value") sInfo->value[Xp] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
+					if (maxSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Xp] += -2.0 * (-sInfo->boundaryInfo[Xmax]->value[divIndexXp]) / deltaX;
+					else if (maxSideIsDirichlet) sInfo->value[Xp] = sInfo->boundaryInfo[Xmax]->value[divIndexXp];
 				}
 				if (sInfo->geoi->isDomain[Xm] == 1) {//Xm
-					if (minSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Xm] += -2.0 * (-sInfo->boundaryInfo[Xmin]->value[divIndexXm]) / deltaX;
-					else if (minSideBC->getType() == "Value") sInfo->value[Xm] = sInfo->boundaryInfo[Xmin]->value[divIndexXm];
+					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Xm] += -2.0 * (-sInfo->boundaryInfo[Xmin]->value[divIndexXm]) / deltaX;
+					else if (minSideIsDirichlet) sInfo->value[Xm] = sInfo->boundaryInfo[Xmin]->value[divIndexXm];
 				}
 			}
 		}
 	}
 	//Yp, Ym
-	if (dimension >= 2) {
-		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymax]->para->getPlugin("spatial"))->getBoundaryCondition();
-		minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymin]->para->getPlugin("spatial"))->getBoundaryCondition();
+	if (dimension >= 2) 
+  {
+		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymax]->para->getPlugin("spatial"))->getBoundaryCondition();		
+    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymin]->para->getPlugin("spatial"))->getBoundaryCondition();
+    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
+    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
+    bool minSideIsDirichlet = minSideBC->getType() == "Value";
+    bool minSideIsNeumann = minSideBC->getType() == "Flux";
+
 		for (Z = 0; Z < Zindex; Z += 2) {
 			for (X = 0; X < Xindex; X += 2) {
 				Yp = Z * Yindex * Xindex + (Yindex - 1) * Xindex + X;
@@ -910,20 +921,26 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = Yp;
 				if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = Ym;
 				if (sInfo->geoi->isDomain[Yp] == 1) {//Yp
-					if (maxSideBC->getType() == "Flux")	sInfo->delta[m * numOfVolIndexes + Yp] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
-					else if (maxSideBC->getType() == "Value") sInfo->value[Yp] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
+					if (maxSideIsNeumann)	sInfo->delta[m * numOfVolIndexes + Yp] += -2.0 * (-sInfo->boundaryInfo[Ymax]->value[divIndexYp]) / deltaY;
+					else if (maxSideIsDirichlet) sInfo->value[Yp] = sInfo->boundaryInfo[Ymax]->value[divIndexYp];
 				}
 				if (sInfo->geoi->isDomain[Ym] == 1) {//Ym
-					if (minSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Ym] += -2.0 * (-sInfo->boundaryInfo[Ymin]->value[divIndexYm]) / deltaY;
-					else if (minSideBC->getType() == "Value") sInfo->value[Ym] = sInfo->boundaryInfo[Ymin]->value[divIndexYm];
+					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Ym] += -2.0 * (-sInfo->boundaryInfo[Ymin]->value[divIndexYm]) / deltaY;
+					else if (minSideIsDirichlet) sInfo->value[Ym] = sInfo->boundaryInfo[Ymin]->value[divIndexYm];
 				}
 			}
 		}
 	}
 	//Zp, Zm
-	if (dimension >= 3) {
+	if (dimension >= 3) 
+  {
 		maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmax]->para->getPlugin("spatial"))->getBoundaryCondition();
 		minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmin]->para->getPlugin("spatial"))->getBoundaryCondition();
+    bool maxSideIsDirichlet = maxSideBC->getType() == "Value";
+    bool maxSideIsNeumann = maxSideBC->getType() == "Flux";
+    bool minSideIsDirichlet = minSideBC->getType() == "Value";
+    bool minSideIsNeumann = minSideBC->getType() == "Flux";
+
 		for (Y = 0; Y < Yindex; Y += 2) {
 			for (X = 0; X < Xindex; X += 2) {
 				Zp = (Zindex - 1) * Yindex * Xindex + Y * Xindex + X;
@@ -931,12 +948,12 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 				if (!sInfo->boundaryInfo[Zmax]->isUniform) divIndexZp = Zp;
 				if (!sInfo->boundaryInfo[Zmin]->isUniform) divIndexZm = Zm;
 				if (sInfo->geoi->isDomain[Zp] == 1) {//Zp
-					if (maxSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Zp] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
-					else if (maxSideBC->getType() == "Value") sInfo->value[Zp] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
+					if (maxSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Zp] += -2.0 * (-sInfo->boundaryInfo[Zmax]->value[divIndexZp]) / deltaZ;
+					else if (maxSideIsDirichlet) sInfo->value[Zp] = sInfo->boundaryInfo[Zmax]->value[divIndexZp];
 				}
 				if (sInfo->geoi->isDomain[Zm] == 1) {//Zm
-					if (minSideBC->getType() == "Flux") sInfo->delta[m * numOfVolIndexes + Zm] += -2.0 * (-sInfo->boundaryInfo[Zmin]->value[divIndexZm]) / deltaZ;
-					else if (minSideBC->getType() == "Value") sInfo->value[Zm] = sInfo->boundaryInfo[Zmin]->value[divIndexZm];
+					if (minSideIsNeumann) sInfo->delta[m * numOfVolIndexes + Zm] += -2.0 * (-sInfo->boundaryInfo[Zmin]->value[divIndexZm]) / deltaZ;
+					else if (minSideIsDirichlet) sInfo->value[Zm] = sInfo->boundaryInfo[Zmin]->value[divIndexZm];
 				}
 			}
 		}
@@ -960,13 +977,15 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 	//for (k = 0; k < (int)geoInfo->domainIndex.size(); k++) {
 	//	index = geoInfo->domainIndex[k];
   int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
-  for (k = 0; k < domainIndexSize; k++) {
+  for (k = 0; k < domainIndexSize; k++)
+  {
 		index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[k];
 		Z = index / (Xindex * Yindex);
 		Y = (index - Z * Xindex * Yindex) / Xindex;
 		X = index - Z * Xindex * Yindex - Y * Xindex;
 		if ((dimension == 3 && (X * Y * Z == 0 || X == Xindex - 1 || Y == Yindex - 1 || Z == Zindex - 1))
-			|| (dimension == 2 && (X * Y == 0 || X == Xindex - 1 || Y == Yindex - 1))) {
+			|| (dimension == 2 && (X * Y == 0 || X == Xindex - 1 || Y == Yindex - 1))) 
+    {
         if (geoInfo != NULL)
 			continue;
 		}
@@ -984,13 +1003,19 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 		Zplus1 = (Z + 1) * Yindex * Xindex + Y * Xindex + X;
 		Zminus1 = (Z - 1) * Yindex * Xindex + Y * Xindex + X;
 
-		if (geoInfo->isDomain[index] == 1) {//not pseudo membrane
-			for (i = 0; i < numOfASTNodes; i++) {
-				if (variable[i] != 0) {//set variable into the stack
-					if (d != 0 && d[i] != 0) {
-						for (j = 0; j < static_cast<int>(rInfo->spRefList.size()); j++) {
+		if (geoInfo->isDomain[index] == 1) 
+    {//not pseudo membrane
+			for (i = 0; i < numOfASTNodes; i++) 
+      {
+				if (variable[i] != 0) 
+        {//set variable into the stack
+					if (d != 0 && d[i] != 0) 
+          {
+						for (j = 0; j < static_cast<int>(rInfo->spRefList.size()); j++) 
+            {
 							//search compartment of equation's symbol
-							if (variable[i] == rInfo->spRefList[j]->value) {
+							if (variable[i] == rInfo->spRefList[j]->value) 
+              {
 								symbolInfo = rInfo->spRefList[j];
 								break;
 							}
@@ -1000,36 +1025,50 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 						  value = value(boundary) + (value(boundary) - value(boundary_next)) / 2
 						  = 1.5 * value(boundary) - 0.5 * value(boundary_next)
 						*/
-						if (symbolInfo->geoi->isVol) {//symbol is in volume
+						if (symbolInfo->geoi->isVol) 
+            {//symbol is in volume
 							//x transport
-							if (static_cast<int>(symbolInfo->geoi->isDomain[Xplus1]) == 1) {//right of membrane
-								if (Xplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Xplus3] == 1) {
+							if (static_cast<int>(symbolInfo->geoi->isDomain[Xplus1]) == 1) 
+              {//right of membrane
+								if (Xplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Xplus3] == 1) 
+                {
 									if (m == 0) rpStack[st_index] = 1.5 * variable[i][Xplus1] - 0.5 * variable[i][Xplus3];
-									else {
+									else 
+                  {
 										rpStack[st_index] = 1.5 * (variable[i][Xplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xplus1])
 											- 0.5 * (variable[i][Xplus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xplus3]);
 									}
-								} else {
+								} 
+                else 
+                {
 									if (m == 0) rpStack[st_index] = variable[i][Xplus1];
 									else rpStack[st_index] = variable[i][Xplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xplus1];
 								}
-							} else if (symbolInfo->geoi->isDomain[Xminus1] == 1) {//left of membrane
-								if (Xminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Xminus3] == 1) {
+							} else if (symbolInfo->geoi->isDomain[Xminus1] == 1) 
+              {//left of membrane
+								if (Xminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Xminus3] == 1) 
+                {
 									if (m == 0) rpStack[st_index] = 1.5 * variable[i][Xminus1] - 0.5 * variable[i][Xminus3];
-									else {
+									else 
+                  {
 										rpStack[st_index] = 1.5 * (variable[i][Xminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xminus1])
 											- 0.5 * (variable[i][Xminus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xminus3]);
 									}
-								} else {
+								} 
+                else 
+                {
 									if (m == 0) rpStack[st_index] = variable[i][Xminus1];
 									else rpStack[st_index] = variable[i][Xminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Xminus1];
 								}
 							}
 							//y transport
-							if (static_cast<int>(symbolInfo->geoi->isDomain[Yplus1]) == 1) {//upper of membrane
-								if (Yplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Yplus3] == 1) {
+							if (static_cast<int>(symbolInfo->geoi->isDomain[Yplus1]) == 1) 
+              {//above membrane
+								if (Yplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Yplus3] == 1) 
+                {
 									if (m == 0) rpStack[st_index] = 1.5 * variable[i][Yplus1] - 0.5 * variable[i][Yplus3];
-									else {
+									else
+                  {
 										rpStack[st_index] = 1.5 * (variable[i][Yplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yplus1])
 											- 0.5 * (variable[i][Yplus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yplus3]);
 									}
@@ -1037,57 +1076,85 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 									if (m == 0) rpStack[st_index] = variable[i][Yplus1];
 									else rpStack[st_index] = variable[i][Yplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yplus1];
 								}
-							} else if (static_cast<int>(symbolInfo->geoi->isDomain[Yminus1]) == 1) {//downer of membrane
-								if (Yminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Yminus3] == 1) {
-									if (m == 0) {
+							} 
+              else if (static_cast<int>(symbolInfo->geoi->isDomain[Yminus1]) == 1) 
+              {//below membrane
+								if (Yminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Yminus3] == 1) 
+                {
+									if (m == 0) 
+                  {
 										rpStack[st_index] = 1.5 * variable[i][Yminus1] - 0.5 * variable[i][Yminus3];
-									} else {
+									} 
+                  else 
+                  {
 										rpStack[st_index] = 1.5 * (variable[i][Yminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yminus1])
 											- 0.5 * (variable[i][Yminus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yminus3]);
 									}
-								} else {
+								} 
+                else 
+                {
 									if (m == 0) rpStack[st_index] = variable[i][Yminus1];
 									else rpStack[st_index] = variable[i][Yminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Yminus1];
 								}
 							}
 							//z transport
-							if (dimension == 3) {
-								if (static_cast<int>(symbolInfo->geoi->isDomain[Zplus1]) == 1) {//higher of membrane
-									if (Zplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Zplus3] == 1) {
+							if (dimension == 3) 
+              {
+								if (static_cast<int>(symbolInfo->geoi->isDomain[Zplus1]) == 1) 
+                {//higher of membrane
+									if (Zplus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Zplus3] == 1) 
+                  {
 										if (m == 0) rpStack[st_index] = 1.5 * variable[i][Zplus1] - 0.5 * variable[i][Zplus3];
-										else {
+										else 
+                    {
 											rpStack[st_index] = 1.5 * (variable[i][Zplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zplus1])
 												- 0.5 * (variable[i][Zplus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zplus3]);
 										}
-									} else {
+									} 
+                  else 
+                  {
 										if (m == 0) rpStack[st_index] = variable[i][Zplus1];
 										else rpStack[st_index] = variable[i][Zplus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zplus1];
 									}
-								} else if (static_cast<int>(symbolInfo->geoi->isDomain[Zminus1]) == 1) {//lowner of membrane
-									if (Zminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Zminus3] == 1) {
+								} 
+                else if (static_cast<int>(symbolInfo->geoi->isDomain[Zminus1]) == 1) 
+                {//lowner of membrane
+									if (Zminus3 < numOfVolIndexes && symbolInfo->geoi->isDomain[Zminus3] == 1) 
+                  {
 										if (m == 0) rpStack[st_index] = 1.5 * variable[i][Zminus1] - 0.5 * variable[i][Zminus3];
-										else {
+										else 
+                    {
 											rpStack[st_index] = 1.5 * (variable[i][Zminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zminus1])
 												- 0.5 * (variable[i][Zminus3] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zminus3]);
 										}
-									} else {
+									} 
+                  else 
+                  {
 										if (m == 0) rpStack[st_index] = variable[i][Zminus1];
 										else rpStack[st_index] = variable[i][Zminus1] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + Zminus1];
 									}
 								}
 							}
-						} else {//symbol is in membrane
+						} 
+            else 
+            {//symbol is in membrane
 							if (m == 0) rpStack[st_index] = variable[i][index];
 							else rpStack[st_index] = variable[i][index] + rk[m] * dt * d[i][(m - 1) * numOfVolIndexes + index];
 						}
-					} else {
+					} 
+          else 
+          {
 						rpStack[st_index] = variable[i][index];
 					}
 					st_index++;
-				} else if (constant[i] != 0) {//set const into the stack
+				} 
+        else if (constant[i] != 0) 
+        {//set const into the stack
 					rpStack[st_index] = *(constant[i]);
 					st_index++;
-				} else {//operation
+				} 
+        else 
+        {//operation
 					st_index--;
 					switch (operation[i]) {
 					case AST_PLUS:
