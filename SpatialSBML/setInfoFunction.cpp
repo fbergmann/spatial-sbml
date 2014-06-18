@@ -746,6 +746,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 					nuVec[index].nz = X1 * Y2 - Y1 * X2;
 
 					len = sqrt(pow(nuVec[index].nx, 2) + pow(nuVec[index].ny, 2) + pow(nuVec[index].nz, 2));
+          if (len == 0) len = 1;
 					//double phi = atan2(nuVec[index].ny, nuVec[index].nx);
 					//double theta = acos(nuVec[index].nz / len);
 					nuVec[index].nx /= len;

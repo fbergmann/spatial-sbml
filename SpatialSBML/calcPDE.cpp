@@ -1407,6 +1407,8 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 				if (rInfo->isVariable[j]) {
 					if (geoInfo->bType[index].isBofXp || geoInfo->bType[index].isBofXm) {//x transport or x binding
 						//transport
+            if (rInfo->spRefList[j]->geoi == NULL || rInfo->spRefList[j]->geoi->isDomain == NULL)
+              continue;
 						if (rInfo->spRefList[j]->geoi->isDomain[Xplus1] == 1) {//right of membrane
 							rInfo->spRefList[j]->delta[m * numOfVolIndexes + Xplus1] += fabs(nuVec[index].nx) * rInfo->srStoichiometry[j] * rpStack[st_index] / deltaX;
 						}

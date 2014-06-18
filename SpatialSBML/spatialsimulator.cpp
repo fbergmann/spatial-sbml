@@ -1043,6 +1043,19 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       }
       ast = const_cast<ASTNode*>(((AssignmentRule*)model->getRule(info->id))->getMath());
     }
+
+
+     //if (info->sp != 0) 
+     //{
+     //  if (info->geoi == NULL)
+     //    info->geoi = searchAvolInfoByCompartment(geoInfoList, info->sp->getCompartment().c_str());
+     //   if (info->sp != 0 && info->delta == NULL && (!info->sp->isSetConstant() || !info->sp->getConstant())) {
+     //     //the species is variable
+     //     info->delta = new double[4 * numOfVolIndexes];
+     //     fill_n(info->delta, 4 * numOfVolIndexes, 0);
+     //   }
+     //}
+    
     if (ast != 0) {
       rearrangeAST(ast);
       numOfASTNodes = 0;
@@ -1067,8 +1080,6 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
   if (notOrderedInfo.size() != 0) {
     for (i = 0;i < notOrderedInfo.size();++i) {
       variableInfo *info = notOrderedInfo[i];
-      if (info->geoi == NULL)
-        continue;
       if (isResolvedAll(info->dependence) && info->isResolved == false) {
         if (model->getInitialAssignment(info->id) != 0) {//initial assignment
           ast = const_cast<ASTNode*>((model->getInitialAssignment(info->id))->getMath());
@@ -1078,6 +1089,8 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
         parseAST(ast, info->rpInfo, varInfoList, info->rpInfo->listNum, freeConstList);
         bool isAllArea = (info->sp != 0)? false: true;
         if (info->sp != 0) info->geoi = searchAvolInfoByCompartment(geoInfoList, info->sp->getCompartment().c_str());
+        if (info->geoi == NULL)
+          continue;
         reversePolishInitial(info->geoi->domainIndex, info->rpInfo, info->value, info->rpInfo->listNum, Xindex, Yindex, Zindex, isAllArea);
         info->isResolved = true;
         if (info->hasAssignmentRule) orderedARule.push_back(info);
