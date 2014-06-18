@@ -35,10 +35,10 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 		st_index = 0;
 		for (i = 0; i < numOfASTNodes; i++) 
     {
-			if (rpInfo->varList[i] != 0) {//set variable into the stack
+			if (rpInfo->varList != NULL && rpInfo->varList[i] != 0) {//set variable into the stack
 				rpStack[st_index] = rpInfo->varList[i][index];
 				st_index++;
-			} else if (rpInfo->constList[i] != 0) {//set const into the stack
+			} else if (rpInfo->constList != NULL && rpInfo->constList[i] != 0) {//set const into the stack
 				rpStack[st_index] = *(rpInfo->constList[i]);
 				st_index++;
 			} else {//operation
@@ -867,7 +867,7 @@ void cipCSLR(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, d
 
 void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, int Xindex, int Yindex, int Zindex, int m, int dimension)
 {
-  if (!sInfo->isResolved) return;
+  if (!sInfo->isResolved || sInfo->geoi == NULL || sInfo->geoi->isDomain == NULL) return;
 	//int Xp = 0, Xm = 0, Yp = 0, Ym = 0, Zp = 0, Zm = 0, 
   int X = 0, Y = 0, Z = 0;
 	int divIndexXp = 0, divIndexXm = 0, divIndexYp = 0,divIndexYm = 0, divIndexZp = 0, divIndexZm = 0;
@@ -923,7 +923,7 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
     maxSideIsNeumannZ   = maxSideBC->getType() == "Flux";
     minSideIsDirichletZ = minSideBC->getType() == "Value";
     minSideIsNeumannZ   = minSideBC->getType() == "Flux";
-  }
+  }  
 
   coordinateDesc desc;
 
@@ -974,7 +974,6 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
         //Yp, Ym
         if (dimension >= 2) 
         {
-
           if (!sInfo->boundaryInfo[Ymax]->isUniform) divIndexYp = desc.Y.p;
           if (!sInfo->boundaryInfo[Ymin]->isUniform) divIndexYm = desc.Y.m;
           if ((!desc.Y.pOutside && sInfo->geoi->isDomain[desc.Y.p] == 1) && ( desc.Y.ppOutside || sInfo->geoi->isDomain[desc.Y.pp] == 0)) {//Yp
@@ -1002,7 +1001,6 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
           }
         }
       }
-
     }
   }
 }
