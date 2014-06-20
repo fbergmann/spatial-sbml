@@ -1007,6 +1007,9 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 
 void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVector *nuVec, int Xindex, int Yindex, int Zindex, double dt, int m, double deltaX, double deltaY, double deltaZ, int dimension, int numOfReactants)
 {
+
+  if (geoInfo == NULL) return;
+
 	int X, Y, Z, i, j, k;
 	int st_index = 0, index = 0, numOfVolIndexes = Xindex * Yindex * Zindex;
 	int Xplus1 = 0, Xminus1 = 0, Yplus1 = 0, Yminus1 = 0, Zplus1 = 0, Zminus1 = 0;
