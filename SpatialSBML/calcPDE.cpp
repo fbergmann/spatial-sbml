@@ -21,7 +21,8 @@
 
 void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, double *value, int numOfASTNodes, int Xindex, int Yindex, int Zindex, bool isAllArea)
 {
-	int X, Y, Z, i, j, it_end = 0;
+	//int X, Y, Z,
+  int i, j, it_end = 0;
 	int st_index = 0, index = 0;
 	double rpStack[stackMax] = {0};
 	if (!isAllArea) it_end = (int)indexList.size();
@@ -29,9 +30,9 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 	for (j = 0; j < it_end; j++) {
 		if (!isAllArea) index = indexList[j];
 		else index = j;
-		Z = index / (Xindex * Yindex);
-		Y = (index - Z * Xindex * Yindex) / Xindex;
-		X = index - Z * Xindex * Yindex - Y * Xindex;
+		//Z = index / (Xindex * Yindex);
+		//Y = (index - Z * Xindex * Yindex) / Xindex;
+		//X = index - Z * Xindex * Yindex - Y * Xindex;
 		st_index = 0;
 		for (i = 0; i < numOfASTNodes; i++) 
     {
@@ -223,7 +224,8 @@ void reversePolishInitial(vector<int> &indexList, reversePolishInfo *rpInfo, dou
 
 void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int Yindex, int Zindex, double dt, int m, int numOfReactants, bool isReaction)
 {
-	int X, Y, Z, i, j;
+	//int X, Y, Z,
+  int i, j;
 	int k;
 	int st_index = 0, index = 0, numOfVolIndexes = Xindex * Yindex * Zindex;
 	double rpStack[stackMax] = {0};
@@ -236,9 +238,9 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
   int domainIndexSize = geoInfo == NULL ? 1 : (int)geoInfo->domainIndex.size();
   for (j = 0; j < domainIndexSize; j++) {
 		index = geoInfo == NULL ? 0 :  geoInfo->domainIndex[j];
-		Z = index / (Xindex * Yindex);
-		Y = (index - Z * Xindex * Yindex) / Xindex;
-		X = index - Z * Xindex * Yindex - Y * Xindex;
+		//Z = index / (Xindex * Yindex);
+		//Y = (index - Z * Xindex * Yindex) / Xindex;
+		//X = index - Z * Xindex * Yindex - Y * Xindex;
 		st_index = 0;
 		for (i = 0; i < numOfASTNodes; i++) {
 			if (variable[i] != 0) {//set variable into the stack
@@ -490,7 +492,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 					}
 				}
 				if (sInfo->diffCInfo[1] != 0) {//y-diffusion
-					if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
+					if (sInfo->diffCInfo[1]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofYp == false) {
 						sInfo->delta[m * numOfVolIndexes + index] += sInfo->diffCInfo[1]->value[dcIndex] * (val[Yplus2] - val[index]) / pow(deltaY, 2);
 					}
@@ -499,7 +501,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 					}
 				}
         if (sInfo->diffCInfo[2] != 0 && dimension > 2) {//z-diffusion
-					if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
+					if (sInfo->diffCInfo[2]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofZp == false) {
 						sInfo->delta[m * numOfVolIndexes + index] += sInfo->diffCInfo[2]->value[dcIndex] * (val[Zplus2] - val[index]) / pow (deltaZ, 2);
 					}
@@ -524,7 +526,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 					}
 				}
 				if (sInfo->diffCInfo[1] != 0) {//y-diffusion
-					if (sInfo->diffCInfo[0] != NULL &&sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
+					if (sInfo->diffCInfo[1]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofYp == false) {
 						sInfo->delta[m * numOfVolIndexes + index]
 							+= sInfo->diffCInfo[1]->value[dcIndex] *
@@ -539,7 +541,7 @@ void calcDiffusion(variableInfo *sInfo, double deltaX, double deltaY, double del
 					}
 				}
 				if (sInfo->diffCInfo[2] != 0  && dimension > 2) {//z-diffusion
-					if (sInfo->diffCInfo[0] != NULL &&  sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;
+					if (sInfo->diffCInfo[2]->isUniform == false) dcIndex = index;
 					if (sInfo->geoi->bType[index].isBofZp == false) {
 						sInfo->delta[m * numOfVolIndexes + index]
 							+= sInfo->diffCInfo[2]->value[dcIndex] *
@@ -1455,9 +1457,10 @@ void calcMemTransport(reactionInfo *rInfo, GeometryInfo *geoInfo, normalUnitVect
 
 void calcMemDiffusion(variableInfo *sInfo, voronoiInfo *vorI, int Xindex, int Yindex, int Zindex, int m, double dt, int dimension)
 {
-	int X = 0, Y = 0, Z = 0, index = 0;
+	//int X = 0, Y = 0, Z = 0,
+  int index = 0;
 	unsigned int i, j;
-	int Xplus2 = 0, Xminus2 = 0, Yplus2 = 0, Yminus2 = 0, Zplus2 = 0, Zminus2 = 0;
+	//int Xplus2 = 0, Xminus2 = 0, Yplus2 = 0, Yminus2 = 0, Zplus2 = 0, Zminus2 = 0;
 	int numOfVolIndexes = Xindex * Yindex * Zindex;
 	int dcIndex = 0;
 	double* val = sInfo->value;
@@ -1476,15 +1479,15 @@ void calcMemDiffusion(variableInfo *sInfo, voronoiInfo *vorI, int Xindex, int Yi
 	// double Dx = deltaX, Dy = deltaY, Dz = deltaZ;
 	for (i = 0; i < geoInfo->domainIndex.size(); i++) {
 		index = geoInfo->domainIndex[i];
-		Z = index / (Xindex * Yindex);
-		Y = (index - Z * Xindex * Yindex) / Xindex;
-		X = index - Z * Xindex * Yindex - Y * Xindex;
-		Xplus2 = Z * Yindex * Xindex + Y * Xindex + (X + 2);
-		Xminus2 = Z * Yindex * Xindex + Y * Xindex + (X - 2);
-		Yplus2 = Z * Yindex * Xindex + (Y + 2) * Xindex + X;
-		Yminus2 = Z * Yindex * Xindex + (Y - 2) * Xindex + X;
-		Zplus2 = (Z + 2) * Yindex * Xindex + Y * Xindex + X;
-		Zminus2 = (Z - 2) * Yindex * Xindex + Y * Xindex + X;
+		//Z = index / (Xindex * Yindex);
+		//Y = (index - Z * Xindex * Yindex) / Xindex;
+		//X = index - Z * Xindex * Yindex - Y * Xindex;
+		//Xplus2 = Z * Yindex * Xindex + Y * Xindex + (X + 2);
+		//Xminus2 = Z * Yindex * Xindex + Y * Xindex + (X - 2);
+		//Yplus2 = Z * Yindex * Xindex + (Y + 2) * Xindex + X;
+		//Yminus2 = Z * Yindex * Xindex + (Y - 2) * Xindex + X;
+		//Zplus2 = (Z + 2) * Yindex * Xindex + Y * Xindex + X;
+		//Zminus2 = (Z - 2) * Yindex * Xindex + Y * Xindex + X;
 
 		if (sInfo->diffCInfo[0] != 0) {
 			if (sInfo->diffCInfo[0]->isUniform == false) dcIndex = index;

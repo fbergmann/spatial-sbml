@@ -320,7 +320,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
 
 
 
-  bool isImageBased = false;
+  /*bool isImageBased = false;
   for (i = 0; i < geometry->getNumGeometryDefinitions(); i++) {
     if (geometry->getGeometryDefinition(i)->isSampledFieldGeometry()) {
       //SampleFieldGeometry
@@ -331,7 +331,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       Ydiv = samField->getNumSamples2();
       Zdiv = samField->getNumSamples3();
     }
-  }
+  }*/
 
 
   Xindex = 2 * Xdiv - 1;
@@ -442,7 +442,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             fill_n(tmp_isDomain, numOfVolIndexes, 0);
             reversePolishInitial(volumeIndexList, geoInfo->rpInfo, tmp_isDomain, numOfASTNodes, Xindex, Yindex, Zindex, false);
             for (k = 0; k < (unsigned int)numOfVolIndexes; k++) {
-              index = k;
+              //index = k;
               geoInfo->isDomain[k] = (int)tmp_isDomain[k];
               //Z = index / (Xindex * Yindex);
               //Y = (index - Z * Xindex * Yindex) / Xindex;

@@ -70,6 +70,7 @@ void SimulationThread::updateUI()
   //cout << "delta: " << delta << endl;
 
   // ascertain we have image of right size
+  if (mpSimulator!= NULL)
   if (image == NULL || image->width() != mpSimulator->getXDim() || image->height() != mpSimulator->getYDim())
   {
     if (image != NULL)

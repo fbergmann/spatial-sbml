@@ -103,6 +103,12 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   setUnifiedTitleAndToolBarOnMac(true);
   setWindowIcon(QIcon(":/images/ICON_Spatial_128x128.png"));
 
+  if (palettes.size() == 0)
+  {
+    ui->lblImage->setText("No Pallette found, this should not be happening, please reinstall.");
+    this->setEnabled(false);
+  }
+
 }
 
 void SpatialMainWindow::updatePosition(int x, int y)

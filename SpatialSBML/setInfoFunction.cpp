@@ -349,11 +349,11 @@ void setReactionInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 			//cout << "before reaction: " << SBML_formulaToString(ast) << endl;
 			//cerr << "num_of_nodes: " << tmp << endl;
 			rearrangeAST(ast);
-			if (rInfo->isMemTransport == false) {
-				cout << "reaction: " << SBML_formulaToString(ast) << endl;
-			} else {
-				cout << "mem trans: " << SBML_formulaToString(ast) << endl;
-			}
+//			if (rInfo->isMemTransport == false) {
+//				cout << "reaction: " << SBML_formulaToString(ast) << endl;
+//			} else {
+//				cout << "mem trans: " << SBML_formulaToString(ast) << endl;
+//			}
 			numOfASTNodes = 0;
 			countAST(ast, numOfASTNodes);
 			//cerr << "num_of_nodes: " << numOfASTNodes << endl;
@@ -395,7 +395,7 @@ void setRateRuleInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 			fill_n(rInfo->value, numOfVolIndexes, 0);
 			ast = const_cast<ASTNode*>(rrule->getMath());
 			rearrangeAST(ast);
-			cout << "rate rule: " << SBML_formulaToString(ast) << endl;
+			//cout << "rate rule: " << SBML_formulaToString(ast) << endl;
 			numOfASTNodes = 0;
 			countAST(ast, numOfASTNodes);
 			rInfo->rpInfo = new reversePolishInfo();
@@ -1073,16 +1073,16 @@ voronoiInfo* setVoronoiInfo(normalUnitVector *nuVec, variableInfo *xInfo, variab
 	int xyPlaneX[2] = {0}, xyPlaneY[2] = {0};
 	int yzPlaneY[2] = {0}, yzPlaneZ[2] = {0};
 	int xzPlaneX[2] = {0}, xzPlaneZ[2] = {0};
-	int Xdiv = (Xindex + 1) / 2;
-	int Ydiv = (Yindex + 1) / 2;
-	int Zdiv = (Zindex + 1) / 2;
+	//int Xdiv = (Xindex + 1) / 2;
+	//int Ydiv = (Yindex + 1) / 2;
+	//int Zdiv = (Zindex + 1) / 2;
 	//double X_proj = 0.0, Y_proj = 0.0, Z_proj = 0.0;
-	double deltaX = 0.0, deltaY = 0.0, deltaZ = 0.0;
+	//double deltaX = 0.0, deltaY = 0.0, deltaZ = 0.0;
 	double inner_pro = 0.0;
 	double d_ij = 0.0, d_ji = 0.0, s_ij = 0.0, s_ji = 0.0;
-	deltaX = Xsize / (double)(Xdiv - 1);
-	deltaY = Ysize / (double)(Ydiv - 1);
-	if (dimension >= 3) deltaZ = Zsize / (double)(Zdiv - 1);
+	//deltaX = Xsize / (double)(Xdiv - 1);
+	//deltaY = Ysize / (double)(Ydiv - 1);
+	//if (dimension >= 3) deltaZ = Zsize / (double)(Zdiv - 1);
 
 	for (i = 0; i < geoInfoList.size(); i++) {
 		if (!geoInfoList[i]->isVol) {
@@ -1461,12 +1461,12 @@ voronoiInfo* setVoronoiInfo(normalUnitVector *nuVec, variableInfo *xInfo, variab
 					}
 				}
 			}
-			for (j = 0; j < geoInfo->domainIndex.size(); j++) {
+			/*for (j = 0; j < geoInfo->domainIndex.size(); j++) {
 				index = geoInfo->domainIndex[j];
 				Z = index / (Xindex * Yindex);
 				Y = (index - Z * Xindex * Yindex) / Xindex;
 				X = index - Z * Xindex * Yindex - Y * Xindex;
-			}
+			}*/
 
 		}
 	}

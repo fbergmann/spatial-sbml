@@ -67,10 +67,10 @@ void setBoundaryType(Model *model, vector<variableInfo*> &varInfoList, vector<Ge
 							Xminus2 = Y * Xindex + (X - 2);
 							Yplus2 = (Y + 2) * Xindex + X;
 							Yminus2 = (Y - 2) * Xindex + X;
-							Xplus1 = Y * Xindex + (X + 1);
-							Xminus1 = Y * Xindex + (X - 1);
-							Yplus1 = (Y + 1) * Xindex + X;
-							Yminus1 = (Y - 1) * Xindex + X;
+							//Xplus1 = Y * Xindex + (X + 1);
+							//Xminus1 = Y * Xindex + (X - 1);
+							//Yplus1 = (Y + 1) * Xindex + X;
+							//Yminus1 = (Y - 1) * Xindex + X;
 							if (isD[index] == 0) sInfo->value[index] = 0.0;
 							if (isD[index] == 1 && isB[index] == 1) {
 								if (X == Xindex - 1 || X == 0 || Y == Yindex - 1 || Y == 0) {
@@ -130,12 +130,12 @@ void setBoundaryType(Model *model, vector<variableInfo*> &varInfoList, vector<Ge
 								Yminus2 = Z * Yindex * Xindex + (Y - 2) * Xindex + X;
 								Zplus2 = (Z + 2) * Yindex * Xindex + Y * Xindex + X;
 								Zminus2 = (Z - 2) * Yindex * Xindex + Y * Xindex + X;
-								Xplus1 = Z * Yindex * Xindex + Y * Xindex + (X + 1);
-								Xminus1 = Z * Yindex * Xindex + Y * Xindex + (X - 1);
-								Yplus1 = Z * Yindex * Xindex + (Y + 1) * Xindex + X;
-								Yminus1 = Z * Yindex * Xindex + (Y - 1) * Xindex + X;
-								Zplus1 = (Z + 1) * Yindex * Xindex + Y * Xindex + X;
-								Zminus1 = (Z - 1) * Yindex * Xindex + Y * Xindex + X;
+								//Xplus1 = Z * Yindex * Xindex + Y * Xindex + (X + 1);
+								//Xminus1 = Z * Yindex * Xindex + Y * Xindex + (X - 1);
+								//Yplus1 = Z * Yindex * Xindex + (Y + 1) * Xindex + X;
+								//Yminus1 = Z * Yindex * Xindex + (Y - 1) * Xindex + X;
+								//Zplus1 = (Z + 1) * Yindex * Xindex + Y * Xindex + X;
+								//Zminus1 = (Z - 1) * Yindex * Xindex + Y * Xindex + X;
 								if (isD[index] == 0) sInfo->value[index] = 0.0;
 								if (isD[index] == 1 && isB[index] == 1) {
 									if (X == Xindex - 1 || X == 0 || Y == Yindex - 1 || Y == 0 || Z == Zindex - 1 || Z == 0) {
