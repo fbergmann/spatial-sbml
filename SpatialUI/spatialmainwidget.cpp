@@ -211,39 +211,6 @@ void SpatialMainWindow::exportConcentration()
 
   helper.writeToFile(fileName.toStdString());
   
- /* ofstream data(fileName.toStdString().c_str(), ios_base::binary);
-  
-  data << thread->mpSimulator->getXDim() << " ";
-  data << thread->mpSimulator->getYDim() << endl;
-
-  for (int x = 0; x < thread->mpSimulator->getXDim(); ++x)
-  {
-    for (int y = 0; y < thread->mpSimulator->getYDim(); ++y)
-    {
-      const auto& all = thread->getConcentrationsAt(x, y);
-      auto& it = all.cbegin();
-      bool wrote = false;
-      while( it != all.end())
-      {
-        if ((*it).first == currentSpecies.toStdString())
-        {
-          data << it->second << " ";
-          wrote = true;
-          break;
-        }
-        ++it;
-      }
-      if (!wrote)
-        data << "0 ";
-    }
-    
-    data << endl;
-  }
-
-
-  data.flush();
-  data.close();*/
-
 }
 
 void SpatialMainWindow::addSpecies()
@@ -328,7 +295,6 @@ void SpatialMainWindow::closeEvent(QCloseEvent *event)
     delete thread;
   }
 
-
   event->accept();
 }
 
@@ -364,16 +330,28 @@ void SpatialMainWindow::open()
 
 bool SpatialMainWindow::save()
 {
-  //if (curFile.isEmpty()) {
+  //if (curFile.isEmpty()) 
+  //{
   return saveAs();
-  //} else {
+  //} 
+  //else 
+  //{
   //  return saveFile(curFile);
   //}
 }
 
-bool SpatialMainWindow::saveAs()
+bool SpatialMainWindow::saveImage()
 {
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image"), lastDir, tr("Image files (*.png *.jpeg *.jpg)"));
+  if (fileName.isEmpty())
+    return false;
+
+  return saveImageFile(fileName);
+}
+
+bool SpatialMainWindow::saveAs()
+{
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save SBML file"), lastDir,  tr("SBML files (*.xml *.sbml)"));
   if (fileName.isEmpty())
     return false;
 
@@ -407,6 +385,11 @@ void SpatialMainWindow::createActions()
   saveAct->setShortcuts(QKeySequence::Save);
   saveAct->setStatusTip(tr("Save the document to disk"));
   connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
+  saveImageAct = new QAction(QIcon(":/images/floppy-128x128.png"), tr("&Save Image"), this);
+  saveImageAct->setStatusTip(tr("Save the current Image to disk"));
+  connect(saveImageAct, SIGNAL(triggered()), this, SLOT(saveImage()));
+
 
   editGeometryAct = new QAction(tr("Edit &Geometry"), this);
   editGeometryAct ->setStatusTip(tr("View / Edit geometries"));
@@ -477,6 +460,8 @@ void SpatialMainWindow::createMenus()
   fileMenu->addAction(openAct);
   fileMenu->addAction(saveAct);
   fileMenu->addAction(saveAsAct);
+  fileMenu->addSeparator();
+  fileMenu->addAction(saveImageAct);
   fileMenu->addSeparator();
   fileMenu->addAction(exitAct);
 
@@ -635,6 +620,148 @@ void SpatialMainWindow::writeSettings()
 
 }
 
+XMLNode* getAnnotationNode(Model* model, const std::string& ns)
+{
+  if (model == NULL || !model->isSetAnnotation()) return NULL;
+
+  XMLNode* parent = model->getAnnotation();
+  bool again = true;
+  while(again)
+  {
+    again = false;
+    for (size_t i = 0;i < parent->getNumChildren(); ++i)
+    {
+      XMLNode* current = &parent->getChild(i);
+      if (current->getName() == "annotation")
+      {
+        again = true;
+        parent = current;
+        break;
+      }
+
+      if (current->hasNamespaceURI(ns))
+        return current;
+    }
+  }
+
+  return NULL;
+}
+
+#define SPATIAL_ANNOTATION_URL "http://spatial-sbml/settings"
+
+void SpatialMainWindow::initializeDisplay(Model* model)
+{
+
+  displayItems.clear();
+  ui->lstAssignments->clear();
+
+  XMLNode* node = getAnnotationNode(model, SPATIAL_ANNOTATION_URL);
+
+  if (node != NULL)
+  {
+    const XMLNode& update = node->getChild("update");
+    if (update.getName() == "update")
+    {
+      txtStepsize->setText(update.getAttrValue("step").c_str());
+      txtUpdate->setText(update.getAttrValue("freq").c_str());
+    }
+
+    const XMLNode& items = node->getChild("items");
+    if (items.getName() == "items")
+    {
+      for (size_t i = 0;i < items.getNumChildren(); ++i)
+      {
+        const XMLNode& item = items.getChild(i);
+
+        const string&id = item.getAttrValue("sbmlId");
+        int index = ui->lstPalettes->findText(item.getAttrValue("name").c_str());
+
+        DisplayItem* dItem = new DisplayItem( id, palettes[index]  );
+        dItem->getPalette()->setMaxValue(QString(item.getAttrValue("max").c_str()).toDouble());
+        displayItems.push_back(dItem);
+        ui->lstAssignments->addItem(id.c_str());
+
+      }
+    }
+  }
+
+  #pragma region // fallback
+  if (node == NULL)
+  {
+    if (lstSpecies->count() > 0 && palettes
+      .size() > 0)
+    {
+      displayItems.push_back(new DisplayItem(
+        lstSpecies->itemText(0).toStdString(),
+        palettes[0]
+      ));
+      ui->lstAssignments->addItem(lstSpecies->itemText(0));
+    }
+
+    if (lstSpecies->count() > 1 && palettes
+      .size() > 1)
+    {
+      displayItems.push_back(new DisplayItem(
+        lstSpecies->itemText(1).toStdString(),
+        palettes[1]
+      ));
+      ui->lstAssignments->addItem(lstSpecies->itemText(1));
+    }
+
+    if (lstSpecies->count() > 2 && palettes
+      .size() > 2)
+    {
+      displayItems.push_back(new DisplayItem(
+        lstSpecies->itemText(2).toStdString(),
+        palettes[2]
+      ));
+      ui->lstAssignments->addItem(lstSpecies->itemText(2));
+    }
+  }
+#pragma endregion
+
+}
+
+void SpatialMainWindow::saveDisplayToModel(Model* model)
+{
+  if (model == NULL) return;
+
+  XMLNode node(XMLTriple("spatialInfo", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
+  node.addAttr("xmlns", SPATIAL_ANNOTATION_URL);
+
+  // save stepsize
+  XMLNode update(XMLTriple("update", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
+  update.addAttr("step", txtStepsize->text().toStdString());
+  update.addAttr("freq", txtUpdate->text().toStdString());
+
+  node.addChild(update);
+
+  // save assignments
+  if (displayItems.size() > 0)
+  {
+    XMLNode items(XMLTriple("items", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
+    std::vector<DisplayItem*>::const_iterator it = displayItems.cbegin();
+
+    while(it != displayItems.cend())
+    {
+      DisplayItem* current = *it;
+      XMLNode item(XMLTriple("item", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
+      item.addAttr("sbmlId", current->getId());
+      QString file = current->getPalette()->getFilename();
+      file = file.replace(qApp->applicationDirPath() +"/", QString(""));
+      item.addAttr("name", file.toStdString());
+      item.addAttr("max", QString::number(current->getPalette()->getMaxValue()).toStdString());
+      items.addChild(item);
+      ++it;
+    }
+    node.addChild(items);
+  }
+
+  model->removeTopLevelAnnotationElement("spatialInfo", SPATIAL_ANNOTATION_URL, false);
+  model->appendAnnotation(&node);
+}
+
+
 void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 {
 
@@ -684,39 +811,7 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
     }
   }
 
-  displayItems.clear();
-  ui->lstAssignments->clear();
-
-
-  if (lstSpecies->count() > 0 && palettes
-    .size() > 0)
-  {
-    displayItems.push_back(new DisplayItem(
-      lstSpecies->itemText(0).toStdString(),
-      palettes[0]
-    ));
-    ui->lstAssignments->addItem(lstSpecies->itemText(0));
-  }
-
-  if (lstSpecies->count() > 1 && palettes
-    .size() > 1)
-  {
-    displayItems.push_back(new DisplayItem(
-      lstSpecies->itemText(1).toStdString(),
-      palettes[1]
-    ));
-    ui->lstAssignments->addItem(lstSpecies->itemText(1));
-  }
-
-  if (lstSpecies->count() > 2 && palettes
-    .size() > 2)
-  {
-    displayItems.push_back(new DisplayItem(
-      lstSpecies->itemText(2).toStdString(),
-      palettes[2]
-    ));
-    ui->lstAssignments->addItem(lstSpecies->itemText(2));
-  }
+  initializeDisplay(model);
 
   restart();
   //thread->mpSimulator->flipVolumeOrder();
@@ -858,11 +953,22 @@ void SpatialMainWindow::stepChanged(const QString &newStep)
     thread->mStep = newStep.toDouble();
 }
 
-bool SpatialMainWindow::saveFile(const QString &fileName)
+bool SpatialMainWindow::saveImageFile(const QString &fileName)
 {
   if (thread != NULL)
   {
     thread->getImage().save(fileName);
+  }
+  return true;
+}
+
+bool SpatialMainWindow::saveFile(const QString &fileName)
+{
+  if (thread != NULL)
+  {
+    saveDisplayToModel(doc->getModel());
+    writeSBMLToFile(doc, fileName.toStdString().c_str());    
+    setCurrentFile(fileName);
   }
   return true;
 }

@@ -40,6 +40,7 @@ class QImage;
 class QTimer;
 class SpatialSimulator;
 class SBMLDocument;
+class Model;
 class QLineEdit;
 class QComboBox;
 class ConcentrationPalette;
@@ -78,6 +79,7 @@ private slots:;
   void newFile();
   void open();
   bool save();
+  bool saveImage();
   bool saveAs();
   void about();
   void togglePlay();
@@ -113,6 +115,10 @@ private:
   void readSettings();
   void writeSettings();
   bool saveFile(const QString &fileName);
+  bool saveImageFile(const QString &fileName);
+
+  void initializeDisplay(Model* model);
+  void saveDisplayToModel(Model* model);
 
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
@@ -129,6 +135,7 @@ private:
   QAction *openAct;
   QAction *saveAct;
   QAction *saveAsAct;
+  QAction *saveImageAct;
   QAction *exitAct;
   QAction *togglePlayAct;
   QAction *stopAct;     
