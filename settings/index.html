@@ -28,7 +28,30 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          
+          <h1>Spatial SBML Settings</h1>
+<p>The SpatialUI application uses a custom SBML annotation of the SBML <code>Model</code> element, to store the initial setup of a loaded spatial model. The format looks like this: </p>
+<pre><code>  &lt;spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings"&gt;
+    &lt;update step="0.00001" freq="100"/&gt;
+    &lt;items&gt;
+      &lt;item sbmlId="p65_P_cytoplasm" palette="black-blue.txt" max="0.001"/&gt;
+      ...
+    &lt;/items&gt;
+  &lt;/spatialInfo&gt;
+</code></pre>
+
+<p>and is described in more detail below.</p>
+<h2>The Update Element</h2>
+<p>The update element holds two attributes: </p>
+<ul>
+<li><code>step</code> of type <code>double</code> describes the initial step size used for the model, and is to be chosen such that the integrator should not fall over immidiately. </li>
+<li><code>freq</code> of type <code>int</code> describes how often the application should attempt to render the scene. </li>
+</ul>
+<h2>The item element</h2>
+<p>The item element also consists of three elements:</p>
+<ul>
+<li><code>sbmlId</code> of type <code>string</code> is the id of a spatial species to be visualized. </li>
+<li><code>palette</code> of type <code>string</code> is the name of a palette to be used. It should be the value of one of the palettes distributed (and present) with <code>SpatialUI</code></li>
+<li><code>max</code> of type <code>double</code> is then the maximum value the species will take during the simulation. The values of the palette chosen will be scaled from [0...<code>max</code>] and assign <code>0</code> the min value of the palette, and <code>max</code> accordingly the highest value.</li></ul>
         </section>
 
         <aside id="sidebar">
