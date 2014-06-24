@@ -5,9 +5,9 @@
         <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
         <update step="1" freq="100"/>
         <items>
-          <item sbmlId="u" name="black-blue.txt" max="6"/>
-          <item sbmlId="v" name="black-green.txt" max="6"/>
-          <item sbmlId="w" name="black-red.txt" max="6"/>
+          <item sbmlId="u" palette="black-blue.txt" max="6"/>
+          <item sbmlId="v" palette="black-green.txt" max="6"/>
+          <item sbmlId="w" palette="black-red.txt" max="6"/>
         </items>
       </spatialInfo>
 	</annotation>

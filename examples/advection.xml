@@ -5,9 +5,9 @@
       <spatialInfo xmlns="http://spatial-sbml/settings">
         <update step="0.05" freq="50"/>
         <items>
-          <item sbmlId="B_cytosol" name="black-blue.txt" max="6"/>
-          <item sbmlId="C_cytosol" name="black-green.txt" max="1000"/>
-          <item sbmlId="A_cytosol" name="black-red.txt" max="6"/>
+          <item sbmlId="B_cytosol" palette="black-blue.txt" max="6"/>
+          <item sbmlId="C_cytosol" palette="black-green.txt" max="1000"/>
+          <item sbmlId="A_cytosol" palette="black-red.txt" max="6"/>
         </items>
       </spatialInfo>
       <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">

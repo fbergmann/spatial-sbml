@@ -677,7 +677,7 @@ void SpatialMainWindow::initializeDisplay(Model* model)
         const XMLNode& item = items.getChild(i);
 
         const string&id = item.getAttrValue("sbmlId");
-        int index = ui->lstPalettes->findText(item.getAttrValue("name").c_str());
+        int index = ui->lstPalettes->findText(item.getAttrValue("palette").c_str());
 
         DisplayItem* dItem = new DisplayItem( id, palettes[index]  );
         dItem->getPalette()->setMaxValue(QString(item.getAttrValue("max").c_str()).toDouble());
@@ -752,7 +752,7 @@ void SpatialMainWindow::saveDisplayToModel(Model* model)
       item.addAttr("sbmlId", current->getId());
       QString file = current->getPalette()->getFilename();
       file = file.replace(qApp->applicationDirPath() +"/", QString(""));
-      item.addAttr("name", file.toStdString());
+      item.addAttr("palette", file.toStdString());
       item.addAttr("max", QString::number(current->getPalette()->getMaxValue()).toStdString());
       items.addChild(item);
       ++it;
