@@ -2,6 +2,14 @@
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model id="simple_transport_simulation" name="simple_transport_simulation">
     <annotation>
+        <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
+        <update step="1" freq="50"/>
+        <items>
+          <item sbmlId="s1" name="black-blue.txt" max="6"/>
+          <item sbmlId="s0" name="black-green.txt" max="6"/>
+        </items>
+      </spatialInfo>
+
       <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
         <vcell:VCMLSpecific>
           <vcell:BioModel Name="simple_transport" KeyValue="60099072"/>

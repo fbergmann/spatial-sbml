@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="true" spatial:required="true">
   <model metaid="COPASI1" id="New_Model_Application0" name="New Model_Application0">
+      <annotation>
+      <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
+        <update step="0.05" freq="50"/>
+        <items>
+          <item sbmlId="species_1" name="black-blue.txt" max="2"/>
+          <item sbmlId="species_2" name="black-green.txt" max="2"/>
+        </items>
+      </spatialInfo>
+    </annotation>
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
         <listOfUnits>

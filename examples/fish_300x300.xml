@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model metaid="meta_fish_skin_pnas2_Application0" id="fish_skin_pnas2_Application0" name="fish-skin-pnas2_Application0">
+  	<annotation>
+        <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
+        <update step="1" freq="100"/>
+        <items>
+          <item sbmlId="u" name="black-blue.txt" max="6"/>
+          <item sbmlId="v" name="black-green.txt" max="6"/>
+          <item sbmlId="w" name="black-red.txt" max="6"/>
+        </items>
+      </spatialInfo>
+	</annotation>
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
         <listOfUnits>

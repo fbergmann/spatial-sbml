@@ -9,7 +9,6 @@
 
 #include <SpatialSBML/datahelper.hh>
 
-
 #include <QApplication>
 #include <QtGui>
 #include <QObject>
@@ -24,7 +23,6 @@
 #include <QStatusBar>
 
 
-
 #include <sbml/SBMLTypes.h>
 #include <sbml/packages/spatial/extension/SpatialSpeciesRxnPlugin.h>
 #include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
@@ -37,6 +35,7 @@
 #include <stdlib.h>
 #endif // USE_SBW_INTEGRATION
 
+#define SPATIAL_ANNOTATION_URL "http://fbergmann.github.io/spatial-sbml/settings"
 
 
 using namespace std;
@@ -652,8 +651,6 @@ XMLNode* getAnnotationNode(Model* model, const std::string& ns)
 
   return NULL;
 }
-
-#define SPATIAL_ANNOTATION_URL "http://spatial-sbml/settings"
 
 void SpatialMainWindow::initializeDisplay(Model* model)
 {
