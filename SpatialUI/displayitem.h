@@ -20,10 +20,14 @@ public:
   QRgb getBlendedColorForConcentration(QRgb color, double concentration) const;
   QRgb getColorForConcentration(double concentration) const;
 
+  bool isVisible() const;
+  void setVisible(bool);
+
 private:
   std::string mSBMLId;
   ConcentrationPalette *mPalette;
   bool needToDelete;
+  bool mVisible;
 };
 
 

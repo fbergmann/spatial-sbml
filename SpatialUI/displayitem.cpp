@@ -3,13 +3,13 @@
 
 
 DisplayItem::DisplayItem( const std::string& sbmlId, const QString& fileName)
-  : mSBMLId(sbmlId), mPalette (NULL), needToDelete(true)
+  : mSBMLId(sbmlId), mPalette (NULL), needToDelete(true), mVisible(true)
 {
   mPalette = new ConcentrationPalette(fileName);
 }
 
 DisplayItem::DisplayItem( const std::string& sbmlId, ConcentrationPalette *palette)
-  : mSBMLId(sbmlId), mPalette (palette), needToDelete(false)
+  : mSBMLId(sbmlId), mPalette (palette), needToDelete(false), mVisible(true)
 {
   
 }
@@ -23,15 +23,27 @@ DisplayItem::~DisplayItem()
   }
 }
 
+bool DisplayItem::isVisible() const
+{
+  return mVisible;
+}
+
+
+void DisplayItem::setVisible(bool visible)
+{
+  mVisible = visible;
+}
 QRgb 
 DisplayItem::getColorForConcentration(double concentration) const
 {
+  if (!mVisible) return qRgb(0,0,0);
   return mPalette ->getColorForConcentration(concentration);
 }
 
 QRgb 
 DisplayItem::getBlendedColorForConcentration(QRgb color,double concentration) const
 {
+  if (!mVisible) return color;
   return mPalette ->getBlendedColorForConcentration(color,concentration);
 }
 

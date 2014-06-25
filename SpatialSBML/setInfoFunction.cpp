@@ -504,7 +504,7 @@ normalUnitVector* setNormalAngle(vector<GeometryInfo*> &geoInfoList, double Xsiz
 								X = X + 2;
 								//Y = Y;
 								preD = E;
-							} else if (isD[Z * Yindex * Xindex + (Y - 1) * Xindex + (X + 1)] == 1 && preD != NW) {//southeast
+							} else if (Y > 0 && isD[Z * Yindex * Xindex + (Y - 1) * Xindex + (X + 1)] == 1 && preD != NW) {//southeast
 								X = X + 1;
 								Y = Y - 1;
 								preD = SE;

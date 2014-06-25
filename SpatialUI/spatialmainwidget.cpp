@@ -71,6 +71,7 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   connect(ui->cmdExportConc, SIGNAL(clicked ()), this, SLOT(exportConcentration()));
   connect(ui->cmdImportConc, SIGNAL(clicked ()), this, SLOT(importConcentration()));
   connect(ui->lstAssignments, SIGNAL(currentRowChanged(int)), this, SLOT(selectedSpeciesChanged(int)));
+  connect(ui->lstAssignments, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(itemChanged(QListWidgetItem*)));
   connect(ui->lblImage, SIGNAL(positionChanged(int, int)), this, SLOT(updatePosition(int,int)));
   connect(ui->tblParameters, SIGNAL(cellChanged(int, int)), this, SLOT(parameterChanged(int,int)));
   connect(ui->chkHideBC, SIGNAL(toggled(bool)), this, SLOT(toggledHideBC(bool)));
@@ -107,6 +108,19 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
     ui->lblImage->setText("No Pallette found, this should not be happening, please reinstall.");
     this->setEnabled(false);
   }
+
+}
+
+
+void SpatialMainWindow::itemChanged ( QListWidgetItem * item)
+{
+  if (item == NULL) return;
+  QString name = item->text().left(item->text().indexOf(" "));
+  Qt::CheckState checked = item->checkState();
+
+  DisplayItem* dItem = getDisplayItem(name);
+  if (dItem != NULL)
+    dItem->setVisible(checked == Qt::Checked);
 
 }
 
@@ -150,6 +164,16 @@ void SpatialMainWindow::updatePosition(int x, int y)
 
 void SpatialMainWindow::selectedSpeciesChanged(int row)
 {
+  if (row < 0 || row >= ui->lstAssignments->count()) return;
+  QListWidgetItem* item = ui->lstAssignments->item(row);
+  if (item == NULL) return;
+
+  DisplayItem* dItem = getDisplayItem(item->text());
+  if (dItem == NULL) return;
+  
+  ui->txtMaxValue->setText(QString::number(dItem->getPalette()->getMaxValue()));
+  ui->lstSpecies->setCurrentIndex(ui->lstSpecies->findText(dItem->getId()));
+  ui->lstPalettes->setCurrentIndex(ui->lstPalettes->findText(dItem->getPalette()->getBasename()));
 }
 
 void SpatialMainWindow::importConcentration()
@@ -218,26 +242,94 @@ void SpatialMainWindow::exportConcentration()
   
 }
 
-void SpatialMainWindow::addSpecies()
+ConcentrationPalette* SpatialMainWindow::getPalette(const QString& name)
 {
-  QString currentSpecies = ui->lstSpecies->currentText();
-  QString currentPalette = ui->lstPalettes->currentText();
-  int index = ui->lstPalettes->currentIndex();
-  DisplayItem* item = NULL;
-
-  vector<DisplayItem*>::iterator iter;
-  for(iter = displayItems.begin(); iter != displayItems.end(); ++iter)
+  ConcentrationPalette* item = NULL;
+  vector<ConcentrationPalette*>::iterator iter;
+  for(iter = palettes.begin(); iter != palettes.end(); ++iter)
   {
-    if ((*iter)->getId() == currentSpecies)
+    const QString& current = (*iter)->getFilename();
+    if ( current == name ||
+      current == qApp->applicationDirPath() + "/" + name ||
+      current == name + ".txt" ||
+      current == qApp->applicationDirPath() + "/" + name + ".txt" )
     {
       item = *iter;
       break;
     }  
   }
+  return item;
+}
 
-  if (item != NULL)
+ConcentrationPalette* SpatialMainWindow::getPalette(size_t index)
+{
+  if (index < 0 || index >= palettes.size())
+    return NULL;
+  return palettes[index];
+}
+
+DisplayItem* SpatialMainWindow::getDisplayItem(const QString& name)
+{
+  DisplayItem* item = NULL;
+  vector<DisplayItem*>::iterator iter;
+  for(iter = displayItems.begin(); iter != displayItems.end(); ++iter)
   {
+    const char* id = (*iter)->getId();
+    if (id == name ||
+      id == name.left(name.indexOf(" ")))
+    {
+      item = *iter;
+      break;
+    }  
+  }
+  return item;
+}
+
+DisplayItem* SpatialMainWindow::getDisplayItem(size_t index)
+{
+  if (index < 0 || index >= displayItems.size())
+    return NULL;
+  return displayItems[index];
+
+}
+
+QListWidgetItem *SpatialMainWindow::getListItem(const QString& species)
+{
+  QListWidgetItem *listItem = NULL;
+
+  for (int i = 0;i < ui->lstAssignments->count(); ++i)
+  {
+    QListWidgetItem *item = ui->lstAssignments->item(i);
+    if (item->text().startsWith(species))
+    {
+      listItem = item;
+      break;
+    }
+  }
+  return listItem;
+}
+
+void SpatialMainWindow::addSpecies()
+{
+  QString currentSpecies = ui->lstSpecies->currentText();
+  QString currentPalette = ui->lstPalettes->currentText();
+  int index = ui->lstPalettes->currentIndex();
+  
+  DisplayItem* item = getDisplayItem(currentSpecies);
+  QListWidgetItem *listItem = getListItem(currentSpecies);
+
+  if (item != NULL && listItem != NULL)
+  {
+     QString label = QString("%1 | %2 | %3")
+      .arg(currentSpecies)
+      .arg(currentPalette)
+      .arg(ui->txtMaxValue->text().toDouble());
+    
+    listItem->setText(label);
+    listItem->setCheckState(Qt::Checked);
+
     item->setPalette(palettes[index]);
+    item->setVisible(true);
   }
   else
   {
@@ -247,7 +339,14 @@ void SpatialMainWindow::addSpecies()
     );
     displayItems.push_back(item);
 
-    ui->lstAssignments->addItem(currentSpecies);
+    QString label = QString("%1 | %2 | %3")
+      .arg(currentSpecies)
+      .arg(currentPalette)
+      .arg(ui->txtMaxValue->text().toDouble());
+
+    QListWidgetItem* listItem = new QListWidgetItem(label);
+    listItem->setCheckState(Qt::Checked);
+    ui->lstAssignments->addItem(listItem);    
   }
 
   item->getPalette()->setMaxValue(ui->txtMaxValue->text().toDouble());
@@ -274,8 +373,6 @@ void SpatialMainWindow::removeSpecies()
       break;
     }
   }
-
-
 
   if (wasRunning) play();
 
@@ -676,13 +773,26 @@ void SpatialMainWindow::initializeDisplay(Model* model)
       {
         const XMLNode& item = items.getChild(i);
 
-        const string&id = item.getAttrValue("sbmlId");
-        int index = ui->lstPalettes->findText(item.getAttrValue("palette").c_str());
+        const string& id = item.getAttrValue("sbmlId");
+        const string& pal = item.getAttrValue("palette");
+        const string& max = item.getAttrValue("max");
 
-        DisplayItem* dItem = new DisplayItem( id, palettes[index]  );
-        dItem->getPalette()->setMaxValue(QString(item.getAttrValue("max").c_str()).toDouble());
+        ConcentrationPalette* palette = getPalette(pal.c_str());
+        if (palette == NULL)
+          palette = palettes[0];
+
+        DisplayItem* dItem = new DisplayItem( id, palette );
+        dItem->getPalette()->setMaxValue(QString(max.c_str()).toDouble());
         displayItems.push_back(dItem);
-        ui->lstAssignments->addItem(id.c_str());
+        
+        QString label = QString("%1 | %2 | %3")
+          .arg(id.c_str())
+          .arg(pal.c_str())
+          .arg(max.c_str());
+
+        QListWidgetItem* listItem = new QListWidgetItem(label);
+        listItem->setCheckState(Qt::Checked);
+        ui->lstAssignments->addItem(listItem);
 
       }
     }
@@ -698,7 +808,15 @@ void SpatialMainWindow::initializeDisplay(Model* model)
         lstSpecies->itemText(0).toStdString(),
         palettes[0]
       ));
-      ui->lstAssignments->addItem(lstSpecies->itemText(0));
+
+      QString label = QString("%1 | %2 | %3")
+        .arg(lstSpecies->itemText(0))
+        .arg(ui->lstPalettes->itemText(0))
+        .arg(6.0);
+
+      QListWidgetItem* listItem = new QListWidgetItem(label);
+      listItem->setCheckState(Qt::Checked);
+      ui->lstAssignments->addItem(listItem);
     }
 
     if (lstSpecies->count() > 1 && palettes
@@ -708,7 +826,15 @@ void SpatialMainWindow::initializeDisplay(Model* model)
         lstSpecies->itemText(1).toStdString(),
         palettes[1]
       ));
-      ui->lstAssignments->addItem(lstSpecies->itemText(1));
+            
+      QString label = QString("%1 | %2 | %3")
+        .arg(lstSpecies->itemText(1))
+        .arg(ui->lstPalettes->itemText(1))
+        .arg(6.0);
+
+      QListWidgetItem* listItem = new QListWidgetItem(label);
+      listItem->setCheckState(Qt::Checked);
+      ui->lstAssignments->addItem(listItem);
     }
 
     if (lstSpecies->count() > 2 && palettes
@@ -718,7 +844,14 @@ void SpatialMainWindow::initializeDisplay(Model* model)
         lstSpecies->itemText(2).toStdString(),
         palettes[2]
       ));
-      ui->lstAssignments->addItem(lstSpecies->itemText(2));
+      QString label = QString("%1 | %2 | %3")
+        .arg(lstSpecies->itemText(2))
+        .arg(ui->lstPalettes->itemText(2))
+        .arg(6.0);
+
+      QListWidgetItem* listItem = new QListWidgetItem(label);
+      listItem->setCheckState(Qt::Checked);
+      ui->lstAssignments->addItem(listItem);
     }
   }
 #pragma endregion
@@ -752,6 +885,7 @@ void SpatialMainWindow::saveDisplayToModel(Model* model)
       item.addAttr("sbmlId", current->getId());
       QString file = current->getPalette()->getFilename();
       file = file.replace(qApp->applicationDirPath() +"/", QString(""));
+      file = file.replace(".txt", QString(""));
       item.addAttr("palette", file.toStdString());
       item.addAttr("max", QString::number(current->getPalette()->getMaxValue()).toStdString());
       items.addChild(item);
@@ -765,7 +899,7 @@ void SpatialMainWindow::saveDisplayToModel(Model* model)
 }
 
 
-void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
+bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 {
 
   Model* model = doc->getModel();
@@ -776,7 +910,7 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
       tr("fatal errors while reading file %1\n%2.")
       .arg(curFile)
       .arg(doc->getErrorLog()->toString().c_str()));    
-    return;
+    return false;
   }
 
 
@@ -790,7 +924,7 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
       tr("It would seem that the given model '%1' does not use the spatial package. Please load one that does. \n")
       .arg(curFile)
       );
-    return;
+    return false;
   }
 
   lstSpecies->clear();
@@ -817,10 +951,10 @@ void SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
   initializeDisplay(model);
 
   restart();
-  //thread->mpSimulator->flipVolumeOrder();
-  //restart();
 
   fillParameters();
+
+  return true;
 
 }
 
@@ -868,11 +1002,13 @@ void SpatialMainWindow::loadFromString(const std::string& sbml)
   doc = readSBMLFromString(sbml.c_str());
 
   setCurrentFile("fromSBW.xml");
-  loadFromDocument(doc);
+  if (loadFromDocument(doc))
+    statusBar()->showMessage(tr("File loaded"), 2000);
+  else
+    statusBar()->showMessage(tr("File could not be loaded"), 2000);
 
   updating = false;
 
-  statusBar()->showMessage(tr("File loaded"), 2000);
 }
 
 void SpatialMainWindow::loadFile(const QString &fileName)
@@ -892,12 +1028,17 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
   doc = readSBMLFromFile(fileName.toStdString().c_str());
 
-  setCurrentFile(fileName);
-  loadFromDocument(doc);
+  if (loadFromDocument(doc))
+  {
+    statusBar()->showMessage(tr("File loaded"), 2000);
+    setCurrentFile(fileName);
+  }
+  else
+  {
+    statusBar()->showMessage(tr("File could not be loaded"), 2000);
+  }
 
-  updating = false;
-
-  statusBar()->showMessage(tr("File loaded"), 2000);
+  updating = false;  
 }
 
 void SpatialMainWindow::parameterChanged(int row, int column)

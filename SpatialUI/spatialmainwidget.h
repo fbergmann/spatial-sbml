@@ -36,6 +36,7 @@ class QMenu;
 class QGraphicsView;
 class QGraphicsScene;
 class QGraphicsPixmapItem;
+class QListWidgetItem;
 class QImage;
 class QTimer;
 class SpatialSimulator;
@@ -63,7 +64,7 @@ class SpatialMainWindow : public QMainWindow
 
 public:
   SpatialMainWindow();
-  void loadFromDocument(SBMLDocument* doc);
+  bool loadFromDocument(SBMLDocument* doc);
 protected:
   // SBW: handle the custom events
   void customEvent(QEvent *);
@@ -91,6 +92,7 @@ private slots:;
   void exportConcentration();
   void importConcentration();
   void toggledHideBC(bool);
+  void itemChanged ( QListWidgetItem * );
 
   void updatePosition(int x, int y);
 
@@ -122,6 +124,14 @@ private:
 
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
+
+  ConcentrationPalette* getPalette(const QString& name);
+  ConcentrationPalette* getPalette(size_t index);
+
+  DisplayItem* getDisplayItem(const QString& name);
+  DisplayItem* getDisplayItem(size_t index);
+
+  QListWidgetItem *getListItem(const QString& species);
 
   QString curFile;
   QString lastDir;    

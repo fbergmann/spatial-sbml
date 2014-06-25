@@ -14,6 +14,7 @@ public:
   static QRgb blendColor(QRgb color1, QRgb color2);
 
   const QString& getFilename() const;
+  QString getBasename() const;
   size_t getNumColors() const;
 
   double getMaxValue() const;

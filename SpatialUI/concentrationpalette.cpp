@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QString>
 #include <QRgb>
+#include <QApplication>
 
 #include <vector>
 
@@ -52,6 +53,13 @@ const QString&
   ConcentrationPalette::getFilename() const
 {
   return mFileName;
+}
+
+QString ConcentrationPalette::getBasename() const
+{
+  QString name = getFilename();
+  name.replace(qApp->applicationDirPath() + "/", "");
+  return name;
 }
 
 size_t 
