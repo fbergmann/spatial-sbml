@@ -92,6 +92,10 @@ private slots:;
   void exportConcentration();
   void importConcentration();
   void toggledHideBC(bool);
+  void showAll ( );
+  void hideAll ( );
+
+
   void itemChanged ( QListWidgetItem * );
 
   void updatePosition(int x, int y);

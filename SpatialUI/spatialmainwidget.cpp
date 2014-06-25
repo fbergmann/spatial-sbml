@@ -70,6 +70,8 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
   connect(ui->cmdAdd, SIGNAL(clicked ()), this, SLOT(addSpecies()));
   connect(ui->cmdExportConc, SIGNAL(clicked ()), this, SLOT(exportConcentration()));
   connect(ui->cmdImportConc, SIGNAL(clicked ()), this, SLOT(importConcentration()));
+  connect(ui->cmdShowAll, SIGNAL(clicked ()), this, SLOT(showAll()));
+  connect(ui->cmdHideAll, SIGNAL(clicked ()), this, SLOT(hideAll()));
   connect(ui->lstAssignments, SIGNAL(currentRowChanged(int)), this, SLOT(selectedSpeciesChanged(int)));
   connect(ui->lstAssignments, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(itemChanged(QListWidgetItem*)));
   connect(ui->lblImage, SIGNAL(positionChanged(int, int)), this, SLOT(updatePosition(int,int)));
@@ -111,6 +113,21 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
 
 }
 
+void SpatialMainWindow::showAll ( )
+{
+  for (int i = 0; i < ui->lstAssignments->count(); ++i)
+  {
+    ui->lstAssignments->item(i)->setCheckState(Qt::Checked);
+  }
+}
+
+void SpatialMainWindow::hideAll ( )
+{
+  for (int i = 0; i < ui->lstAssignments->count(); ++i)
+  {
+    ui->lstAssignments->item(i)->setCheckState(Qt::Unchecked);
+  }
+}
 
 void SpatialMainWindow::itemChanged ( QListWidgetItem * item)
 {

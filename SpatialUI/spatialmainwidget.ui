@@ -41,7 +41,7 @@
        <item>
         <widget class="QDockWidget" name="dockAssignment">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -56,63 +56,85 @@
           <string>Palette Assignment</string>
          </property>
          <widget class="QWidget" name="dockWidgetContents">
-          <layout class="QFormLayout" name="formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
-           <item row="0" column="0" colspan="2">
-            <widget class="QListWidget" name="lstAssignments"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Species</string>
+          <layout class="QVBoxLayout" name="assignVLayout">
+           <item>
+            <widget class="QListWidget" name="lstAssignments">
+             <property name="sortingEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="lstSpecies"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Palette</string>
+           <item>
+            <layout class="QFormLayout" name="assignFormLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
              </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="lstPalettes"/>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Maximum:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="txtMaxValue">
-             <property name="text">
-              <string>6.0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QPushButton" name="cmdRemove">
-             <property name="text">
-              <string>Remove</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QPushButton" name="cmdAdd">
-             <property name="text">
-              <string>Add</string>
-             </property>
-            </widget>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Species</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="lstSpecies"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Palette</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="lstPalettes"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Maximum:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="txtMaxValue">
+               <property name="text">
+                <string>6.0</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="cmdRemove">
+               <property name="text">
+                <string>Remove</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QPushButton" name="cmdAdd">
+               <property name="text">
+                <string>Add</string>
+               </property>
+              </widget>
+             </item>
+              <item row="5" column="0">
+                <widget class="QPushButton" name="cmdShowAll">
+                  <property name="text">
+                    <string>Show All</string>
+                  </property>
+                </widget>
+              </item>
+              <item row="5" column="1">
+                <widget class="QPushButton" name="cmdHideAll">
+                  <property name="text">
+                    <string>Hide All</string>
+                  </property>
+                </widget>
+              </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -142,111 +164,108 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-           <layout class="QVBoxLayout" name="infoLayout">
-             <item>
-
-               <layout class="QFormLayout" name="formLayout_2">
-                 <property name="fieldGrowthPolicy">
-                   <enum>QFormLayout::ExpandingFieldsGrow</enum>
-                 </property>
-                 <item row="0" column="0">
-                   <widget class="QLabel" name="label_4">
-                     <property name="text">
-                       <string>X:</string>
-                     </property>
-                   </widget>
-                 </item>
-                 <item row="0" column="1">
-                   <widget class="QLineEdit" name="txtXPos">
-                     <property name="enabled">
-                       <bool>false</bool>
-                     </property>
-                     <property name="text">
-                       <string>0</string>
-                     </property>
-                     <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                     <property name="readOnly">
-                       <bool>true</bool>
-                     </property>
-                   </widget>
-                 </item>
-                 <item row="1" column="0">
-                   <widget class="QLabel" name="label_5">
-                     <property name="text">
-                       <string>Y:</string>
-                     </property>
-                   </widget>
-                 </item>
-                 <item row="1" column="1">
-                   <widget class="QLineEdit" name="txtYPos">
-                     <property name="enabled">
-                       <bool>false</bool>
-                     </property>
-                     <property name="text">
-                       <string>0</string>
-                     </property>
-                     <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                     <property name="readOnly">
-                       <bool>true</bool>
-                     </property>
-                   </widget>
-                 </item>
-                 
-               </layout>
-
+          <layout class="QVBoxLayout" name="infoLayout">
+           <item>
+            <layout class="QFormLayout" name="formLayout_2">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>X:</string>
+               </property>
+              </widget>
              </item>
-             <item >
-               <widget class="QListWidget" name="lstConcentrations">
-                 <property name="enabled">
-                   <bool>false</bool>
-                 </property>
-                 <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                   </sizepolicy>
-                 </property>
-               </widget>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="txtXPos">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>0</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
-             <item >
-               <widget class="QLabel" name="label_6">
-                 <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                   </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                   <size>
-                     <width>0</width>
-                     <height>50</height>
-                   </size>
-                 </property>
-                 <property name="font">
-                   <font>
-                     <italic>true</italic>
-                   </font>
-                 </property>
-                 <property name="text">
-                   <string>Click anywhere on the image to display the concentrations at that point.</string>
-                 </property>
-                 <property name="wordWrap">
-                   <bool>true</bool>
-                 </property>
-               </widget>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Y:</string>
+               </property>
+              </widget>
              </item>
-           </layout>
-               </widget>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="txtYPos">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>0</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListWidget" name="lstConcentrations">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>Click anywhere on the image to display the concentrations at that point.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
         <widget class="QDockWidget" name="dockDose">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
