@@ -106,10 +106,24 @@ endif()
 
 ###############################################################################
 #
-# SBW Integration
+# SBW Integration 
 #
 option(ENABLE_SBW   "Enable SBW Integration."     ON)
+SET(USE_SBW_INTEGRATION 0)
 if (ENABLE_SBW)
+
+SET(USE_SBW_INTEGRATION 1)
+add_definitions(-DUSE_SBW_INTEGRATION)
+
+
+if (APPLE)
+add_definitions(-DDARWIN)
+endif()
+
+if (UNIX)
+add_definitions(-DLINUX)
+endif()
+
 
 find_library(SBW_LIBRARY
   NAMES SBW-static.lib SBW-static SBW

@@ -173,6 +173,8 @@ private:
   int maxX;
   int maxY;
 
+  bool mHaveEdit;
+
   std::vector<ConcentrationPalette*> palettes;
   std::vector<DisplayItem*> displayItems;
 

@@ -41,7 +41,15 @@
 using namespace std;
 LIBSBML_CPP_NAMESPACE_USE;
 
-SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(0), pickerY(0), maxX(501), maxY(501)
+SpatialMainWindow::SpatialMainWindow() 
+  : thread(NULL)
+  , doc(NULL)
+  , updating(false)
+  , pickerX(0)
+  , pickerY(0)
+  , maxX(501)
+  , maxY(501)
+  , mHaveEdit(false)
 #ifdef USE_SBW_INTEGRATION
   , mpSBWModule(NULL)
   , mSBWAnalyzerModules()
@@ -90,7 +98,7 @@ SpatialMainWindow::SpatialMainWindow() : thread(NULL), updating(false), pickerX(
 
   sbwConnect();
   sbwRegister();
-    
+   
 #endif // USE_SBW_INTEGRATION
 
 
@@ -937,10 +945,44 @@ bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
 
   if (!haveSpatial)
   {
+#if USE_SBW_INTEGRATION
+    if (mHaveEdit)
+    {
+      if (QMessageBox::question(this, tr("Spatial UI"),
+      tr("It would seem that the given model '%1' does not use the spatial package. Would you like to add a spatial description to it?\n")
+      .arg(curFile), QMessageBox::Yes | QMessageBox::Default , QMessageBox::No) == 
+      QMessageBox::Yes)
+      {
+        try
+        {
+          int nModule = SBWLowLevel::getModuleInstance("EditSpatial");
+          int nService = SBWLowLevel::moduleFindServiceByName(nModule, "analysis");
+          int nMethod = SBWLowLevel::serviceGetMethod(nModule, nService, "void doAnalysis(string)");
+          
+          DataBlockWriter args;
+          args << writeSBMLToString(doc);
+          SBWLowLevel::methodSend(nModule, nService, nMethod, args);
+          
+        }
+
+        catch (SBWException * pE)
+        {
+          QMessageBox::critical(this, "SBW Error",
+            pE->getMessage().c_str(),
+            QMessageBox::Ok | QMessageBox::Default,
+            QMessageBox::NoButton);
+        }
+      }
+      
+    }
+    else
+#endif
+    {
     QMessageBox::critical(this, tr("Spatial UI"),
       tr("It would seem that the given model '%1' does not use the spatial package. Please load one that does. \n")
       .arg(curFile)
       );
+    }
     return false;
   }
 
@@ -1016,13 +1058,20 @@ void SpatialMainWindow::loadFromString(const std::string& sbml)
   updating = true;
   stop();
 
-  doc = readSBMLFromString(sbml.c_str());
+  QString current = curFile;
 
   setCurrentFile("fromSBW.xml");
+  doc = readSBMLFromString(sbml.c_str());
+
   if (loadFromDocument(doc))
+  {
     statusBar()->showMessage(tr("File loaded"), 2000);
+  }
   else
+  {
     statusBar()->showMessage(tr("File could not be loaded"), 2000);
+    setCurrentFile("invalid.xml");
+  }
 
   updating = false;
 
@@ -1043,16 +1092,17 @@ void SpatialMainWindow::loadFile(const QString &fileName)
   }
 
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
+  setCurrentFile(fileName);
   doc = readSBMLFromFile(fileName.toStdString().c_str());
 
   if (loadFromDocument(doc))
   {
     statusBar()->showMessage(tr("File loaded"), 2000);
-    setCurrentFile(fileName);
   }
   else
   {
     statusBar()->showMessage(tr("File could not be loaded"), 2000);
+    setCurrentFile("invalid.xml");
   }
 
   updating = false;  
@@ -1456,6 +1506,8 @@ void SpatialMainWindow::sbwRefreshMenu()
                 }
             }
 
+          mHaveEdit |= mHaveEdit || ModuleName == "EditSpatial";
+
           SortedNames[MenuName.c_str()] = i++;
           ModuleList.append(ModuleName.c_str());
           ServiceList.append(ServiceName.c_str());
@@ -1479,10 +1531,12 @@ void SpatialMainWindow::sbwRefreshMenu()
           mSBWAnalyzerModules.append(ModuleList[itMap.value()]);
           mSBWAnalyzerServices.append(ServiceList[itMap.value()]);
 
-          pAction = new QAction(itMap.key(), mpSBWActionGroup);
+          pAction = mpSBWActionGroup->addAction(itMap.key());
           mpSBWMenu->addAction(pAction);
           mSBWActionMap[pAction] = i;
+          
         }
+
 
       if (mSBWAnalyzerModules.empty())
         Visible = false;
@@ -1505,6 +1559,7 @@ void SpatialMainWindow::sbwSlotMenuTriggeredFinished(bool success)
 
 void SpatialMainWindow::sbwSlotMenuTriggered(QAction * pAction)
 {
+  if (doc == NULL) return;
 
   mSBWActionId = mSBWActionMap[pAction];
 

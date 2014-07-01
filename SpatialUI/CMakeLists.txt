@@ -11,7 +11,7 @@ cmake_policy(SET CMP0020 NEW)
 
 
 if (PREFIX_PATH)
-set (CMAKE_PREFIX_PATH "${PREFIX_PATH}")
+set (CMAKE_PREFIX_PATH "${PREFIX_PATH}") 
 endif()
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/ChooseQtVersion.cmake)
@@ -70,20 +70,6 @@ set(MACOSX_BUNDLE_COPYRIGHT ${MACOSX_BUNDLE_INFO_STRING})
 
 endif(APPLE)
 
-if (ENABLE_SBW)
-
-include_directories(${SBW_INCLUDE_DIR})
-add_definitions(-DUSE_SBW_INTEGRATION)
-
-if (APPLE)
-add_definitions(-DDARWIN)
-endif()
-
-if (UNIX)
-add_definitions(-DLINUX)
-endif()
-endif()
-
 
 add_executable(SpatialUI ${EXECUTABLE_FLAGS} ${CPP_FILES}
 	${H_FILES}
@@ -98,6 +84,8 @@ QT_BIND_TO_TARGET(SpatialUI)
 target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML)
 
 if (ENABLE_SBW)
+  include_directories(${SBW_INCLUDE_DIR})
+  #set_target_properties(SpatialUI PROPERTIES AUTOMOC_MOC_OPTIONS -DUSE_SBW_INTEGRATION)
   target_link_libraries(SpatialUI ${EXTRA_LIBS} SpatialSBML ${SBW_LIBRARY})
   
   if (WIN32)
@@ -105,7 +93,6 @@ if (ENABLE_SBW)
   endif()
 
 endif()
-
 
 file(GLOB PALETTE_FILES palettes/*.txt )
 file(COPY ${PALETTE_FILES} DESTINATION  ${CMAKE_CURRENT_BINARY_DIR})
