@@ -434,13 +434,15 @@ void reversePolishRK(reactionInfo *rInfo, GeometryInfo *geoInfo, int Xindex, int
 			for (k = 0; k < numOfReactants; k++) {//reactants
         if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && !rInfo->spRefList[k]->isUniform) 
         {
-          rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] -= rInfo->srStoichiometry[k] * rpStack[st_index];
+          variableInfo* current = rInfo->spRefList[k];
+          current->delta[m * numOfVolIndexes + index] -= rInfo->srStoichiometry[k] * rpStack[st_index];
         }
 			}
 			for (k = numOfReactants; k < (int)rInfo->spRefList.size(); k++) {//products
 				if (rInfo->isVariable[k] && rInfo->spRefList[k] != NULL && !rInfo->spRefList[k]->isUniform ) 
         {
-          rInfo->spRefList[k]->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
+          variableInfo* current = rInfo->spRefList[k];
+          current ->delta[m * numOfVolIndexes + index] += rInfo->srStoichiometry[k] * rpStack[st_index];
         }
 			}
 		} else if (st_index >= 0 && rInfo->isVariable[0] && rInfo->spRefList[0] != NULL && !rInfo->spRefList[0]->isUniform){//RateRule

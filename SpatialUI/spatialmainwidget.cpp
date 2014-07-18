@@ -959,6 +959,7 @@ bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
           int nService = SBWLowLevel::moduleFindServiceByName(nModule, "analysis");
           int nMethod = SBWLowLevel::serviceGetMethod(nModule, nService, "void doAnalysis(string)");
           
+          
           DataBlockWriter args;
           args << writeSBMLToString(doc);
           SBWLowLevel::methodSend(nModule, nService, nMethod, args);
@@ -992,6 +993,7 @@ bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
   maxX = modelPlugin->getGeometry()->getCoordinateComponent("x")->getBoundaryMax()->getValue() + 1;
   maxY = modelPlugin->getGeometry()->getCoordinateComponent("y")->getBoundaryMax()->getValue() + 1;
 
+  
 
   for(unsigned int i = 0; i < model->getNumSpecies(); i++)
   {
@@ -1006,7 +1008,10 @@ bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
       }
     }
   }
-
+  
+  lstSpecies->model()->sort(0);
+  ui->lstDose->model()->sort(0);
+  
   initializeDisplay(model);
 
   restart();
@@ -1049,7 +1054,7 @@ void SpatialMainWindow::fillParameters()
     ++count;
   }
   ui->tblParameters->setRowCount(count);
-
+  
   ui->tblParameters->repaint();
 }
 
