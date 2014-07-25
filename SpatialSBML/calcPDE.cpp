@@ -575,7 +575,7 @@ void cipCSLR(variableInfo *sInfo, double deltaX, double deltaY, double deltaZ, d
 	unsigned int i;
 	double *val = sInfo->value;
 	double *val_delta =  new double[Xindex * Yindex * Zindex];
-	fill_n(val_delta, Xindex * Yindex * Zindex, 0);
+	memset(val_delta, 0, Xindex * Yindex * Zindex*sizeof(double));
 	boundaryType type;
 	for (int j = 0; j < Xindex * Yindex * Zindex; j++) val_delta[j] = 0.0;
 	if (sInfo->adCInfo[0] != 0) {//x-direction

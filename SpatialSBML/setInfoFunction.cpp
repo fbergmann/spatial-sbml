@@ -66,10 +66,10 @@ void setSpeciesInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, unsig
     {
       if (s->isSetInitialAmount() || s->isSetInitialConcentration()) {//Initial Amount or Initial Concentration
         info->value = new double[numOfVolIndexes];
-        fill_n(info->value, numOfVolIndexes, 0);
+        memset(info->value, 0, numOfVolIndexes*sizeof(double));
         if (!s->isSetConstant() || !s->getConstant()) {
           info->delta = new double[4 * numOfVolIndexes];
-          fill_n(info->delta, 4 * numOfVolIndexes, 0.0);
+          memset(info->delta, 0, 4*numOfVolIndexes*sizeof(double));
         }
         if (s->isSetInitialAmount()) {//Initial Amount
           info->isResolved = true;
@@ -158,7 +158,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 				sInfo = searchInfoById(varInfoList, pPlugin->getDiffusionCoefficient()->getVariable().c_str());
 				if (sInfo->diffCInfo == 0) {
 					sInfo->diffCInfo = new variableInfo*[3];
-					fill_n(sInfo->diffCInfo, 3, reinterpret_cast<variableInfo*>(0));
+					memset(sInfo->diffCInfo, 0, 3*sizeof(variableInfo*));
 				}
         if (!pPlugin->getDiffusionCoefficient()->isSetCoordinateIndex())
         {
@@ -185,8 +185,8 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 			case SBML_SPATIAL_ADVECTIONCOEFFICIENT://advection coefficient
 				sInfo = searchInfoById(varInfoList, pPlugin->getAdvectionCoefficient()->getVariable().c_str());
 				if (sInfo->adCInfo == 0) {
-					sInfo->adCInfo = new variableInfo*[3];
-					fill_n(sInfo->adCInfo, 3, reinterpret_cast<variableInfo*>(0));
+					sInfo->adCInfo = new variableInfo*[3];          
+					memset(sInfo->adCInfo, 0, 3* sizeof(variableInfo*));
 				}
 				sInfo->adCInfo[pPlugin->getAdvectionCoefficient()->getCoordinateIndex()] = info;
 				if (model->getRule(info->id) == 0 && p->isSetValue()) {
@@ -200,7 +200,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 				bcon = pPlugin->getBoundaryCondition();
 				if (sInfo->boundaryInfo == 0) {
 					sInfo->boundaryInfo = new variableInfo*[6];
-					fill_n(sInfo->boundaryInfo, 6, reinterpret_cast<variableInfo*>(0));
+					memset(sInfo->boundaryInfo, 0, 6* sizeof(variableInfo*));
 				}
 				if (sInfo != 0 &&bcon != 0) {
 					int boundaryIndex = -1;
@@ -229,7 +229,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 					double max = cc->getBoundaryMax()->getValue();
 					if (cc->getComponentType() == "cartesianX") {
 						info->value = new double[numOfVolIndexes];
-						fill_n(info->value, numOfVolIndexes, 0);
+						memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						xaxis = const_cast<char*>(p->getId().c_str());
 						Xsize = max - min;
 						deltaX = (max - min) / (Xdiv - 1);
@@ -243,7 +243,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 						}
 					} else if (cc->getComponentType() == "cartesianY") {
 						info->value = new double[numOfVolIndexes];
-						fill_n(info->value, numOfVolIndexes, 0);
+						memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						yaxis = const_cast<char*>(p->getId().c_str());
 						Ysize = max - min;
 						deltaY = (max - min) / (Ydiv - 1);
@@ -257,7 +257,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 						}
 					} else if (cc->getComponentType() == "cartesianZ") {
 						info->value = new double[numOfVolIndexes];
-						fill_n(info->value, numOfVolIndexes, 0);
+            memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						zaxis = const_cast<char*>(p->getId().c_str());
 						Zsize = max - min;
 						deltaZ = (max - min) / (Zdiv - 1);
@@ -342,7 +342,7 @@ void setReactionInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 			}
 			rInfo->id = r->getId().c_str();
 			rInfo->value = new double[numOfVolIndexes];
-			fill_n(rInfo->value, numOfVolIndexes, 0);
+   		memset(rInfo->value, 0, numOfVolIndexes*sizeof(double));
 			ast = const_cast<ASTNode*>(kl->getMath());
 			int tmp = 0;
 			countAST(ast, tmp);
@@ -358,14 +358,14 @@ void setReactionInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 			countAST(ast, numOfASTNodes);
 			//cerr << "num_of_nodes: " << numOfASTNodes << endl;
 			rInfo->rpInfo = new reversePolishInfo();
-			rInfo->rpInfo->varList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->varList, numOfASTNodes, reinterpret_cast<double*>(0));
+			rInfo->rpInfo->varList = new double*[numOfASTNodes];			
+      memset(rInfo->rpInfo->varList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->deltaList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->deltaList, numOfASTNodes, reinterpret_cast<double*>(0));
+      memset(rInfo->rpInfo->deltaList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->constList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->constList, numOfASTNodes, reinterpret_cast<double*>(0));
+      memset(rInfo->rpInfo->constList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->opfuncList = new int[numOfASTNodes];
-			fill_n(rInfo->rpInfo->opfuncList, numOfASTNodes, 0);
+      memset(rInfo->rpInfo->opfuncList, 0, numOfASTNodes*sizeof(int));
 			rInfo->rpInfo->listNum = numOfASTNodes;
 			parseAST(ast, rInfo->rpInfo, varInfoList, numOfASTNodes, freeConstList);
 			//parseAST(ast, rInfo->rpInfo->varList, rInfo->rpInfo->constList, rInfo->rpInfo->opfuncList, varInfoList, numOfASTNodes);
@@ -392,7 +392,7 @@ void setRateRuleInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
       rInfo->reaction = NULL;
 			rInfo->id = rrule->getVariable().c_str();
 			rInfo->value = new double[numOfVolIndexes];
-			fill_n(rInfo->value, numOfVolIndexes, 0);
+			memset(rInfo->value, 0, numOfVolIndexes*sizeof(double));
 			ast = const_cast<ASTNode*>(rrule->getMath());
 			rearrangeAST(ast);
 			//cout << "rate rule: " << SBML_formulaToString(ast) << endl;
@@ -400,13 +400,13 @@ void setRateRuleInfo(Model *model, vector<variableInfo*> &varInfoList, vector<re
 			countAST(ast, numOfASTNodes);
 			rInfo->rpInfo = new reversePolishInfo();
 			rInfo->rpInfo->varList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->varList, numOfASTNodes, reinterpret_cast<double*>(0));
+			memset(rInfo->rpInfo->varList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->deltaList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->deltaList, numOfASTNodes, reinterpret_cast<double*>(0));
+			memset(rInfo->rpInfo->deltaList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->constList = new double*[numOfASTNodes];
-			fill_n(rInfo->rpInfo->constList, numOfASTNodes, reinterpret_cast<double*>(0));
+			memset(rInfo->rpInfo->constList, 0, numOfASTNodes*sizeof(double*));
 			rInfo->rpInfo->opfuncList = new int[numOfASTNodes];
-			fill_n(rInfo->rpInfo->opfuncList, numOfASTNodes, 0);
+			memset(rInfo->rpInfo->opfuncList, 0, numOfASTNodes*sizeof(int));
 			rInfo->rpInfo->listNum = numOfASTNodes;
 			parseAST(ast, rInfo->rpInfo, varInfoList, numOfASTNodes, freeConstList);
 			//parseAST(ast, rInfo->rpInfo->varList, rInfo->rpInfo->constList, rInfo->rpInfo->opfuncList, varInfoList, numOfASTNodes);

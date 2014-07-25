@@ -377,9 +377,12 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
 
   //volume index
   vector<int> volumeIndexList;
-  for (Z = 0; Z < Zindex; Z += 2) {
-    for (Y = 0; Y < Yindex; Y += 2) {
-      for (X = 0; X < Xindex; X += 2) {
+  for (Z = 0; Z < Zindex; Z += 2) 
+  {
+    for (Y = 0; Y < Yindex; Y += 2) 
+    {
+      for (X = 0; X < Xindex; X += 2) 
+      {
         volumeIndexList.push_back(Z * Yindex * Xindex + Y * Xindex + X);
       }
     }
@@ -389,12 +392,15 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
 
   //geometryDefinition
   double *tmp_isDomain = new double[numOfVolIndexes];
-  for (i = 0; i < geometry->getNumGeometryDefinitions(); i++) {
-    if (geometry->getGeometryDefinition(i)->isAnalyticGeometry()) {
+  for (i = 0; i < geometry->getNumGeometryDefinitions(); i++) 
+  {
+    if (geometry->getGeometryDefinition(i)->isAnalyticGeometry()) 
+    {
       //AnalyticVolumes
       AnalyticGeometry *analyticGeo = static_cast<AnalyticGeometry*>(geometry->getGeometryDefinition(i));
       //gather information of compartment, domainType, analyticVolume
-      for (j = 0; j < numOfCompartments; j++) {
+      for (j = 0; j < numOfCompartments; j++) 
+      {
         Compartment *c = loc->get(j);
         cPlugin = static_cast<SpatialCompartmentPlugin*>(c->getPlugin("spatial"));
         if (cPlugin != 0) {
@@ -425,21 +431,21 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             countAST(ast, numOfASTNodes);
             geoInfo->rpInfo = new reversePolishInfo();
             geoInfo->rpInfo->varList = new double*[numOfASTNodes];
-            fill_n(geoInfo->rpInfo->varList, numOfASTNodes, reinterpret_cast<double*>(0));
+            memset(geoInfo->rpInfo->varList, 0, numOfASTNodes*sizeof(double*));
             geoInfo->rpInfo->constList = new double*[numOfASTNodes];
-            fill_n(geoInfo->rpInfo->constList, numOfASTNodes, reinterpret_cast<double*>(0));
+            memset(geoInfo->rpInfo->constList, 0, numOfASTNodes*sizeof(double*));
             geoInfo->rpInfo->opfuncList = new int[numOfASTNodes];
-            fill_n(geoInfo->rpInfo->opfuncList, numOfASTNodes, 0);
+            memset(geoInfo->rpInfo->opfuncList, 0, numOfASTNodes*sizeof(int));
             geoInfo->rpInfo->listNum = numOfASTNodes;
             geoInfo->isDomain = new int[numOfVolIndexes];
-            fill_n(geoInfo->isDomain, numOfVolIndexes, 0);
+            memset(geoInfo->isDomain, 0, numOfASTNodes*sizeof(int));
             geoInfo->isBoundary = new int[numOfVolIndexes];
-            fill_n(geoInfo->isBoundary, numOfVolIndexes, 0);
+            memset(geoInfo->isBoundary, 0, numOfASTNodes*sizeof(int));
             geoInfo->adjacent0 = 0;
             geoInfo->adjacent1 = 0;
             parseAST(ast, geoInfo->rpInfo, varInfoList, numOfASTNodes, freeConstList);
             //judge if the coordinate point is inside the analytic volume
-            fill_n(tmp_isDomain, numOfVolIndexes, 0);
+            memset(tmp_isDomain, 0, numOfVolIndexes*sizeof(double));
             reversePolishInitial(volumeIndexList, geoInfo->rpInfo, tmp_isDomain, numOfASTNodes, Xindex, Yindex, Zindex, false);
             for (k = 0; k < (unsigned int)numOfVolIndexes; k++) {
               //index = k;
@@ -493,9 +499,9 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             }
             geoInfo->isVol = true;
             geoInfo->isDomain = new int[numOfVolIndexes];
-            fill_n(geoInfo->isDomain, numOfVolIndexes, 0);
+            memset(geoInfo->isDomain, 0, numOfVolIndexes*sizeof(int));
             geoInfo->isBoundary = new int[numOfVolIndexes];
-            fill_n(geoInfo->isBoundary, numOfVolIndexes, 0);
+            memset(geoInfo->isBoundary, 0, numOfVolIndexes*sizeof(int));
             geoInfoList.push_back(geoInfo);
             /*
             for (Y = 0; Y <= samField->getNumSamples2(); Y++) {
@@ -745,9 +751,9 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     GeometryInfo *geoInfo = geoInfoList[i];
     if (geoInfo->isVol == false) {//avol is membrane
       geoInfo->isDomain = new int[numOfVolIndexes];
-      fill_n(geoInfo->isDomain, numOfVolIndexes, 0);
+      memset(geoInfo->isDomain, 0, numOfVolIndexes*sizeof(int));
       geoInfo->isBoundary = new int[numOfVolIndexes];
-      fill_n(geoInfo->isBoundary, numOfVolIndexes, 0);
+      memset(geoInfo->isBoundary, 0, numOfVolIndexes*sizeof(int));
       geoInfo->bType = new boundaryType[numOfVolIndexes];
       for (j = 0; j < (unsigned int)numOfVolIndexes; j++) {
         geoInfo->bType[j].isBofXp = false;
@@ -1023,10 +1029,10 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     if (model->getInitialAssignment(info->id) != 0) {//initial assignment
       if (info->value == 0) {//value is not set yet
         info->value = new double[numOfVolIndexes];
-        fill_n(info->value, numOfVolIndexes, 0);
+        memset(info->value, 0, numOfVolIndexes*sizeof(double));
         if (info->sp != 0 && (!info->sp->isSetConstant() || !info->sp->getConstant())) {
           info->delta = new double[4 * numOfVolIndexes];
-          fill_n(info->delta, 4 * numOfVolIndexes, 0);
+          memset(info->delta, 0, 4*numOfVolIndexes*sizeof(double));
         }
       }
       ast = const_cast<ASTNode*>((model->getInitialAssignment(info->id))->getMath());
@@ -1034,11 +1040,11 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       info->hasAssignmentRule = true;
       if (info->value == 0) {//value is not set yet
         info->value = new double[numOfVolIndexes];
-        fill_n(info->value, numOfVolIndexes, 0);
+        memset(info->value, 0, numOfVolIndexes*sizeof(double));        
         if (info->sp != 0 && (!info->sp->isSetConstant() || !info->sp->getConstant())) {
           //the species is variable
           info->delta = new double[4 * numOfVolIndexes];
-          fill_n(info->delta, 4 * numOfVolIndexes, 0);
+          memset(info->delta, 0, 4*numOfVolIndexes*sizeof(double));
         }
       }
       ast = const_cast<ASTNode*>(((AssignmentRule*)model->getRule(info->id))->getMath());
@@ -1061,13 +1067,13 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       numOfASTNodes = 0;
       countAST(ast, numOfASTNodes);
       info->rpInfo = new reversePolishInfo();
-      info->rpInfo->varList = new double*[numOfASTNodes];
-      fill_n(info->rpInfo->varList, numOfASTNodes, reinterpret_cast<double*>(0));
+      info->rpInfo->varList = new double*[numOfASTNodes];      
+      memset(info->rpInfo->varList, 0, numOfASTNodes*sizeof(double*));
       info->rpInfo->deltaList = 0;
       info->rpInfo->constList = new double*[numOfASTNodes];
-      fill_n(info->rpInfo->constList, numOfASTNodes, reinterpret_cast<double*>(0));
+      memset(info->rpInfo->constList, 0, numOfASTNodes*sizeof(double*));
       info->rpInfo->opfuncList = new int[numOfASTNodes];
-      fill_n(info->rpInfo->opfuncList, numOfASTNodes, 0);
+      memset(info->rpInfo->opfuncList, 0, numOfASTNodes*sizeof(int));
       info->rpInfo->listNum = numOfASTNodes;
       info->isResolved = false;
       parseDependence(ast, info->dependence, varInfoList);
@@ -1081,12 +1087,16 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     for (i = 0;i < notOrderedInfo.size();++i) {
       variableInfo *info = notOrderedInfo[i];
       if (isResolvedAll(info->dependence) && info->isResolved == false) {
+        std::string formula; 
         if (model->getInitialAssignment(info->id) != 0) {//initial assignment
           ast = const_cast<ASTNode*>((model->getInitialAssignment(info->id))->getMath());
+          formula = SBML_formulaToString((model->getInitialAssignment(info->id))->getMath());
         } else if (model->getRule(info->id) != 0 && model->getRule(info->id)->isAssignment()) {//assignment rule
           ast = const_cast<ASTNode*>(((AssignmentRule*)model->getRule(info->id))->getMath());
+          formula = SBML_formulaToString(((AssignmentRule*)model->getRule(info->id))->getMath());
         }
         parseAST(ast, info->rpInfo, varInfoList, info->rpInfo->listNum, freeConstList);
+        std::string formula2 = SBML_formulaToString(ast); 
         bool isAllArea = (info->sp != 0)? false: true;
         if (info->sp != 0) info->geoi = searchAvolInfoByCompartment(geoInfoList, info->sp->getCompartment().c_str());
         if (info->geoi == NULL)
@@ -1152,7 +1162,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
 
   //output geometries
   int *geo_edge = new int[numOfVolIndexes];
-  fill_n(geo_edge, numOfVolIndexes, 0);
+  memset(geo_edge, 0, numOfVolIndexes*sizeof(int));  
   vector<GeometryInfo*> memInfoList = vector<GeometryInfo*>();
   for (i = 0; i < geoInfoList.size(); i++) {
     GeometryInfo *geoInfo = geoInfoList[i];
