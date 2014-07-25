@@ -99,6 +99,24 @@ using namespace std;
 #include "calcFastReaction.cxx"
 
 
+std::string getFirstCompartmentId(const Model* model, const ASTNode *ast)
+{
+
+  for (unsigned int i = 0;i < ast->getNumChildren();++i)
+  {
+    string id = getFirstCompartmentId(model, ast->getChild(i));
+    if (!id.empty()) return id;
+  }
+
+  if (!ast->isName()) return "";
+
+  if (model->getCompartment(ast->getName()) != NULL)
+    return ast->getName();
+  
+  return "";
+
+}
+
 bool isResolvedAll(vector<variableInfo*> &dependence)
 {
   if (dependence.size() == 0) return true;
@@ -1099,9 +1117,20 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
         std::string formula2 = SBML_formulaToString(ast); 
         bool isAllArea = (info->sp != 0)? false: true;
         if (info->sp != 0) info->geoi = searchAvolInfoByCompartment(geoInfoList, info->sp->getCompartment().c_str());
+        else if (info->com != NULL) info->geoi = searchAvolInfoByCompartment(geoInfoList, info->com->getId().c_str());
+        else
+        {
+          string id = getFirstCompartmentId(model, ast);
+          if (!id.empty())
+            info->geoi = searchAvolInfoByCompartment(geoInfoList, id.c_str());          
+        }
         if (info->geoi == NULL)
-          continue;
-        reversePolishInitial(info->geoi->domainIndex, info->rpInfo, info->value, info->rpInfo->listNum, Xindex, Yindex, Zindex, isAllArea);
+        {
+          vector<int> vTemp;
+          reversePolishInitial(vTemp, info->rpInfo, info->value, info->rpInfo->listNum, Xindex, Yindex, Zindex, isAllArea);
+        }
+        else
+          reversePolishInitial(info->geoi->domainIndex, info->rpInfo, info->value, info->rpInfo->listNum, Xindex, Yindex, Zindex, isAllArea);
         info->isResolved = true;
         if (info->hasAssignmentRule) orderedARule.push_back(info);
       }
