@@ -104,7 +104,7 @@ bool isResolvedAll(vector<variableInfo*> &dependence)
   if (dependence.size() == 0) return true;
   vector<variableInfo*>::iterator it = dependence.begin();
   while (it != dependence.end()) {
-    if (!(*it)->isResolved) {
+    if ((*it) == NULL || !(*it)->isResolved) {
       return false;
     }
     ++it;

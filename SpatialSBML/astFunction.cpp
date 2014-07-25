@@ -238,12 +238,20 @@ void rearrangeAST(ASTNode *ast)
 void parseDependence(const ASTNode *ast, vector<variableInfo*> &dependence, vector<variableInfo*> &varInfoList)
 {
 	unsigned int i;
-	for (i = 0; i < ast->getNumChildren(); i++) {
+	
+  for (i = 0; i < ast->getNumChildren(); ++i) 
+  {
 		parseDependence(ast->getChild(i), dependence, varInfoList);
 	}
-	if (ast->isName()) {
-		if (searchInfoById(dependence, ast->getName()) == 0) {
-			dependence.push_back(searchInfoById(varInfoList, ast->getName()));
-		}
-	}
+	
+  if (!ast->isName()) return;
+
+  if (searchInfoById(dependence, ast->getName()) != 0) 
+    return;
+
+  variableInfo* temp = searchInfoById(varInfoList, ast->getName());
+  if (temp == NULL)
+    return;
+
+  dependence.push_back(temp);
 }
