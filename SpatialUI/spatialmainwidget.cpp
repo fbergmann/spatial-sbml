@@ -209,8 +209,7 @@ void SpatialMainWindow::importConcentration()
 
   lastDir = QFileInfo(fileName).absoluteDir().absolutePath();
 
-  const auto& currentSpecies = ui->lstDose->currentText();
-  //const auto& index = ui->lstDose->currentIndex();
+  const QString& currentSpecies = ui->lstDose->currentText();
 
   DataHelper helper(fileName.toStdString());
   if (!helper.isValid()) return;
@@ -246,7 +245,7 @@ void SpatialMainWindow::exportConcentration()
     for (int y = 0; y < thread->mpSimulator->getYDim(); ++y)
     {
       const std::vector<std::pair<std::string, double> >& all = thread->getConcentrationsAt(x, y);
-      std::vector<std::pair<std::string, double> >::const_iterator it = all.cbegin();
+      std::vector<std::pair<std::string, double> >::const_iterator it = all.begin();
       bool wrote = false;
       while( it != all.end())
       {
@@ -901,9 +900,9 @@ void SpatialMainWindow::saveDisplayToModel(Model* model)
   if (displayItems.size() > 0)
   {
     XMLNode items(XMLTriple("items", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
-    std::vector<DisplayItem*>::const_iterator it = displayItems.cbegin();
+    std::vector<DisplayItem*>::const_iterator it = displayItems.begin();
 
-    while(it != displayItems.cend())
+    while(it != displayItems.end())
     {
       DisplayItem* current = *it;
       XMLNode item(XMLTriple("item", SPATIAL_ANNOTATION_URL, ""), XMLAttributes());
