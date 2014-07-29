@@ -16,6 +16,45 @@
 void stepSearch(int l, int preD, int step_count, int step_k, int X, int Y, int Z, int Xindex, int Yindex, int Zindex, int *horComponent, int *verComponent, int *isD, string plane);
 void oneStepSearch(int step_count, int step_k, int X, int Y, int Z, int Xindex, int Yindex, int Zindex, int *horComponent, int *verComponent, int *isD, string plane);
 
+bool containsSpatialMath(const ASTNode* node, const Model* model)
+{
+  for (int i = 0; i < node->getNumChildren(); ++i)
+  {
+    if (containsSpatialMath(node->getChild(i), model))
+      return true;
+  }
+
+  if (!node->isName()) return false;
+
+  SBase* element = const_cast<Model*>(model)->getElementBySId(node->getName());
+
+  if (element == NULL) return false;
+
+  if (element->getTypeCode() == SBML_SPECIES)
+  {
+    SpatialSpeciesRxnPlugin* plug = dynamic_cast<SpatialSpeciesRxnPlugin*>(element->getPlugin("spatial"));
+    if (plug == NULL) return false;
+    return plug->getIsSpatial();
+  }    
+  
+  return false;
+
+}
+
+bool dependencesAreSpatial(const SBase *s, const Model *model)
+{
+  if (model == NULL || s == NULL || !s->isSetId()) return false;
+
+  const Rule* rule = model->getRule(s->getId());
+  if (rule == NULL || rule->getTypeCode() != SBML_ASSIGNMENT_RULE) return false;
+
+  const AssignmentRule* ar = static_cast<const AssignmentRule*>(rule);
+  if (!ar->isSetMath()) return false;
+
+  return containsSpatialMath(ar->getMath(), model);
+
+}
+
 void setCompartmentInfo(Model *model, vector<variableInfo*> &varInfoList)
 {
 	ListOfCompartments *loc = model->getListOfCompartments();
@@ -62,7 +101,7 @@ void setSpeciesInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, unsig
     }
     //species value is specified by initial amount, initial value, rule or initial assignment
     //species is spatially defined
-    if (splugin->getIsSpatial()) 
+    if (splugin->getIsSpatial() || dependencesAreSpatial(s, model)) 
     {
       if (s->isSetInitialAmount() || s->isSetInitialConcentration()) {//Initial Amount or Initial Concentration
         info->value = new double[numOfVolIndexes];
