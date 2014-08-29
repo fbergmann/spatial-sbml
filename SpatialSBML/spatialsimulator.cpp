@@ -486,16 +486,20 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
       SampledFieldGeometry *sfGeo	= static_cast<SampledFieldGeometry*>(geometry->getGeometryDefinition(i));
       for (j = 0; j < numOfCompartments; j++) {
         Compartment *c = loc->get(j);
-        if (c->getSpatialDimensions() == volDimension) {
+        if (c->getSpatialDimensions() == volDimension) 
+        {
           cPlugin = static_cast<SpatialCompartmentPlugin*>(c->getPlugin("spatial"));
-          if (cPlugin != 0) {
+          if (cPlugin != 0) 
+          {
+            const std::string& domainType = cPlugin->getCompartmentMapping()->getDomainType();
             SampledField *samField = sfGeo->getSampledField();
             SampledVolume *samVol = 0;
             for (k = 0; k < sfGeo->getNumSampledVolumes(); k++) {
-              if (sfGeo->getSampledVolume(k)->getDomainType() == cPlugin->getCompartmentMapping()->getDomainType()) {
+              if (sfGeo->getSampledVolume(k)->getDomainType() == domainType) {
                 samVol = sfGeo->getSampledVolume(k);
               }
             }
+            if (samVol == NULL) continue;
             ImageData *idata = samField->getImageData();
             unsigned int  uncomprLen =idata->getUncompressedLength();
             int *uncompr = (int*)calloc(sizeof(int), uncomprLen);
@@ -504,7 +508,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             GeometryInfo *geoInfo = new GeometryInfo;
             InitializeAVolInfo(geoInfo);
             geoInfo->compartmentId = c->getId().c_str();
-            geoInfo->domainTypeId = cPlugin->getCompartmentMapping()->getDomainType().c_str();
+            geoInfo->domainTypeId = domainType.c_str();
             geoInfo->domainId = 0;
             geoInfo->bType = new boundaryType[numOfVolIndexes];
             for (k = 0; k < (unsigned int)numOfVolIndexes; k++) {
