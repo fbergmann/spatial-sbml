@@ -722,13 +722,16 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     if (cPlugin == 0) continue;
     DomainType *dType = geometry->getDomainType(cPlugin->getCompartmentMapping()->getDomainType());
     GeometryInfo *geoInfo = searchAvolInfoByCompartment(geoInfoList, loc->get(i)->getId().c_str());
-    if (geoInfo == 0) {
+    if (geoInfo == NULL) {
       geoInfo = new GeometryInfo;
       InitializeAVolInfo(geoInfo);
       geoInfo->compartmentId = loc->get(i)->getId().c_str();
       geoInfo->domainTypeId = cPlugin->getCompartmentMapping()->getDomainType().c_str();
       //geoInfo->bt = new boundaryType[numOfVolIndexes];
-      if (dType->getSpatialDimensions() == volDimension) {
+      if (dType == NULL) {
+        geoInfo->isVol = true;
+      }
+      else if (dType->getSpatialDimensions() == volDimension) {
         geoInfo->isVol = true;
       } else if (dType->getSpatialDimensions() == memDimension) {
         geoInfo->isVol = false;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model metaid="meta_fish_skin_pnas2_Application0" id="fish_skin_pnas2_Application0" name="fish-skin-pnas2_Application0">
-	<annotation>
-        <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
+    <annotation>
+      <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
         <update step="1" freq="50"/>
         <items>
           <item sbmlId="u" palette="black-blue.txt" max="6"/>
@@ -10,7 +10,7 @@
           <item sbmlId="w" palette="black-red.txt" max="6"/>
         </items>
       </spatialInfo>
-	</annotation>
+    </annotation>
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
         <listOfUnits>
@@ -716,6 +716,185 @@
       <spatial:listOfGeometryDefinitions>
         <spatial:analyticGeometry spatial:spatialId="Geometry225509093">
           <spatial:listOfAnalyticVolumes>
+            <spatial:analyticVolume spatial:spatialId="fish_body" spatial:domainType="fish_body" spatial:functionType="layered" spatial:ordinal="1">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <piecewise>
+                  <piece>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <and/>
+                      <apply>
+                        <or/>
+                        <apply>
+                          <lt/>
+                          <apply>
+                            <plus/>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> x </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.42 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.37 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> y </ci>
+                                  <apply>
+                                    <divide/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn type="integer"> 2 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.25 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                        <apply>
+                          <and/>
+                          <apply>
+                            <lt/>
+                            <ci> y </ci>
+                            <apply>
+                              <plus/>
+                              <apply>
+                                <minus/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.1 </cn>
+                                </apply>
+                              </apply>
+                              <ci> x </ci>
+                            </apply>
+                          </apply>
+                          <apply>
+                            <gt/>
+                            <ci> y </ci>
+                            <apply>
+                              <plus/>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 1.1 </cn>
+                              </apply>
+                              <apply>
+                                <minus/>
+                                <ci> x </ci>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <apply>
+                            <lt/>
+                            <ci> x </ci>
+                            <apply>
+                              <times/>
+                              <cn type="integer"> 100 </cn>
+                              <cn> 0.9 </cn>
+                            </apply>
+                          </apply>
+                        </apply>
+                      </apply>
+                      <apply>
+                        <not/>
+                        <apply>
+                          <lt/>
+                          <apply>
+                            <plus/>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> x </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.25 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn> 0.08 </cn>
+                                  <cn type="integer"> 100 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> y </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.45 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn> 0.08 </cn>
+                                  <cn type="integer"> 100 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                      </apply>
+                    </apply>
+                  </piece>
+                  <otherwise>
+                    <cn type="integer"> 0 </cn>
+                  </otherwise>
+                </piecewise>
+              </math>
+            </spatial:analyticVolume>
             <spatial:analyticVolume spatial:spatialId="fish_eye" spatial:domainType="fish_eye" spatial:functionType="layered" spatial:ordinal="2">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <piecewise>
@@ -726,102 +905,57 @@
                       <apply>
                         <plus/>
                         <apply>
-                          <power/>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -24 </cn>
-                            <ci> x </ci>
-                          </apply>
-                          <cn type="integer"> 2 </cn>
-                        </apply>
-                        <apply>
-                          <power/>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -58 </cn>
-                            <ci> y </ci>
-                          </apply>
-                          <cn type="integer"> 2 </cn>
-                        </apply>
-                      </apply>
-                      <cn type="integer"> 25 </cn>
-                    </apply>
-                  </piece>
-                  <otherwise>
-                    <cn type="integer"> 0 </cn>
-                  </otherwise>
-                </piecewise>
-              </math>
-            </spatial:analyticVolume>
-            <spatial:analyticVolume spatial:spatialId="fish_body" spatial:domainType="fish_body" spatial:functionType="layered" spatial:ordinal="1">
-              <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <piecewise>
-                  <piece>
-                    <cn type="integer"> 1 </cn>
-                    <apply>
-                      <or/>
-                      <apply>
-                        <lt/>
-                        <apply>
-                          <plus/>
+                          <divide/>
                           <apply>
                             <power/>
-                            <apply>
-                              <times/>
-                              <cn> 0.27 </cn>
-                              <apply>
-                                <plus/>
-                                <cn type="integer"> -42 </cn>
-                                <ci> x </ci>
-                              </apply>
-                            </apply>
-                            <cn type="integer"> 2 </cn>
-                          </apply>
-                          <apply>
-                            <power/>
-                            <apply>
-                              <times/>
-                              <cn> 0.4 </cn>
-                              <apply>
-                                <plus/>
-                                <cn type="integer"> -50 </cn>
-                                <ci> y </ci>
-                              </apply>
-                            </apply>
-                            <cn type="integer"> 2 </cn>
-                          </apply>
-                        </apply>
-                        <cn type="integer"> 100 </cn>
-                      </apply>
-                      <apply>
-                        <and/>
-                        <apply>
-                          <lt/>
-                          <ci> y </ci>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -10 </cn>
-                            <ci> x </ci>
-                          </apply>
-                        </apply>
-                        <apply>
-                          <gt/>
-                          <ci> y </ci>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> 110 </cn>
                             <apply>
                               <minus/>
                               <ci> x </ci>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 0.25 </cn>
+                              </apply>
                             </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <times/>
+                              <cn> 0.08 </cn>
+                              <cn type="integer"> 100 </cn>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
                           </apply>
                         </apply>
                         <apply>
-                          <lt/>
-                          <ci> x </ci>
-                          <cn type="integer"> 90 </cn>
+                          <divide/>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <minus/>
+                              <ci> y </ci>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 0.45 </cn>
+                              </apply>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <times/>
+                              <cn> 0.08 </cn>
+                              <cn type="integer"> 100 </cn>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
                         </apply>
                       </apply>
+                      <cn type="integer"> 1 </cn>
                     </apply>
                   </piece>
                   <otherwise>
