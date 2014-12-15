@@ -18,7 +18,7 @@ void oneStepSearch(int step_count, int step_k, int X, int Y, int Z, int Xindex, 
 
 bool containsSpatialMath(const ASTNode* node, const Model* model)
 {
-  for (int i = 0; i < node->getNumChildren(); ++i)
+  for (int i = 0; i < (int)node->getNumChildren(); ++i)
   {
     if (containsSpatialMath(node->getChild(i), model))
       return true;
