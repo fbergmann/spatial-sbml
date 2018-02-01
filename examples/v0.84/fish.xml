@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" spatial:required="true">
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model metaid="meta_fish_skin_pnas2_Application0" id="fish_skin_pnas2_Application0" name="fish-skin-pnas2_Application0">
     <annotation>
-      <oldspatialInfo xmlns="http://fbergmann.github.io/oldspatial-sbml/settings">
+      <spatialInfo xmlns="http://fbergmann.github.io/spatial-sbml/settings">
         <update step="1" freq="50"/>
         <items>
           <item sbmlId="u" palette="black-blue.txt" max="6"/>
           <item sbmlId="v" palette="black-green.txt" max="6"/>
           <item sbmlId="w" palette="black-red.txt" max="6"/>
         </items>
-      </oldspatialInfo>
+      </spatialInfo>
     </annotation>
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
@@ -19,12 +19,12 @@
       </unitDefinition>
       <unitDefinition id="volume">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="area">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="molecules">
@@ -34,22 +34,22 @@
       </unitDefinition>
       <unitDefinition id="umol_um3_litre_1">
         <listOfUnits>
-          <unit kind="mole" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-021"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um3">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um2">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="uM_um3_molecules_1">
         <listOfUnits>
-          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-021"/>
           <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
           <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
         </listOfUnits>
@@ -70,10 +70,10 @@
     </listOfUnitDefinitions>
     <listOfCompartments>
       <compartment id="outside" name="outside" spatialDimensions="3" size="50000" units="um3" constant="true">
-        <spatial:compartmentMapping spatial:id="outsideoutside" spatial:domainType="outside" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="outsideoutside" spatial:compartment="outside" spatial:domainType="outside" spatial:unitSize="1"/>
       </compartment>
       <compartment id="eye" name="eye" spatialDimensions="3" size="500" units="um3" constant="true">
-        <spatial:compartmentMapping spatial:id="fish_eyeeye" spatial:domainType="fish_eye" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="fish_eyeeye" spatial:compartment="eye" spatial:domainType="fish_eye" spatial:unitSize="1"/>
       </compartment>
       <compartment id="fish" name="fish" spatialDimensions="3" size="5000" units="um3" constant="true">
         <annotation>
@@ -83,7 +83,7 @@
             </vcell:VCMLSpecific>
           </vcell:VCellInfo>
         </annotation>
-        <spatial:compartmentMapping spatial:id="fish_bodyfish" spatial:domainType="fish_body" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="fish_bodyfish" spatial:compartment="fish" spatial:domainType="fish_body" spatial:unitSize="1"/>
       </compartment>
       <compartment id="Membrane0" name="Membrane0" spatialDimensions="2" size="1414" units="um2" constant="true">
         <annotation>
@@ -93,7 +93,7 @@
             </vcell:VCMLSpecific>
           </vcell:VCellInfo>
         </annotation>
-        <spatial:compartmentMapping spatial:id="fish_body_outside_membraneMembrane0" spatial:domainType="fish_body_outside_membrane" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="fish_body_outside_membraneMembrane0" spatial:compartment="Membrane0" spatial:domainType="fish_body_outside_membrane" spatial:unitSize="1"/>
       </compartment>
       <compartment id="Membrane1" name="Membrane1" spatialDimensions="2" size="304.6" units="um2" constant="true">
         <annotation>
@@ -103,11 +103,11 @@
             </vcell:VCMLSpecific>
           </vcell:VCellInfo>
         </annotation>
-        <spatial:compartmentMapping spatial:id="fish_body_fish_eye_membraneMembrane1" spatial:domainType="fish_body_fish_eye_membrane" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="fish_body_fish_eye_membraneMembrane1" spatial:compartment="Membrane1" spatial:domainType="fish_body_fish_eye_membrane" spatial:unitSize="1"/>
       </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="u" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="u" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -116,7 +116,7 @@
           </vcell:VCellInfo>
         </annotation>
       </species>
-      <species id="v" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="v" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -125,7 +125,7 @@
           </vcell:VCellInfo>
         </annotation>
       </species>
-      <species id="X" compartment="fish" initialConcentration="0" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="X" compartment="fish" initialConcentration="0" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -134,7 +134,7 @@
           </vcell:VCellInfo>
         </annotation>
       </species>
-      <species id="w" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="w" compartment="fish" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -145,65 +145,65 @@
       </species>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="x" value="0" constant="false">
-        <spatial:spatialSymbolReference spatial:spatialRef="x"/>
+      <parameter id="x" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
       </parameter>
-      <parameter id="y" value="0" constant="false">
-        <spatial:spatialSymbolReference spatial:spatialRef="y"/>
+      <parameter id="y" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
       </parameter>
-      <parameter id="u_diff_X" value="0.02" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="u" spatial:type="isotropic" spatial:coordinateReference1="cartesianX"/>
+      <parameter id="u_diff_X" value="0.02" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="u" spatial:coordinateIndex="0"/>
       </parameter>
-      <parameter id="u_diff_Y" value="0.02" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="u" spatial:type="isotropic" spatial:coordinateReference1="cartesianY"/>
+      <parameter id="u_diff_Y" value="0.02" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="u" spatial:coordinateIndex="1"/>
       </parameter>
-      <parameter id="u_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="u" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="u_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="u" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="u_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="u" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="u_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="u" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="u_BC_Ym" value="5" constant="true">
-        <spatial:boundaryCondition spatial:variable="u" spatial:type="Dirichlet" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="u_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="u" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="u_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="u" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="u_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="u" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="v_diff_X" value="0.02" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="v" spatial:type="isotropic" spatial:coordinateReference1="cartesianX"/>
+      <parameter id="v_diff_X" value="0.02" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="v" spatial:coordinateIndex="0"/>
       </parameter>
-      <parameter id="v_diff_Y" value="0.02" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="v" spatial:type="isotropic" spatial:coordinateReference1="cartesianY"/>
+      <parameter id="v_diff_Y" value="0.02" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="v" spatial:coordinateIndex="1"/>
       </parameter>
-      <parameter id="v_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="v" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="v_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="v" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="v_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="v" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="v_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="v" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="v_BC_Ym" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="v" spatial:type="Neumann" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="v_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="v" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="v_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="v" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="v_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="v" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="w_diff_X" value="0.2" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="w" spatial:type="isotropic" spatial:coordinateReference1="cartesianX"/>
+      <parameter id="w_diff_X" value="0.2" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="w" spatial:coordinateIndex="0"/>
       </parameter>
-      <parameter id="w_diff_Y" value="0.2" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="w" spatial:type="isotropic" spatial:coordinateReference1="cartesianY"/>
+      <parameter id="w_diff_Y" value="0.2" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="w" spatial:coordinateIndex="1"/>
       </parameter>
-      <parameter id="w_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="w" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="w_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="w" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="w_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="w" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="w_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="w" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="w_BC_Ym" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="w" spatial:type="Neumann" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="w_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="w" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="w_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="w" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="w_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="w" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
       <parameter id="KMOLE" value="0.00166112956810631" units="uM_um3_molecules_1" constant="true"/>
     </listOfParameters>
@@ -285,7 +285,7 @@
       </initialAssignment>
     </listOfInitialAssignments>
     <listOfReactions>
-      <reaction id="re0" name="re0" reversible="false" fast="false" spatial:isLocal="true">
+      <reaction id="re0" name="re0" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -413,7 +413,7 @@
           </listOfLocalParameters>
         </kineticLaw>
       </reaction>
-      <reaction id="re1" name="re1" reversible="false" fast="false" spatial:isLocal="true">
+      <reaction id="re1" name="re1" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -541,7 +541,7 @@
           </listOfLocalParameters>
         </kineticLaw>
       </reaction>
-      <reaction id="re2" name="re2" reversible="false" fast="false" spatial:isLocal="true">
+      <reaction id="re2" name="re2" reversible="false" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -670,53 +670,232 @@
         </kineticLaw>
       </reaction>
     </listOfReactions>
-    <spatial:geometry spatial:id="newGeometry" spatial:coordinateSystem="cartesian">
+    <spatial:geometry spatial:coordinateSystem="Cartesian">
       <spatial:listOfCoordinateComponents>
-        <spatial:coordinateComponent spatial:id="x" spatial:type="cartesianX">
-          <spatial:boundaryMin spatial:id="Xmin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:id="Xmax" spatial:value="100"/>
+        <spatial:coordinateComponent spatial:spatialId="x" spatial:componentType="cartesianX" spatial:sbmlUnit="um" spatial:index="0">
+          <spatial:boundaryMin spatial:spatialId="Xmin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Xmax" spatial:value="100"/>
         </spatial:coordinateComponent>
-        <spatial:coordinateComponent spatial:id="y" spatial:type="cartesianY">
-          <spatial:boundaryMin spatial:id="Ymin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:id="Ymax" spatial:value="100"/>
+        <spatial:coordinateComponent spatial:spatialId="y" spatial:componentType="cartesianY" spatial:sbmlUnit="um" spatial:index="1">
+          <spatial:boundaryMin spatial:spatialId="Ymin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Ymax" spatial:value="100"/>
         </spatial:coordinateComponent>
       </spatial:listOfCoordinateComponents>
       <spatial:listOfDomainTypes>
-        <spatial:domainType spatial:id="fish_eye" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:id="fish_body" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:id="outside" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:id="fish_body_outside_membrane" spatial:spatialDimensions="2"/>
-        <spatial:domainType spatial:id="fish_body_fish_eye_membrane" spatial:spatialDimensions="2"/>
+        <spatial:domainType spatial:spatialId="fish_eye" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="fish_body" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="outside" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="fish_body_outside_membrane" spatial:spatialDimensions="2"/>
+        <spatial:domainType spatial:spatialId="fish_body_fish_eye_membrane" spatial:spatialDimensions="2"/>
       </spatial:listOfDomainTypes>
       <spatial:listOfDomains>
-        <spatial:domain spatial:id="outside0" spatial:domainType="outside">
+        <spatial:domain spatial:spatialId="outside0" spatial:domainType="outside">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="0" spatial:coord2="0" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:id="fish_body1" spatial:domainType="fish_body">
+        <spatial:domain spatial:spatialId="fish_body1" spatial:domainType="fish_body">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="89" spatial:coord2="22" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:id="fish_eye2" spatial:domainType="fish_eye">
+        <spatial:domain spatial:spatialId="fish_eye2" spatial:domainType="fish_eye">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="22" spatial:coord2="38" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:id="membrane_outside0_fish_body1" spatial:domainType="fish_body_outside_membrane"/>
-        <spatial:domain spatial:id="membrane_fish_body1_fish_eye2" spatial:domainType="fish_body_fish_eye_membrane"/>
+        <spatial:domain spatial:spatialId="membrane_outside0_fish_body1" spatial:domainType="fish_body_outside_membrane"/>
+        <spatial:domain spatial:spatialId="membrane_fish_body1_fish_eye2" spatial:domainType="fish_body_fish_eye_membrane"/>
       </spatial:listOfDomains>
       <spatial:listOfAdjacentDomains>
-        <spatial:adjacentDomains spatial:id="membrane_outside0_fish_body1_fish_body1" spatial:domain1="membrane_outside0_fish_body1" spatial:domain2="fish_body1"/>
-        <spatial:adjacentDomains spatial:id="membrane_outside0_fish_body1_outside0" spatial:domain1="membrane_outside0_fish_body1" spatial:domain2="outside0"/>
-        <spatial:adjacentDomains spatial:id="membrane_fish_body1_fish_eye2_fish_eye2" spatial:domain1="membrane_fish_body1_fish_eye2" spatial:domain2="fish_eye2"/>
-        <spatial:adjacentDomains spatial:id="membrane_fish_body1_fish_eye2_fish_body1" spatial:domain1="membrane_fish_body1_fish_eye2" spatial:domain2="fish_body1"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_outside0_fish_body1_fish_body1" spatial:domain1="membrane_outside0_fish_body1" spatial:domain2="fish_body1"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_outside0_fish_body1_outside0" spatial:domain1="membrane_outside0_fish_body1" spatial:domain2="outside0"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_fish_body1_fish_eye2_fish_eye2" spatial:domain1="membrane_fish_body1_fish_eye2" spatial:domain2="fish_eye2"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_fish_body1_fish_eye2_fish_body1" spatial:domain1="membrane_fish_body1_fish_eye2" spatial:domain2="fish_body1"/>
       </spatial:listOfAdjacentDomains>
       <spatial:listOfGeometryDefinitions>
-        <spatial:analyticGeometry spatial:id="Geometry225509093" spatial:isActive="true">
+        <spatial:analyticGeometry spatial:spatialId="Geometry225509093">
           <spatial:listOfAnalyticVolumes>
-            <spatial:analyticVolume spatial:id="fish_eye" spatial:functionType="layered" spatial:ordinal="2" spatial:domainType="fish_eye">
+            <spatial:analyticVolume spatial:spatialId="fish_body" spatial:domainType="fish_body" spatial:functionType="layered" spatial:ordinal="1">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <piecewise>
+                  <piece>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <and/>
+                      <apply>
+                        <or/>
+                        <apply>
+                          <lt/>
+                          <apply>
+                            <plus/>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> x </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.42 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.37 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> y </ci>
+                                  <apply>
+                                    <divide/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn type="integer"> 2 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.25 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                        <apply>
+                          <and/>
+                          <apply>
+                            <lt/>
+                            <ci> y </ci>
+                            <apply>
+                              <plus/>
+                              <apply>
+                                <minus/>
+                                <apply>
+                                  <times/>
+                                  <cn type="integer"> 100 </cn>
+                                  <cn> 0.1 </cn>
+                                </apply>
+                              </apply>
+                              <ci> x </ci>
+                            </apply>
+                          </apply>
+                          <apply>
+                            <gt/>
+                            <ci> y </ci>
+                            <apply>
+                              <plus/>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 1.1 </cn>
+                              </apply>
+                              <apply>
+                                <minus/>
+                                <ci> x </ci>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <apply>
+                            <lt/>
+                            <ci> x </ci>
+                            <apply>
+                              <times/>
+                              <cn type="integer"> 100 </cn>
+                              <cn> 0.9 </cn>
+                            </apply>
+                          </apply>
+                        </apply>
+                      </apply>
+                      <apply>
+                        <not/>
+                        <apply>
+                          <lt/>
+                          <apply>
+                            <plus/>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> x </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.25 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn> 0.08 </cn>
+                                  <cn type="integer"> 100 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                            <apply>
+                              <divide/>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <minus/>
+                                  <ci> y </ci>
+                                  <apply>
+                                    <times/>
+                                    <cn type="integer"> 100 </cn>
+                                    <cn> 0.45 </cn>
+                                  </apply>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                              <apply>
+                                <power/>
+                                <apply>
+                                  <times/>
+                                  <cn> 0.08 </cn>
+                                  <cn type="integer"> 100 </cn>
+                                </apply>
+                                <cn type="integer"> 2 </cn>
+                              </apply>
+                            </apply>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                      </apply>
+                    </apply>
+                  </piece>
+                  <otherwise>
+                    <cn type="integer"> 0 </cn>
+                  </otherwise>
+                </piecewise>
+              </math>
+            </spatial:analyticVolume>
+            <spatial:analyticVolume spatial:spatialId="fish_eye" spatial:domainType="fish_eye" spatial:functionType="layered" spatial:ordinal="2">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <piecewise>
                   <piece>
@@ -726,102 +905,57 @@
                       <apply>
                         <plus/>
                         <apply>
-                          <power/>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -24 </cn>
-                            <ci> x </ci>
-                          </apply>
-                          <cn type="integer"> 2 </cn>
-                        </apply>
-                        <apply>
-                          <power/>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -58 </cn>
-                            <ci> y </ci>
-                          </apply>
-                          <cn type="integer"> 2 </cn>
-                        </apply>
-                      </apply>
-                      <cn type="integer"> 25 </cn>
-                    </apply>
-                  </piece>
-                  <otherwise>
-                    <cn type="integer"> 0 </cn>
-                  </otherwise>
-                </piecewise>
-              </math>
-            </spatial:analyticVolume>
-            <spatial:analyticVolume spatial:id="fish_body" spatial:functionType="layered" spatial:ordinal="1" spatial:domainType="fish_body">
-              <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <piecewise>
-                  <piece>
-                    <cn type="integer"> 1 </cn>
-                    <apply>
-                      <or/>
-                      <apply>
-                        <lt/>
-                        <apply>
-                          <plus/>
+                          <divide/>
                           <apply>
                             <power/>
-                            <apply>
-                              <times/>
-                              <cn> 0.27 </cn>
-                              <apply>
-                                <plus/>
-                                <cn type="integer"> -42 </cn>
-                                <ci> x </ci>
-                              </apply>
-                            </apply>
-                            <cn type="integer"> 2 </cn>
-                          </apply>
-                          <apply>
-                            <power/>
-                            <apply>
-                              <times/>
-                              <cn> 0.1 </cn>
-                              <apply>
-                                <plus/>
-                                <cn type="integer"> -50 </cn>
-                                <ci> y </ci>
-                              </apply>
-                            </apply>
-                            <cn type="integer"> 2 </cn>
-                          </apply>
-                        </apply>
-                        <cn type="integer"> 100 </cn>
-                      </apply>
-                      <apply>
-                        <and/>
-                        <apply>
-                          <lt/>
-                          <ci> y </ci>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> -10 </cn>
-                            <ci> x </ci>
-                          </apply>
-                        </apply>
-                        <apply>
-                          <gt/>
-                          <ci> y </ci>
-                          <apply>
-                            <plus/>
-                            <cn type="integer"> 110 </cn>
                             <apply>
                               <minus/>
                               <ci> x </ci>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 0.25 </cn>
+                              </apply>
                             </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <times/>
+                              <cn> 0.08 </cn>
+                              <cn type="integer"> 100 </cn>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
                           </apply>
                         </apply>
                         <apply>
-                          <lt/>
-                          <ci> x </ci>
-                          <cn type="integer"> 90 </cn>
+                          <divide/>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <minus/>
+                              <ci> y </ci>
+                              <apply>
+                                <times/>
+                                <cn type="integer"> 100 </cn>
+                                <cn> 0.45 </cn>
+                              </apply>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
+                          <apply>
+                            <power/>
+                            <apply>
+                              <times/>
+                              <cn> 0.08 </cn>
+                              <cn type="integer"> 100 </cn>
+                            </apply>
+                            <cn type="integer"> 2 </cn>
+                          </apply>
                         </apply>
                       </apply>
+                      <cn type="integer"> 1 </cn>
                     </apply>
                   </piece>
                   <otherwise>
@@ -830,7 +964,7 @@
                 </piecewise>
               </math>
             </spatial:analyticVolume>
-            <spatial:analyticVolume spatial:id="outside" spatial:functionType="layered" spatial:ordinal="0" spatial:domainType="outside">
+            <spatial:analyticVolume spatial:spatialId="outside" spatial:domainType="outside" spatial:functionType="layered" spatial:ordinal="0">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <cn type="integer"> 1 </cn>
               </math>

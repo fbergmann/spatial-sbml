@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" spatial:required="true">
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="false" spatial:required="true">
   <model id="advection_test_simulation" name="advection_test_simulation">
     <annotation>
-      <oldspatialInfo xmlns="http://oldspatial-sbml/settings">
+      <spatialInfo xmlns="http://spatial-sbml/settings">
         <update step="0.05" freq="50"/>
         <items>
           <item sbmlId="B_cytosol" palette="black-blue.txt" max="6"/>
           <item sbmlId="C_cytosol" palette="black-green.txt" max="1000"/>
           <item sbmlId="A_cytosol" palette="black-red.txt" max="6"/>
         </items>
-      </oldspatialInfo>
+      </spatialInfo>
       <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
         <vcell:VCMLSpecific>
           <vcell:BioModel Name="advection_test" KeyValue="62900696"/>
@@ -25,12 +25,12 @@
       </unitDefinition>
       <unitDefinition id="volume">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="area">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="molecules">
@@ -40,22 +40,22 @@
       </unitDefinition>
       <unitDefinition id="umol_um3_litre_1">
         <listOfUnits>
-          <unit kind="mole" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-021"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um3">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um2">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="uM_um3_molecules_1">
         <listOfUnits>
-          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-021"/>
           <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
           <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
         </listOfUnits>
@@ -63,7 +63,7 @@
     </listOfUnitDefinitions>
     <listOfCompartments>
       <compartment id="extracellular" name="extracellular" spatialDimensions="3" units="um3" constant="true">
-        <spatial:compartmentMapping spatial:id="subdomain0extracellular" spatial:domainType="subdomain0" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="subdomain0extracellular" spatial:compartment="extracellular" spatial:domainType="subdomain0" spatial:unitSize="1"/>
       </compartment>
       <compartment id="cytosol" name="cytosol" spatialDimensions="3" units="um3" constant="true">
         <annotation>
@@ -73,7 +73,7 @@
             </vcell:VCMLSpecific>
           </vcell:VCellInfo>
         </annotation>
-        <spatial:compartmentMapping spatial:id="subdomain1cytosol" spatial:domainType="subdomain1" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="subdomain1cytosol" spatial:compartment="cytosol" spatial:domainType="subdomain1" spatial:unitSize="1"/>
       </compartment>
       <compartment id="membrane0" name="membrane0" spatialDimensions="2" units="um2" constant="true">
         <annotation>
@@ -83,11 +83,11 @@
             </vcell:VCMLSpecific>
           </vcell:VCellInfo>
         </annotation>
-        <spatial:compartmentMapping spatial:id="subdomain0_subdomain1_membranemembrane0" spatial:domainType="subdomain0_subdomain1_membrane" spatial:unitSize="1"/>
+        <spatial:compartmentMapping spatial:spatialId="subdomain0_subdomain1_membranemembrane0" spatial:compartment="membrane0" spatial:domainType="subdomain0_subdomain1_membrane" spatial:unitSize="1"/>
       </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="B_cytosol" compartment="cytosol" initialConcentration="0" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="B_cytosol" compartment="cytosol" initialConcentration="0" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -96,7 +96,7 @@
           </vcell:VCellInfo>
         </annotation>
       </species>
-      <species id="C_cytosol" compartment="cytosol" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="C_cytosol" compartment="cytosol" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -105,7 +105,7 @@
           </vcell:VCellInfo>
         </annotation>
       </species>
-      <species id="A_cytosol" compartment="cytosol" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" spatial:isSpatial="true">
+      <species id="A_cytosol" compartment="cytosol" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
         <annotation>
           <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
             <vcell:VCMLSpecific>
@@ -116,62 +116,62 @@
       </species>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="x" value="0" constant="false">
-        <spatial:spatialSymbolReference spatial:spatialRef="x"/>
+      <parameter id="x" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
       </parameter>
-      <parameter id="y" value="0" constant="false">
-        <spatial:spatialSymbolReference spatial:spatialRef="y"/>
+      <parameter id="y" value="0" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
       </parameter>
-      <parameter id="B_cytosol_diff" value="2" constant="true">
-        <spatial:diffusionCoefficient spatial:variable="B_cytosol" spatial:type="isotropic"/>
+      <parameter id="B_cytosol_diff" value="2" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="B_cytosol"/>
       </parameter>
-      <parameter id="B_cytosol_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="B_cytosol_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="B_cytosol_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="B_cytosol_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="B_cytosol_BC_Ym" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="B_cytosol_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="B_cytosol_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="B_cytosol_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="B_cytosol" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="C_cytosol_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="C_cytosol_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="C_cytosol_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="C_cytosol_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="C_cytosol_BC_Ym" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="C_cytosol_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="C_cytosol_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="C_cytosol_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="C_cytosol" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="C_cytosol_Vel_X" value="2" constant="true">
-        <spatial:advectionCoefficient spatial:variable="C_cytosol" spatial:coordinate="cartesianX"/>
+      <parameter id="C_cytosol_Vel_X" value="2" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:advectionCoefficient spatial:variable="C_cytosol" spatial:coordinateIndex="0"/>
       </parameter>
-      <parameter id="C_cytosol_Vel_Y" value="-2" constant="true">
-        <spatial:advectionCoefficient spatial:variable="C_cytosol" spatial:coordinate="cartesianY"/>
+      <parameter id="C_cytosol_Vel_Y" value="-2" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:advectionCoefficient spatial:variable="C_cytosol" spatial:coordinateIndex="1"/>
       </parameter>
-      <parameter id="A_cytosol_BC_Xm" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmin"/>
+      <parameter id="A_cytosol_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="A_cytosol_BC_Xp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Xmax"/>
+      <parameter id="A_cytosol_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="A_cytosol_BC_Ym" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymin"/>
+      <parameter id="A_cytosol_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
       </parameter>
-      <parameter id="A_cytosol_BC_Yp" value="0" constant="true">
-        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:type="Neumann" spatial:coordinateBoundary="Ymax"/>
+      <parameter id="A_cytosol_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="A_cytosol" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
       </parameter>
-      <parameter id="A_cytosol_Vel_X" value="4" constant="true">
-        <spatial:advectionCoefficient spatial:variable="A_cytosol" spatial:coordinate="cartesianX"/>
+      <parameter id="A_cytosol_Vel_X" value="4" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:advectionCoefficient spatial:variable="A_cytosol" spatial:coordinateIndex="0"/>
       </parameter>
-      <parameter id="A_cytosol_Vel_Y" value="-3" constant="true">
-        <spatial:advectionCoefficient spatial:variable="A_cytosol" spatial:coordinate="cartesianY"/>
+      <parameter id="A_cytosol_Vel_Y" value="-3" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:advectionCoefficient spatial:variable="A_cytosol" spatial:coordinateIndex="1"/>
       </parameter>
       <parameter id="KMOLE" value="0.00166112956810631" units="uM_um3_molecules_1" constant="true"/>
     </listOfParameters>
@@ -282,43 +282,43 @@
         </math>
       </initialAssignment>
     </listOfInitialAssignments>
-    <spatial:geometry spatial:id="newGeometry" spatial:coordinateSystem="cartesian">
+    <spatial:geometry spatial:coordinateSystem="Cartesian">
       <spatial:listOfCoordinateComponents>
-        <spatial:coordinateComponent spatial:id="x" spatial:type="cartesianX">
-          <spatial:boundaryMin spatial:id="Xmin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:id="Xmax" spatial:value="100"/>
+        <spatial:coordinateComponent spatial:spatialId="x" spatial:componentType="cartesianX" spatial:sbmlUnit="um" spatial:index="0">
+          <spatial:boundaryMin spatial:spatialId="Xmin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Xmax" spatial:value="100"/>
         </spatial:coordinateComponent>
-        <spatial:coordinateComponent spatial:id="y" spatial:type="cartesianY">
-          <spatial:boundaryMin spatial:id="Ymin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:id="Ymax" spatial:value="100"/>
+        <spatial:coordinateComponent spatial:spatialId="y" spatial:componentType="cartesianY" spatial:sbmlUnit="um" spatial:index="1">
+          <spatial:boundaryMin spatial:spatialId="Ymin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Ymax" spatial:value="100"/>
         </spatial:coordinateComponent>
       </spatial:listOfCoordinateComponents>
       <spatial:listOfDomainTypes>
-        <spatial:domainType spatial:id="subdomain1" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:id="subdomain0" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:id="subdomain0_subdomain1_membrane" spatial:spatialDimensions="2"/>
+        <spatial:domainType spatial:spatialId="subdomain1" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="subdomain0" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="subdomain0_subdomain1_membrane" spatial:spatialDimensions="2"/>
       </spatial:listOfDomainTypes>
       <spatial:listOfDomains>
-        <spatial:domain spatial:id="subdomain00" spatial:domainType="subdomain0">
+        <spatial:domain spatial:spatialId="subdomain00" spatial:domainType="subdomain0">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="0" spatial:coord2="0" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:id="subdomain11" spatial:domainType="subdomain1">
+        <spatial:domain spatial:spatialId="subdomain11" spatial:domainType="subdomain1">
           <spatial:listOfInteriorPoints>
             <spatial:interiorPoint spatial:coord1="45" spatial:coord2="17" spatial:coord3="5"/>
           </spatial:listOfInteriorPoints>
         </spatial:domain>
-        <spatial:domain spatial:id="membrane_subdomain00_subdomain11" spatial:domainType="subdomain0_subdomain1_membrane"/>
+        <spatial:domain spatial:spatialId="membrane_subdomain00_subdomain11" spatial:domainType="subdomain0_subdomain1_membrane"/>
       </spatial:listOfDomains>
       <spatial:listOfAdjacentDomains>
-        <spatial:adjacentDomains spatial:id="membrane_subdomain00_subdomain11_subdomain11" spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain11"/>
-        <spatial:adjacentDomains spatial:id="membrane_subdomain00_subdomain11_subdomain00" spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain00"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_subdomain00_subdomain11_subdomain11" spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain11"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_subdomain00_subdomain11_subdomain00" spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain00"/>
       </spatial:listOfAdjacentDomains>
       <spatial:listOfGeometryDefinitions>
-        <spatial:analyticGeometry spatial:id="cyt" spatial:isActive="true">
+        <spatial:analyticGeometry spatial:spatialId="cyt">
           <spatial:listOfAnalyticVolumes>
-            <spatial:analyticVolume spatial:id="subdomain1" spatial:functionType="layered" spatial:ordinal="1" spatial:domainType="subdomain1">
+            <spatial:analyticVolume spatial:spatialId="subdomain1" spatial:domainType="subdomain1" spatial:functionType="layered" spatial:ordinal="1">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <piecewise>
                   <piece>
@@ -369,7 +369,7 @@
                 </piecewise>
               </math>
             </spatial:analyticVolume>
-            <spatial:analyticVolume spatial:id="subdomain0" spatial:functionType="layered" spatial:ordinal="0" spatial:domainType="subdomain0">
+            <spatial:analyticVolume spatial:spatialId="subdomain0" spatial:domainType="subdomain0" spatial:functionType="layered" spatial:ordinal="0">
               <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <cn type="integer"> 1 </cn>
               </math>

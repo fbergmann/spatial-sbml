@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" 
+level="3" version="1">
   <model metaid="COPASI1" id="New_Model_Application0" name="New Model_Application0">
     <listOfUnitDefinitions>
       <unitDefinition id="substance">
@@ -9,12 +10,12 @@
       </unitDefinition>
       <unitDefinition id="volume">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="area">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="molecules">
@@ -24,22 +25,22 @@
       </unitDefinition>
       <unitDefinition id="umol_um3_litre_1">
         <listOfUnits>
-          <unit kind="mole" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-021"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um3">
         <listOfUnits>
-          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="um2">
         <listOfUnits>
-          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="uM_um3_molecules_1">
         <listOfUnits>
-          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-021"/>
           <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
           <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
         </listOfUnits>
@@ -62,7 +63,7 @@
       </unitDefinition>
       <unitDefinition id="_one__0E_6">
         <listOfUnits>
-          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-06"/>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-006"/>
         </listOfUnits>
       </unitDefinition>
       <unitDefinition id="_one_000000_0">
@@ -90,8 +91,8 @@
       <compartment id="compartment_1" name="compartment_1" spatialDimensions="3" size="1" constant="true"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="species_1" compartment="compartment_1" initialConcentration="6" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="species_2" compartment="compartment_1" initialConcentration="0.1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="species_1" initialConcentration="6" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" />
+      <species id="species_2" initialConcentration="0.1" compartment="compartment_1" substanceUnits="molecules" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" />
     </listOfSpecies>
     <listOfParameters>
       <parameter id="v1" value="0.06" constant="true"/>
