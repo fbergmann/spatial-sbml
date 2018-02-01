@@ -24,7 +24,8 @@
 
 
 #include <sbml/SBMLTypes.h>
-#include <sbml/packages/spatial/extension/SpatialSpeciesRxnPlugin.h>
+#include <sbml/packages/spatial/extension/SpatialSpeciesPlugin.h>
+#include <sbml/packages/spatial/extension/SpatialReactionPlugin.h>
 #include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
 #include <sbml/packages/spatial/extension/SpatialParameterPlugin.h>
 
@@ -989,15 +990,32 @@ bool SpatialMainWindow::loadFromDocument(SBMLDocument* toLoad)
   lstSpecies->clear();
   ui->lstDose->clear();
 
-  maxX = modelPlugin->getGeometry()->getCoordinateComponent("x")->getBoundaryMax()->getValue() + 1;
-  maxY = modelPlugin->getGeometry()->getCoordinateComponent("y")->getBoundaryMax()->getValue() + 1;
+  // some sanity checks
+  auto* geometry = modelPlugin->getGeometry();
+  auto* coordinate = geometry == NULL ? NULL : geometry->getCoordinateComponentByKind(SPATIAL_COORDINATEKIND_CARTESIAN_X);
+  auto* bmax = coordinate == NULL ? NULL : coordinate->getBoundaryMax();
+  if (bmax == NULL)
+  {
+    QMessageBox messageBox(this);
+    messageBox.setWindowTitle(tr("Spatial UI"));
+    messageBox.setText(
+      tr("It would seem that the given model '%1' does not use the spatial package.\n")
+      .arg(curFile));
+    messageBox.setDetailedText(toLoad->getErrorLog()->toString().c_str());
+    messageBox.exec();
+    return false;
+  }
+
+
+  maxX = modelPlugin->getGeometry()->getCoordinateComponentByKind(SPATIAL_COORDINATEKIND_CARTESIAN_X)->getBoundaryMax()->getValue() + 1;
+  maxY = modelPlugin->getGeometry()->getCoordinateComponentByKind(SPATIAL_COORDINATEKIND_CARTESIAN_Y)->getBoundaryMax()->getValue() + 1;
 
   
 
   for(unsigned int i = 0; i < model->getNumSpecies(); i++)
   {
     Species* species = model->getSpecies(i);
-    SpatialSpeciesRxnPlugin* plugin = (SpatialSpeciesRxnPlugin*)species->getPlugin("spatial");
+    SpatialSpeciesPlugin* plugin = (SpatialSpeciesPlugin*)species->getPlugin("spatial");
     if (plugin != NULL)
     {
       if (plugin->getIsSpatial())

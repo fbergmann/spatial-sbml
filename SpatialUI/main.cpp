@@ -2,11 +2,6 @@
 #include "spatialapplication.h"
 #include "spatialmainwidget.h"
 
-
-#ifdef Darwin
-
-#endif
-
 int main(int argc, char *argv[])
 {
   Q_INIT_RESOURCE(spatialresources);

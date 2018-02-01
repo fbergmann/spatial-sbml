@@ -102,14 +102,14 @@ SET(DIRS)
 
 foreach(${lib} ${EXTRA_LIBS})
   if (EXISTS ${lib})
-	get_filename_component(dir ${lib} PATH)	
-	SET(DIRS  ${DIRS} ${dir})
+	  get_filename_component(dir ${lib} PATH)	
+	  SET(DIRS  ${DIRS} ${dir})
   endif()
 endforeach()
 
 if (NOT DIRS)
    if (EXISTS "${EXTRA_LIBS}")
-	get_filename_component(DIRS ${EXTRA_LIBS} PATH)
+	   get_filename_component(DIRS ${EXTRA_LIBS} PATH)
    endif()
 endif()
 

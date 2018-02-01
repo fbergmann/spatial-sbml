@@ -50,7 +50,6 @@
 
 #include <sbml/extension/SBMLExtensionRegistry.h>
 
-#include <sbml/packages/req/common/RequiredElementsExtensionTypes.h>
 #include <sbml/packages/spatial/common/SpatialExtensionTypes.h>
 #include <sbml/packages/spatial/extension/SpatialModelPlugin.h>
 #include <sbml/packages/spatial/extension/SpatialExtension.h>
@@ -135,7 +134,7 @@ bool isNormalParameter(SpatialParameterPlugin *pPlugin )
 {
   if (pPlugin == NULL) return true;
 
-  if (pPlugin ->getSpatialSymbolReference() != NULL && !pPlugin ->getSpatialSymbolReference()->getSpatialId().empty())
+  if (pPlugin ->getSpatialSymbolReference() != NULL && !pPlugin ->getSpatialSymbolReference()->getId().empty())
     return false;
 
   if (pPlugin ->getDiffusionCoefficient() != NULL && !pPlugin ->getDiffusionCoefficient()->getVariable().empty())
@@ -178,7 +177,7 @@ void SpatialSimulator::setParameter(const std::string &id, double value)
     if (dc != NULL) {
       variableInfo *sInfo = searchInfoById(varInfoList,dc->getVariable().c_str());
       if (sInfo != 0) {
-        variableInfo *dci = sInfo->diffCInfo[dc->getCoordinateIndex()];
+        variableInfo *dci = sInfo->diffCInfo[dc->getCoordinateReference1()];
         if (dci != NULL)
         {
           if (dci->isUniform && dci->value != NULL)
@@ -232,7 +231,7 @@ Parameter* SpatialSimulator::getDiffusionCoefficientForSpecies(const std::string
     SpatialParameterPlugin *pPlugin = static_cast<SpatialParameterPlugin*>(current->getPlugin("spatial"));
     if (pPlugin == NULL) continue;
     DiffusionCoefficient* coefficient = pPlugin->getDiffusionCoefficient();
-    if (coefficient == NULL || coefficient->getVariable() != id || coefficient->getCoordinateIndex() != index)
+    if (coefficient == NULL || coefficient->getVariable() != id || coefficient->getCoordinateReference1() != index)
       continue;    
     return current;
   }
@@ -492,7 +491,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
           if (cPlugin != 0) 
           {
             const std::string& domainType = cPlugin->getCompartmentMapping()->getDomainType();
-            SampledField *samField = sfGeo->getSampledField();
+            SampledField *samField = geometry->getSampledField(sfGeo->getSampledField());
             SampledVolume *samVol = 0;
             for (k = 0; k < sfGeo->getNumSampledVolumes(); k++) {
               if (sfGeo->getSampledVolume(k)->getDomainType() == domainType) {
@@ -500,10 +499,9 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
               }
             }
             if (samVol == NULL) continue;
-            ImageData *idata = samField->getImageData();
-            unsigned int  uncomprLen =idata->getUncompressedLength();
+            unsigned int  uncomprLen = samField->getUncompressedLength();
             int *uncompr = (int*)calloc(sizeof(int), uncomprLen);
-            idata->getUncompressed(uncompr);
+            samField->getUncompressed(uncompr);
 
             GeometryInfo *geoInfo = new GeometryInfo;
             InitializeAVolInfo(geoInfo);
@@ -537,7 +535,10 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             for (Z = 0; Z < Zindex; Z += 2) {
               for (Y = 0; Y < Yindex; Y += 2) {
                 for (X = 0; X < Xindex; X += 2) {
-                  if (static_cast<unsigned int>(uncompr[Z / 2 * samField->getNumSamples2() * samField->getNumSamples1() + (samField->getNumSamples2() - Y / 2 - 1) * samField->getNumSamples1() + X / 2]) == static_cast<unsigned int>(samVol->getSampledValue())) {
+                  int currentZ = Z / 2 * samField->getNumSamples2() * samField->getNumSamples1();
+                  int currentY = (samField->getNumSamples2() - Y / 2 - 1) * samField->getNumSamples1();
+                  int currentX = X / 2;
+                  if (static_cast<unsigned int>(uncompr[currentZ + currentY + currentX]) == static_cast<unsigned int>(samVol->getSampledValue())) {
                     geoInfo->isDomain[Z * Yindex * Xindex + Y * Xindex + X] = 1;
                     geoInfo->domainIndex.push_back(Z * Yindex * Xindex + Y * Xindex + X);
                   } else {
@@ -741,7 +742,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
     for (j = 0; j < geometry->getNumDomains(); j++) {//Domain
       Domain *domain = geometry->getDomain(j);
       if (domain->getDomainType() == geoInfo->domainTypeId) {
-        geoInfo->domainIdList.push_back(domain->getSpatialId().c_str());
+        geoInfo->domainIdList.push_back(domain->getId().c_str());
       }
     }
   }

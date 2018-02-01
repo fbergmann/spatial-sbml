@@ -1,7 +1,6 @@
 #include <cmath>
 #include "sbml/SBMLTypes.h"
 #include "sbml/extension/SBMLExtensionRegistry.h"
-#include "sbml/packages/req/common/RequiredElementsExtensionTypes.h"
 #include "sbml/packages/spatial/common/SpatialExtensionTypes.h"
 #include "sbml/packages/spatial/extension/SpatialModelPlugin.h"
 #include "sbml/packages/spatial/extension/SpatialExtension.h"

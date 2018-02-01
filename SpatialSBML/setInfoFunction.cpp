@@ -1,6 +1,5 @@
 #include "sbml/SBMLTypes.h"
 #include "sbml/extension/SBMLExtensionRegistry.h"
-#include "sbml/packages/req/common/RequiredElementsExtensionTypes.h"
 #include "sbml/packages/spatial/common/SpatialExtensionTypes.h"
 #include "sbml/packages/spatial/extension/SpatialModelPlugin.h"
 #include "sbml/packages/spatial/extension/SpatialExtension.h"
@@ -12,6 +11,21 @@
 #include "initializeFunction.h"
 #include "searchFunction.h"
 #include "astFunction.h"
+
+int getIndex(CoordinateKind_t kind)
+{
+  switch (kind)
+  {
+  case SPATIAL_COORDINATEKIND_CARTESIAN_X:
+  case SPATIAL_COORDINATEKIND_INVALID:
+  default:
+    return 0;
+  case SPATIAL_COORDINATEKIND_CARTESIAN_Y:
+    return 1;
+  case SPATIAL_COORDINATEKIND_CARTESIAN_Z:
+    return 2;
+  }
+}
 
 void stepSearch(int l, int preD, int step_count, int step_k, int X, int Y, int Z, int Xindex, int Yindex, int Zindex, int *horComponent, int *verComponent, int *isD, string plane);
 void oneStepSearch(int step_count, int step_k, int X, int Y, int Z, int Xindex, int Yindex, int Zindex, int *horComponent, int *verComponent, int *isD, string plane);
@@ -32,7 +46,7 @@ bool containsSpatialMath(const ASTNode* node, const Model* model)
 
   if (element->getTypeCode() == SBML_SPECIES)
   {
-    SpatialSpeciesRxnPlugin* plug = dynamic_cast<SpatialSpeciesRxnPlugin*>(element->getPlugin("spatial"));
+    SpatialSpeciesPlugin* plug = dynamic_cast<SpatialSpeciesPlugin*>(element->getPlugin("spatial"));
     if (plug == NULL) return false;
     return plug->getIsSpatial();
   }    
@@ -86,7 +100,7 @@ void setSpeciesInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, unsig
 	int numOfVolIndexes = Xindex * Yindex * Zindex;
   for (i = 0; i < numOfSpecies; ++i) {
     Species *s = los->get(i);
-    SpatialSpeciesRxnPlugin* splugin = static_cast<SpatialSpeciesRxnPlugin*>(s->getPlugin("spatial"));
+    SpatialSpeciesPlugin* splugin = static_cast<SpatialSpeciesPlugin*>(s->getPlugin("spatial"));
     //species have spatial extension
     variableInfo *info = new variableInfo;
     InitializeVarInfo(info);
@@ -160,17 +174,17 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 	//cc = geometry->getCoordinateComponent(p->getId());
 	for (i = 0; i < geometry->getNumCoordinateComponents(); i++) {
 		CoordinateComponent *cc = geometry->getCoordinateComponent(i);
-		if (cc->getComponentType() == "cartesianX") {
-			XmaxId = cc->getBoundaryMax()->getSpatialId();
-			XminId = cc->getBoundaryMin()->getSpatialId();
+		if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_X) {
+			XmaxId = cc->getBoundaryMax()->getId();
+			XminId = cc->getBoundaryMin()->getId();
 		}
-		if (cc->getComponentType() == "cartesianY") {
-			YmaxId = cc->getBoundaryMax()->getSpatialId();
-			YminId = cc->getBoundaryMin()->getSpatialId();
+		if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_Y) {
+			YmaxId = cc->getBoundaryMax()->getId();
+			YminId = cc->getBoundaryMin()->getId();
 		}
-		if (cc->getComponentType() == "cartesianZ") {
-			ZmaxId = cc->getBoundaryMax()->getSpatialId();
-			ZminId = cc->getBoundaryMin()->getSpatialId();
+		if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_Z) {
+			ZmaxId = cc->getBoundaryMax()->getId();
+			ZminId = cc->getBoundaryMin()->getId();
 		}
 	}
 
@@ -199,7 +213,7 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 					sInfo->diffCInfo = new variableInfo*[3];
 					memset(sInfo->diffCInfo, 0, 3*sizeof(variableInfo*));
 				}
-        if (!pPlugin->getDiffusionCoefficient()->isSetCoordinateIndex())
+        if (!pPlugin->getDiffusionCoefficient()->isSetCoordinateReference1())
         {
           for (int coordIndex = 0 ; coordIndex < 3; ++coordIndex)
           {
@@ -213,25 +227,25 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
         }
         else
         {
-				sInfo->diffCInfo[pPlugin->getDiffusionCoefficient()->getCoordinateIndex()] = info;
+				sInfo->diffCInfo[getIndex(pPlugin->getDiffusionCoefficient()->getCoordinateReference1())] = info;
 				if (model->getRule(info->id) == 0 && p->isSetValue()) {
 					info->isResolved = true;
 					info->isUniform = true;
-					sInfo->diffCInfo[pPlugin->getDiffusionCoefficient()->getCoordinateIndex()]->value = new double(p->getValue());
+					sInfo->diffCInfo[getIndex(pPlugin->getDiffusionCoefficient()->getCoordinateReference1())]->value = new double(p->getValue());
 				}
         }
 				break;
-			case SBML_SPATIAL_ADVECTIONCOEFFICIENT://advection coefficient
+			case SBML_SPATIAL_ADVECTIONCOEFFICIENT: // advection coefficient
 				sInfo = searchInfoById(varInfoList, pPlugin->getAdvectionCoefficient()->getVariable().c_str());
 				if (sInfo->adCInfo == 0) {
 					sInfo->adCInfo = new variableInfo*[3];          
 					memset(sInfo->adCInfo, 0, 3* sizeof(variableInfo*));
 				}
-				sInfo->adCInfo[pPlugin->getAdvectionCoefficient()->getCoordinateIndex()] = info;
+				sInfo->adCInfo[getIndex(pPlugin->getAdvectionCoefficient()->getCoordinate())] = info;
 				if (model->getRule(info->id) == 0 && p->isSetValue()) {
 					info->isResolved = true;
 					info->isUniform = true;
-					sInfo->adCInfo[pPlugin->getAdvectionCoefficient()->getCoordinateIndex()]->value = new double(p->getValue());
+					sInfo->adCInfo[getIndex(pPlugin->getAdvectionCoefficient()->getCoordinate())]->value = new double(p->getValue());
 				}
 				break;
 			case SBML_SPATIAL_BOUNDARYCONDITION://boundary condition
@@ -240,6 +254,14 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 				if (sInfo->boundaryInfo == 0) {
 					sInfo->boundaryInfo = new variableInfo*[6];
 					memset(sInfo->boundaryInfo, 0, 6* sizeof(variableInfo*));
+          for (int i = 0; i < 6; ++i)
+          {
+            sInfo->boundaryInfo[i] = new variableInfo();
+            
+            sInfo->boundaryInfo[i]->isResolved = true;
+            sInfo->boundaryInfo[i]->isUniform = true;
+            sInfo->boundaryInfo[i]->value = new double (0.0);
+          }
 				}
 				if (sInfo != 0 &&bcon != 0) {
 					int boundaryIndex = -1;
@@ -254,19 +276,26 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 						if (model->getRule(info->id) == 0 && p->isSetValue()) {
 							info->isResolved = true;
 							info->isUniform = true;
+              delete sInfo->boundaryInfo[boundaryIndex]->value;
 							sInfo->boundaryInfo[boundaryIndex]->value = new double(p->getValue());
 						}
 					}
 				}
 				break;
-			case SBML_SPATIAL_SPATIALSYMBOLREFERENCE://spatial simbol refference
-				if (pPlugin->getSpatialSymbolReference()->getType() == "coordinateComponent") {
+			case SBML_SPATIAL_SPATIALSYMBOLREFERENCE://spatial symbol reference
+				{
 					cc = geometry->getCoordinateComponent(p->getId());
+          // recover for new format
+          if (cc == NULL)
+          {
+            const auto* ref = pPlugin->getSpatialSymbolReference();
+            cc = ref == NULL ? NULL : geometry->getCoordinateComponent(ref->getSpatialRef());
+          } 
           if (cc == NULL)
             break;
 					double min = cc->getBoundaryMin()->getValue();
 					double max = cc->getBoundaryMax()->getValue();
-					if (cc->getComponentType() == "cartesianX") {
+					if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_X) {
 						info->value = new double[numOfVolIndexes];
 						memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						xaxis = const_cast<char*>(p->getId().c_str());
@@ -280,7 +309,8 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 								}
 							}
 						}
-					} else if (cc->getComponentType() == "cartesianY") {
+					} 
+          else if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_Y) {
 						info->value = new double[numOfVolIndexes];
 						memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						yaxis = const_cast<char*>(p->getId().c_str());
@@ -294,7 +324,8 @@ void setParameterInfo(SBMLDocument *doc, vector<variableInfo*> &varInfoList, int
 								}
 							}
 						}
-					} else if (cc->getComponentType() == "cartesianZ") {
+					} 
+          else if (cc->getType() == SPATIAL_COORDINATEKIND_CARTESIAN_Z) {
 						info->value = new double[numOfVolIndexes];
             memset(info->value, 0, numOfVolIndexes*sizeof(double));
 						zaxis = const_cast<char*>(p->getId().c_str());

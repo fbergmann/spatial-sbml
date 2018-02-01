@@ -1,7 +1,6 @@
 #include <cmath>
 #include "sbml/SBMLTypes.h"
 #include "sbml/extension/SBMLExtensionRegistry.h"
-#include "sbml/packages/req/common/RequiredElementsExtensionTypes.h"
 #include "sbml/packages/spatial/common/SpatialExtensionTypes.h"
 #include "sbml/packages/spatial/extension/SpatialModelPlugin.h"
 #include "sbml/packages/spatial/extension/SpatialExtension.h"
@@ -901,32 +900,57 @@ void calcBoundary(variableInfo *sInfo, double deltaX, double deltaY, double delt
 
   if (dimension >= 1)
   {
-    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmax]->para->getPlugin("spatial"))->getBoundaryCondition();
-    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Xmin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    maxSideIsDirichletX = maxSideBC->getType() == "Value";
-    maxSideIsNeumannX   = maxSideBC->getType() == "Flux";
-    minSideIsDirichletX = minSideBC->getType() == "Value";
-    minSideIsNeumannX   = minSideBC->getType() == "Flux";
+    _variableInfo * bcXmax = sInfo->boundaryInfo[Xmax];
+    if (bcXmax != NULL)
+    {
+      maxSideBC = static_cast<SpatialParameterPlugin*>(bcXmax->para->getPlugin("spatial"))->getBoundaryCondition();
+      maxSideIsDirichletX = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      maxSideIsNeumannX = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
+    _variableInfo * bcXmin = sInfo->boundaryInfo[Xmin];
+    if (bcXmin != NULL)
+    {
+      minSideBC = static_cast<SpatialParameterPlugin*>(bcXmin->para->getPlugin("spatial"))->getBoundaryCondition();
+      minSideIsDirichletX = minSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      minSideIsNeumannX = minSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
   }
 
   if (dimension >= 2)
   {
-    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymax]->para->getPlugin("spatial"))->getBoundaryCondition();		
-    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Ymin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    maxSideIsDirichletY = maxSideBC->getType() == "Value";
-    maxSideIsNeumannY   = maxSideBC->getType() == "Flux";
-    minSideIsDirichletY = minSideBC->getType() == "Value";
-    minSideIsNeumannY   = minSideBC->getType() == "Flux";
+    _variableInfo * bcYmax = sInfo->boundaryInfo[Ymax];
+    if (bcYmax != NULL)
+    {
+      maxSideBC = static_cast<SpatialParameterPlugin*>(bcYmax->para->getPlugin("spatial"))->getBoundaryCondition();
+      maxSideIsDirichletY = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      maxSideIsNeumannY = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
+  
+    _variableInfo * bcYmin = sInfo->boundaryInfo[Ymin];
+    if (bcYmin != NULL)
+    {
+      minSideBC = static_cast<SpatialParameterPlugin*>(bcYmin->para->getPlugin("spatial"))->getBoundaryCondition();
+      minSideIsDirichletY = minSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      minSideIsNeumannY   = minSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
   }
 
   if (dimension >= 3)
   {
-    maxSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmax]->para->getPlugin("spatial"))->getBoundaryCondition();
-    minSideBC = static_cast<SpatialParameterPlugin*>(sInfo->boundaryInfo[Zmin]->para->getPlugin("spatial"))->getBoundaryCondition();
-    maxSideIsDirichletZ = maxSideBC->getType() == "Value";
-    maxSideIsNeumannZ   = maxSideBC->getType() == "Flux";
-    minSideIsDirichletZ = minSideBC->getType() == "Value";
-    minSideIsNeumannZ   = minSideBC->getType() == "Flux";
+    _variableInfo * bcZmax = sInfo->boundaryInfo[Zmax];
+    if (bcZmax != NULL)
+    {
+      maxSideBC = static_cast<SpatialParameterPlugin*>(bcZmax->para->getPlugin("spatial"))->getBoundaryCondition();
+      maxSideIsDirichletZ = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      maxSideIsNeumannZ = maxSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
+    _variableInfo * bcZmin = sInfo->boundaryInfo[Zmin];
+    if (bcZmin != NULL)
+    {
+      minSideBC = static_cast<SpatialParameterPlugin*>(bcZmin->para->getPlugin("spatial"))->getBoundaryCondition();
+      minSideIsDirichletZ = minSideBC->getType() == SPATIAL_BOUNDARYKIND_DIRICHLET;
+      minSideIsNeumannZ = minSideBC->getType() == SPATIAL_BOUNDARYKIND_NEUMANN;
+    }
   }  
 
   coordinateDesc desc;
