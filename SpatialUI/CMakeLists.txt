@@ -38,9 +38,11 @@ endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${EXTRA_INCLUDE})
 include_directories(../SpatialSBML)
-include_directories(${LIBSBML_INCLUDE_DIR})
+include_directories(BEFORE ${LIBSBML_INCLUDE_DIR})
+if (EXTRA_INCLUDE)
+include_directories(BEFORE ${EXTRA_INCLUDE})
+endif()
 
 set(EXECUTABLE_FLAGS)
 

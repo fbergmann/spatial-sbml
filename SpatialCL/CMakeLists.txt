@@ -14,7 +14,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(../SpatialSBML)
 include_directories(${LIBSBML_INCLUDE_DIR})
-
+if (EXTRA_INCLUDE)
+include_directories(${EXTRA_INCLUDE})
+endif()
 
 set(EXECUTABLE_FLAGS)
 
