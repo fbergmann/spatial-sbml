@@ -500,7 +500,7 @@ void SpatialSimulator::initFromModel(SBMLDocument* doc, int xdim, int ydim, int 
             }
             if (samVol == NULL) continue;
             unsigned int  uncomprLen = samField->getUncompressedLength();
-            int *uncompr = (int*)calloc(sizeof(int), uncomprLen);
+            double *uncompr = (double*)calloc(sizeof(double), uncomprLen);
             samField->getUncompressed(uncompr);
 
             GeometryInfo *geoInfo = new GeometryInfo;
@@ -1463,7 +1463,7 @@ void SpatialSimulator::performStep(double t, double dt)
     //diffusion
     for (size_t i = 0; i < numOfSpecies; ++i) {
       variableInfo *sInfo = searchInfoById(varInfoList, los->get(i)->getId().c_str());
-      if (sInfo == NULL) continue;
+      if (sInfo == NULL || sInfo->geoi == NULL) continue;
       //volume diffusion
       if (sInfo->diffCInfo != 0 && sInfo->geoi->isVol) {
         calcDiffusion(sInfo, deltaX, deltaY, deltaZ, Xindex, Yindex, Zindex, m, dt, dimension);

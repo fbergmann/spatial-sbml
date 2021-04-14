@@ -46,18 +46,13 @@ int main(int argc, const char *argv[])
 
   cout << "SpatialPlugin: " << (doc->getModel()->getPlugin("spatial") != NULL ? "not null": "null") <<endl;
   cout << "spatial required: "<< (doc->getPkgRequired("spatial") ? "yes": "no") << endl;
-  cout << "req required: "<< (doc->getPkgRequired("req") ? "yes": "no") << endl;
 
   if (doc->getModel()->getPlugin("spatial") != NULL && 
-    doc->getPkgRequired("spatial") && 
-    doc->getPkgRequired("req")) {
+    doc->getPkgRequired("spatial")) {
       // probably a spatial simulation 
       SpatialSimulator sim(doc, 101, 101);
-#ifdef WIN32
-      sim.setGnuplotExecutable("C:/gnuplot/bin/gnuplot.exe");
-#else
+      // just pick gnuplot from the path
       sim.setGnuplotExecutable("gnuplot");
-#endif
       sim.run(1001, 0.01);
       //spatialSimulator(doc, argc, argv);
   } 
