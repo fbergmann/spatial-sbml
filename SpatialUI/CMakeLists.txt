@@ -139,10 +139,10 @@ else()
   # and only then install it
   SET(APPS "${CMAKE_CURRENT_BINARY_DIR}/SpatialUI.app" CACHE INTERNAL "")
   # ensure that next to the binaries also dependencies are copied
-  install(CODE "
-      include(BundleUtilities)
-      fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
-      " COMPONENT Runtime)
+  #install(CODE "
+  #    include(BundleUtilities)
+  #    fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")
+  #    " COMPONENT Runtime)
   install(TARGETS SpatialUI DESTINATION .)
 
 endif()
